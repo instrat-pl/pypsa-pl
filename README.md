@@ -11,7 +11,7 @@ Welcome to the `PyPSA-PL` repository! `PyPSA-PL` is a set of scripts and a datas
 
 The recommended citation is:
 
-`Czyżak, P., Mańko, M., Stępień, K., Sikorski, M. (2021). PyPSA-PL - An open energy model of the Polish power sector based on the PyPSA framework. Instrat. https://github.com/instrat-pl/pypsa-pl`
+`Czyżak, P., Mańko, M., Sikorski, M., Stępień, K., Wieczorek, B. (2021). PyPSA-PL - An open energy model of the Polish power sector based on the PyPSA framework. Instrat. https://github.com/instrat-pl/pypsa-pl`
 
 `PyPSA-PL` is based on the [PyPSA](https://pypsa.readthedocs.io/en/latest/index.html) open energy modelling framework used by many research institutions around the world. Whenever using `PyPSA-PL`, please also give credit to the authors of `PyPSA` following the guidelines [described in the PyPSA documentation](https://pypsa.readthedocs.io/en/latest/citing.html).
 
@@ -41,8 +41,10 @@ After you complete the installation procedue, it is relatively easy to get some 
 2. Set the `scenario_name` and `reference_year`. The available scenarios are `instrat` and `pep2040`, the input data is provided for years `2020`, `2021`, `2025`, `2030`, `2035`, `2040`. It is necessary to run each year separately. 
 3. Save the file and run it (if an error pops up, make sure the terminal points to the correct directory).
 4. This will create the `PyPSA` input data in your `pypsa-pl/pypsa/scenario_name/data/reference_year/` folder.
-5. Run the `run_pypsa_lopf` script.
-6. Once the optimization is finished, the results will be placed in your `pypsa-pl/pypsa/scenario_name/results/reference_year/` folder.
+5. Open the `run_pypsa_lopf` script in the `pypsa-pl` folder using your IDE
+6. Set the solver name in line 155 (where the `network.lopf` function is called). See the `PyPSA` documentation for a list of compatible solvers.
+7. Save the file and run it.
+8. Once the optimization is finished, the results will be placed in your `pypsa-pl/pypsa/scenario_name/results/reference_year/` folder.
 
 ## Accessing the results
 
