@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Welcome to the `PyPSA-PL` repository! `PyPSA-PL` is a set of scripts and a dataset that can be used with the `PyPSA` open energy modelling framework to analyze the mechanics of the Polish power system. The model was created by the Instrat Foundation and described in a trilogy of publications about the Polish coal phase-out:
+Welcome to the `PyPSA-PL` repository! `PyPSA-PL` is a set of scripts and data that can be used with the `PyPSA` open energy modelling framework to analyze the mechanics of the Polish power system. The model includes a unit-by-unit representation of thermal power plants, a 75-200 node 400/220 kV transmission grid, a spatial distribution of renewables based on the most comprehensive assessment available, a detailed forecast of capacity increases across several technologies based on the existing and planned project pipeline.
+
+PyPSA-PL was created by the Instrat Foundation and described in a trilogy of publications about the Polish coal phase-out:
 1. Czyżak, P., Wrona, A. (2021). Achieving the goal. Coal phase-out in Polish power sector. Instrat Policy Paper 01/2021. https://instrat.pl/en/coal-phase-out/
 2. Czyżak, P., Sikorski, M., Wrona, A. (2021). What’s next after coal? RES potential in Poland. Instrat Policy Paper 06/2021. https://instrat.pl/en/res-potential/
 3. Czyżak, P., Wrona, A., Borkowski, M. (2021). The missing element. Energy security considerations. Instrat Policy Paper 09/2021. https://instrat.pl/en/energy-security/
@@ -19,7 +21,7 @@ The recommended citation is:
 
 ## Setup
 
-To use the model you will need to have a basic understanding of `Python` and `conda`, an LP solver and a high performance computer with enough memory (32 GB RAM for the simplified 400kV network, 64 GB for the full 220 kV network). It is possible to run the model with an open solver, but the performance might not be satisfactory. In case of lacking hardware resources, it is possible to run the model using a virtual machine e.g. hosted in Azure. You can also run single days instead of a full year to improve solving time.
+To use the model you will need to have a basic understanding of `Python`, `conda` and `PyPSA`, an LP solver and a high performance computer with enough memory (32 GB RAM for the simplified 400kV network, 64 GB for the full 220 kV network). It is possible to run the model with an open solver, but the performance might not be satisfactory. In case of lacking hardware resources, it is possible to run the model using a virtual machine e.g. hosted in Azure. You can also run single days instead of a full year to improve solving time.
 
 Before you start working with PyPSA-PL, please follow the [installation guidelines for PyPSA](https://pypsa.readthedocs.io/en/latest/installation.html).
 
@@ -109,14 +111,14 @@ You can look at the `pypsa/scenario_name/data` folder contents to diagnose any d
 
 We are aware that many improvements need to be made in the `PyPSA-PL` model, some of them include:
 
-- Heating - including heat demand in the model and proposing a full coal-to-X conversion scheme for existing CHP plants
+- Heating - including heat demand in the model and proposing a full coal-to-X conversion scheme for existing CHP plants;
 - Hydrogen - including electrolyzers in the model, which could allow for a more detailed assessment of using RES energy surplusses for green hydrogen generation
-- EU-wide network - improving the representation of the European-wide transmission network and the cross-border flows by adding at least a single node per country, with capacity expansion projections based on e.g. the NECP's
-- Coal unit flexibility - adding ramp-up/down and minimum utilization constraints. This was removed from the model due to the significant increase in model complexity and solving times, but it is possible to implement these constraints in base `PyPSA`.
-- Demand and RES disaggregation - both load and RES distribution are defined on voivodeship level. These could be disaggregated onto the network nodes using a more sophisticated approach - e.g. taking into account population density, economic activity, industry etc.
-- Demand from other sectors - the demand projection for 2020-2040 comes from the Polish TSO (also included in PEP2040). It is very likely that the electrification of transport and heating will lead to even higher electricity demand increases. 
-- Line loading - to ensure an even distribution of line loading with the simplified 220 kV network, the resistance and reactance of 220 kV lines was changed in the `line_types` file in core `PyPSA`. This is not an ideal solution and should be handled in the `PyPSA-PL` code.
-- Thermal unit maintenance schedule - the Polish coal units are extremely prone to outages due to their age. This is not represented in the model and could mean that the availability of coal plants is higher than in reality. A maintenance schedule and a random outage algorithm could be included to represent the actual working conditions of coal plants.
+- EU-wide network - improving the representation of the European-wide transmission network and the cross-border flows by adding at least a single node per country, with capacity expansion projections based on e.g. the NECP's;
+- Coal unit flexibility - adding ramp-up/down and minimum utilization constraints. This was removed from the model due to the significant increase in model complexity and solving times, but it is possible to implement these constraints in the `utility_units` input file;
+- Demand and RES disaggregation - both load and RES distribution are defined on voivodeship level. These could be disaggregated onto the network nodes using a more sophisticated approach - e.g. taking into account population density, economic activity, industry etc.;
+- Demand from other sectors - the demand projection for 2020-2040 comes from the Polish TSO (also included in PEP2040). It is very likely that the electrification of transport and heating will lead to even higher electricity demand increases;
+- Line loading - to ensure an even distribution of line loading with the simplified 220 kV network, the resistance and reactance of 220 kV lines was changed in the `line_types` file in core `PyPSA`. This is not an ideal solution and should be handled in the `PyPSA-PL` code;
+- Thermal unit maintenance schedule - the Polish coal units are extremely prone to outages due to their age. This is not represented in the model and could mean that the availability of coal plants is higher than in reality. A maintenance schedule and a random outage algorithm could be included to represent the actual working conditions of coal plants;
 
 You are welcome to expand and modify `PyPSA-PL` according to your needs (honoring the license - see `Citiation and license` section). You can also submit pull requests onto the `PyPSA-PL` repository, but due to a lack of resources we cannot ensure we will be able to review and approve those.
 
