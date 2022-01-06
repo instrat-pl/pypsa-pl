@@ -30,23 +30,23 @@ In the PyPSA-PL repository you will find a `requirements.txt` file that can be u
 The basic installation steps can be summarized as follows:
 
 1. Clone the `PyPSA-PL` repository
-2. Create a new `conda` environment (optionaly using the `requirements.txt` file)
+2. Create a new `conda` environment with Python 3.7.7 (conda create -n pypsa-pl python=3.7.7)
 3. Install an LP solver (make sure it is available in the `Python` terminal)
-4. Install the `PyPSA` package (if not done via the `requirements.txt` file)
+4. Install the `PyPSA` package and all dependencies
 
 ## Getting started
 
 `PyPSA-PL` is a set of scripts and spreadsheets that can be used to generate inputs for the actual `PyPSA` framework.
 After you complete the installation procedue, it is relatively easy to get some first results:
 
-1. Open the `prepare_input_files` script in the `pypsa-pl` folder using your IDE.
+1. Open the `prepare_input_files` script in the `pypsa-pl` folder using your IDE (preferably open the IDE in Admin mode).
 2. Set the `scenario_name` and `reference_year`. The available scenarios are `instrat` and `pep2040`, the input data is provided for years `2020`, `2021`, `2025`, `2030`, `2035`, `2040`. It is necessary to run each year separately. 
 3. Save the file and run it (if an error pops up, make sure the terminal points to the correct directory).
 4. This will create the `PyPSA` input data in your `pypsa-pl/pypsa/scenario_name/data/reference_year/` folder.
-5. Open the `run_pypsa_lopf` script in the `pypsa-pl` folder using your IDE
-6. Set the solver name in line 155 (where the `network.lopf` function is called). See the `PyPSA` documentation for a list of compatible solvers.
-7. Save the file and run it.
-8. Once the optimization is finished, the results will be placed in your `pypsa-pl/pypsa/scenario_name/results/reference_year/` folder.
+6. Open the `run_pypsa_lopf` script in the `pypsa-pl` folder using your IDE
+7. Set the solver name in line 155 (where the `network.lopf` function is called). See the `PyPSA` documentation for a list of compatible solvers.
+8. Save the file and run it.
+9. Once the optimization is finished, the results will be placed in your `pypsa-pl/pypsa/scenario_name/results/reference_year/` folder. (if you see an error complaining about the directory being not accessible, create the results folder manually)
 
 ## Accessing the results
 
