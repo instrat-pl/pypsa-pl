@@ -1,7 +1,7 @@
 import pandas as pd
 from scripts.create_date_index import create_date_index
 
-capacity_factors_excel_dir = 'inputs\\capacity_factors.xlsx'
+capacity_factors_excel_dir = 'inputs/capacity_factors.xlsx'
 
 
 def assign_capacity_factor_based_on_voivodeship(df_original, index_date, points_in_vois):
