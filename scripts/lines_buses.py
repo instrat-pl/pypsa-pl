@@ -34,7 +34,7 @@ def create_lines_between_buses(year, df_buses, save_directory):
     buses = df_buses['name'].to_list()
 
     # Create lines between buses but only for existing ones
-    df_lines = pd.read_excel('inputs\\lines.xlsx', sheet_name=str(year), index_col=0)
+    df_lines = pd.read_excel('inputs/lines.xlsx', sheet_name=str(year), index_col=0)
     df_lines['bus0'] = df_lines['bus0'].astype(str)
     df_lines['bus1'] = df_lines['bus1'].astype(str)
     df_lines = df_lines[(df_lines['bus0'].isin(buses)) & (df_lines['bus1'].isin(buses))]
