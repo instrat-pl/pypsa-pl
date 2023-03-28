@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "pypsa-pl"
+version = "2.0.0"
+description = "PyPSA-PL: optimisation model of the Polish energy system"
+authors = ["Patryk Kubiczek <patryk.kubiczek@instrat.pl>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "src/pypsa_pl"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pypsa = "^0.21.3"
+pandas = "^1.5.3"
+numpy = "^1.24.2"
+openpyxl = "^3.1.2"
+plotly = "^5.13.1"
+kaleido = "0.2.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
