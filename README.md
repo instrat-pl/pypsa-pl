@@ -40,14 +40,16 @@ installed capacity - neighbour countries | ENTSO-E & ENTSO-G. (2022). TYNDP 2022
 
 Here you can find the list of publications based on the PyPSA-PL results and links to the full datasets stored in Zenodo.
 
+* Kubiczek P., Smoleń M. (2023). Polski nie stać na średnie ambicje. Oszczędności dzięki szybkiemu rozwojowi OZE do 2030 r. Instrat Policy Paper 03/2023. https://www.instrat.pl/pypsa-marzec-2023 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7783037.svg)](https://doi.org/10.5281/zenodo.7783037)
+
 
 ## Acknowledgements
 
 The current version of PyPSA-PL is a successor of the [PyPSA-PL v1](https://github.com/instrat-pl/pypsa-pl/tree/v1) developed by the Instrat Foundation in 2021. The following publications were based on the PyPSA-PL v1 results:
 
-* Czyżak, P., Wrona, A. (2021). Achieving the goal. Coal phase-out in Polish power sector. Instrat Policy Paper 01/2021. https://instrat.pl/en/coal-phase-out/
-* Czyżak, P., Sikorski, M., Wrona, A. (2021). What’s next after coal? RES potential in Poland. Instrat Policy Paper 06/2021. https://instrat.pl/en/res-potential/
-* Czyżak, P., Wrona, A., Borkowski, M. (2021). The missing element. Energy security considerations. Instrat Policy Paper 09/2021. https://instrat.pl/en/energy-security/
+* Czyżak, P., Wrona, A. (2021). Achieving the goal. Coal phase-out in Polish power sector. Instrat Policy Paper 01/2021. https://instrat.pl/en/coal-phase-out
+* Czyżak, P., Sikorski, M., Wrona, A. (2021). What’s next after coal? RES potential in Poland. Instrat Policy Paper 06/2021. https://instrat.pl/en/res-potential
+* Czyżak, P., Wrona, A., Borkowski, M. (2021). The missing element. Energy security considerations. Instrat Policy Paper 09/2021. https://instrat.pl/en/energy-security
 
 
 ## License
