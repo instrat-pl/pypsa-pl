@@ -27,7 +27,7 @@ Input | Source
 -- | ----
 installed capacity | ARE. (2023). Wynikowe informacje statystyczne. Agencja Rynku Energii. https://www.are.waw.pl/badania-statystycznewynikowe-informacje-statystyczne <br><br> PSE. (2023). Zasoby wytwórcze—Wg stanu na 2022.01.01. Informacje o zasobach wytwórczych KSE. Polskie Sieci Elektronergetyczne. https://www.pse.pl/dokumenty?safeargs=666f6c64657249643d3333393139# <br><br> URE. (2022). Instalacje odnawialnych źródeł energii. Urząd Regulacji Energetyki. https://www.ure.gov.pl/pl/oze/potencjal-krajowy-oze/8108,Instalacje-odnawialnych-zrodel-energii-stan-na-31-grudnia-2021-r.html
 thermal units | Charkowska, Z., Przedlacki, W., Hetmański, M., Swoczyna, B. (2022). Database of thermal power plants and combined heat-and-power plants in Poland. Instrat. https://instrat.pl/en/power-plants-database-for-poland-expanded
-fuel and CO~2~ prices | IEA. (2022). World Energy Outlook 2022. IEA. https://www.iea.org/reports/world-energy-outlook-2022
+fuel and CO<sub>2</sub> prices | IEA. (2022). World Energy Outlook 2022. IEA. https://www.iea.org/reports/world-energy-outlook-2022
 technology data | DAE. (2023). Technology Data. Danish Energy Agency. https://ens.dk/en/our-services/projections-and-models/technology-data
 electricity demand | PSE. (2022). Plan rozwoju w zakresie zaspokojenia obecnego i przyszłego zapotrzebowania na energię elektryczną na lata 2023-2032. Polskie Sieci Elektronergetyczne. https://www.pse.pl/documents/20182/291785a3-7832-4cb6-a5ae-971d29024b82?safeargs=646f776e6c6f61643d74727565
 load time series | ENTSO-E. (2023). Total Load—Day Ahead / Actual. Transparency Platform. https://transparency.entsoe.eu/load-domain/r2/totalLoadR2/show
@@ -54,6 +54,6 @@ The current version of PyPSA-PL is a successor of the [PyPSA-PL v1](https://gith
 
 The code is released under the [MIT license](LICENSE). The input and output data are released under the [CC BY 4.0 license](https://creativecommons.org/licenses/by/4.0/).
 
-&copy; [Instrat Foundation](https://instrat.pl/en/) 2023
+&copy; Instrat Foundation 2023
 
-![](docs/instrat.png | width=200)
+<a href="https://instrat.pl/en/"><img src="docs/instrat.png" width="200"></a>
