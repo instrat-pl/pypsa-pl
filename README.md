@@ -40,7 +40,7 @@ installed capacity - neighbour countries | ENTSO-E & ENTSO-G. (2022). TYNDP 2022
 
 Here you can find the list of publications based on the PyPSA-PL results and links to the full datasets stored in Zenodo.
 
-* Kubiczek P., Smoleń M. (2023). Polski nie stać na średnie ambicje. Oszczędności dzięki szybkiemu rozwojowi OZE do 2030 r. Instrat Policy Paper 03/2023. https://www.instrat.pl/pypsa-marzec-2023 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7783037.svg)](https://doi.org/10.5281/zenodo.7783037)
+* Kubiczek P., Smoleń M. (2023). Polski nie stać na średnie ambicje. Oszczędności dzięki szybkiemu rozwojowi OZE do 2030 r. Instrat Policy Paper 03/2023. https://www.instrat.pl/pypsa-marzec-2023 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7784931.svg)](https://doi.org/10.5281/zenodo.7784931)
 
 
 ## Acknowledgements
