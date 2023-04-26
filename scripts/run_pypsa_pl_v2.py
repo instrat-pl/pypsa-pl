@@ -22,7 +22,7 @@ if __name__ == "__main__":
             enforce_bio=0.8,
         )
         try:
-            run_pypsa_pl(params, use_cache=False)
+            run_pypsa_pl(params, use_cache=False, dry=False)
         except Exception as e:
             print(f"Error in {params['scenario']}: {e}")
 

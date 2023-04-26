@@ -53,8 +53,9 @@ class Params:
         self.dynamic_trade_prices = True
         self.trade_prices = "pypsa_pl_v1"
         self.nodes = "pypsa_pl_v1_75"
-        self.links = "pypsa_pl_v2"
+        self.interconnectors = "pypsa_pl_v2.1"
         self.default_v_nom = 380
+        self.default_build_year = 2020
         self.demand = "PSE_2022"
         self.demand_correction = 1.0
         self.srmc_only_JWCD = False
@@ -258,17 +259,44 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             )
 
             df_links = read_excel(
-                input_dir(f"links;source={params.links}.xlsx"), sheet_var="year"
+                input_dir(f"interconnectors;source={params.interconnectors}.xlsx")
             )
-            df_links = df_links[["year", "name", "bus0", "bus1", "p_nom"]]
+            # Determine build_year and lifetime parameters
+            df_links["build_year"] = df_links["build_year"].fillna(
+                params.default_build_year
+            )
+            df_links["retire_year"] = df_links["retire_year"].fillna(np.inf)
+            df_links["lifetime"] = df_links["retire_year"] - df_links["build_year"]
+            if params.decommission_year_inclusive:
+                df_links["lifetime"] += 1
+
+            # Keep only components that are active in the considered period
+            year_min, year_max = min(params.years), max(params.years)
+            df_links = df_links[
+                (df_links["build_year"] <= year_min)
+                & (year_max < df_links["build_year"] + df_links["lifetime"])
+            ]
+
+            # Remove links with zero capacity
             df_links = df_links[df_links["p_nom"] > 0]
+
             # Scale links
             df_links["p_nom"] *= params.trade_factor
-            df_links = select_subset(df_links, var="year", vals=params.years)
-            df_links = adjust_lifetime_to_periods(df_links, years=params.years)
-            df_imports, df_exports = split_into_imports_exports(df_links)
-            df_imports["bus1"] = "PL_" + df_imports["bus1"].astype(str)
-            df_exports["bus0"] = "PL_" + df_exports["bus0"].astype(str)
+
+            # Define relevant columns
+            df_links = df_links[
+                ["name", "bus0", "bus1", "carrier", "build_year", "p_nom"]
+            ]
+
+            # Split into export and import links
+            df_exports = df_links[df_links["bus0"].str.startswith("PL")]
+            df_imports = df_links[df_links["bus1"].str.startswith("PL")]
+
+            # TODO: add voivodeship buses later such that we do not need to remove full bus information
+            df_exports = df_exports.copy()
+            df_imports = df_imports.copy()
+            df_exports["bus0"] = network.buses.index[0]
+            df_imports["bus1"] = network.buses.index[0]
 
             if params.dynamic_trade_prices:
                 # Demand and load
@@ -400,6 +428,7 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                     p_set=100000,
                 )
 
+                # TODO: marginal cost should be time-dependent
                 df_imports = pd.merge(
                     df_imports,
                     df_tp.rename(
@@ -422,13 +451,10 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                 df_exports["marginal_cost"] *= -1
 
             if params.imports:
-                # TODO: fix AC to DC for DC interconnectors
-                df_imports["carrier"] = "AC"
                 network.import_components_from_dataframe(
                     df_imports.set_index("name"), "Link"
                 )
             if params.exports:
-                df_exports["carrier"] = "AC"
                 network.import_components_from_dataframe(
                     df_exports.set_index("name"), "Link"
                 )
