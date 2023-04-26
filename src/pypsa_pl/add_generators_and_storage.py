@@ -51,7 +51,8 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "build_year",
             "lifetime",
             "p_nom_extendable",
-            "is_reserve",
+            "is_warm_reserve",
+            "is_cold_reserve",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
         if "p_max_pu" in kwargs.keys():
@@ -168,7 +169,8 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
             "build_year",
             "lifetime",
             "p_nom_extendable",
-            "is_reserve",
+            "is_warm_reserve",
+            "is_cold_reserve",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
         if "p_min_pu" in kwargs.keys():

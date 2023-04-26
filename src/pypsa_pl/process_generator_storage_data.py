@@ -13,7 +13,8 @@ def process_utility_units_data(
     source_storage,
     source_technology,
     decommission_year_inclusive=True,
-    reserve_technologies=None,
+    warm_reserve_sources=None,
+    cold_reserve_sources=None,
 ):
     """
     Process data on individual utility units (combustion, renewable, storage).
@@ -153,9 +154,12 @@ def process_utility_units_data(
         df["p_nom_extendable"] = False
 
         # Contribution to reserve
-        df["is_reserve"] = False
-        if reserve_technologies:
-            df.loc[df["category"].isin(reserve_technologies), "is_reserve"] = True
+        df["is_warm_reserve"] = False
+        if warm_reserve_sources:
+            df.loc[df["category"].isin(warm_reserve_sources), "is_warm_reserve"] = True
+        df["is_cold_reserve"] = False
+        if cold_reserve_sources:
+            df.loc[df["category"].isin(cold_reserve_sources), "is_cold_reserve"] = True
 
         df = df.dropna(axis=1, how="all")
         dfs.append(df)
@@ -171,7 +175,8 @@ def process_aggregate_capacity_data(
     source_hydro_utilization="entsoe_2020",
     discount_rate=0.05,
     extendable_technologies=None,
-    reserve_technologies=None,
+    warm_reserve_sources=None,
+    cold_reserve_sources=None,
     active_investment_years=None,
     extend_from_zero=False,
     enforce_bio=0,
@@ -419,8 +424,11 @@ def process_aggregate_capacity_data(
     else:
         df = df[df["p_nom"] > 0]
 
-    df["is_reserve"] = False
-    if area_column == "Voivodeship" and reserve_technologies:
-        df.loc[df["category"].isin(reserve_technologies), "is_reserve"] = True
+    df["is_warm_reserve"] = False
+    if area_column == "Voivodeship" and warm_reserve_sources:
+        df.loc[df["category"].isin(warm_reserve_sources), "is_warm_reserve"] = True
+    df["is_cold_reserve"] = False
+    if area_column == "Voivodeship" and cold_reserve_sources:
+        df.loc[df["category"].isin(cold_reserve_sources), "is_cold_reserve"] = True
 
     return df

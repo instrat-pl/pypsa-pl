@@ -24,7 +24,8 @@ from pypsa_pl.custom_constraints import (
     p_set_constraint,
     maximum_annual_capacity_factor,
     minimum_annual_capacity_factor,
-    operational_reserve,
+    warm_reserve,
+    cold_reserve,
     maximum_capacity_per_voivodeship,
     maximum_growth_per_carrier,
 )
@@ -87,14 +88,19 @@ class Params:
         self.discount_rate = 0.03
         self.extendable_technologies = None
         self.extend_from_zero = False
-        self.reserve_technologies = [
+        self.warm_reserve_sources = [
             "JWCD",
             "Hydro PSH",
             "Battery large",
             "Battery large 1h",
             "Battery large 4h",
         ]
-        self.reserve_margin = 0.09
+        self.cold_reserve_sources = ["JWCD"]
+        self.warm_reserve_need_per_demand = 0.09
+        self.warm_reserve_need_per_pv = 0.15
+        self.warm_reserve_need_per_wind = 0.10
+        self.cold_reserve_need_per_demand = 0.09
+        self.cold_reserve_need_per_import = 1.0
         self.max_r_over_p = 1.0
         self.random_seed = 0
         self.extension_years = 5
@@ -416,10 +422,13 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                 df_exports["marginal_cost"] *= -1
 
             if params.imports:
+                # TODO: fix AC to DC for DC interconnectors
+                df_imports["carrier"] = "AC"
                 network.import_components_from_dataframe(
                     df_imports.set_index("name"), "Link"
                 )
             if params.exports:
+                df_exports["carrier"] = "AC"
                 network.import_components_from_dataframe(
                     df_exports.set_index("name"), "Link"
                 )
@@ -440,7 +449,8 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             source_storage=params.storage_units,
             source_technology=params.technology_data,
             decommission_year_inclusive=params.decommission_year_inclusive,
-            reserve_technologies=params.reserve_technologies,
+            warm_reserve_sources=params.warm_reserve_sources,
+            cold_reserve_sources=params.cold_reserve_sources,
         )
         # Spatial attribution
         df_units["bus"] = network.buses.index[0]  # TODO: attribute to the closest node
@@ -484,7 +494,8 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             extendable_technologies=params.extendable_technologies,
             active_investment_years=params.years,
             extend_from_zero=params.extend_from_zero,
-            reserve_technologies=params.reserve_technologies,
+            warm_reserve_sources=params.warm_reserve_sources,
+            cold_reserve_sources=params.cold_reserve_sources,
             enforce_bio=params.enforce_bio,
             industrial_utilization=params.industrial_utilization,
         )
@@ -696,15 +707,32 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
         p_set_constraint(network, snapshots)
         maximum_annual_capacity_factor(network, snapshots)
         minimum_annual_capacity_factor(network, snapshots)
-        if params.reserve_margin > 0:
-            operational_reserve(
+        warm_reserve_flag = False
+        if (
+            params.warm_reserve_need_per_demand
+            + params.warm_reserve_need_per_pv
+            + params.warm_reserve_need_per_wind
+            > 0
+        ):
+            warm_reserve_flag = True
+            warm_reserve(
                 network,
                 snapshots,
-                reserve_margin=params.reserve_margin,
+                warm_reserve_need_per_demand=params.warm_reserve_need_per_demand,
+                warm_reserve_need_per_pv=params.warm_reserve_need_per_pv,
+                warm_reserve_need_per_wind=params.warm_reserve_need_per_wind,
                 max_r_over_p=params.max_r_over_p,
                 hours_per_timestep=int(
                     params.temporal_resolution[:-1]
                 ),  # e.g. 1H -> 1,
+            )
+        if params.cold_reserve_need_per_import > 0:
+            cold_reserve(
+                network,
+                snapshots,
+                cold_reserve_need_per_demand=params.cold_reserve_need_per_demand,
+                cold_reserve_need_per_import=params.cold_reserve_need_per_import,
+                warm_reserve=warm_reserve_flag,
             )
         maximum_capacity_per_voivodeship(network, snapshots)
         maximum_growth_per_carrier(network, snapshots)

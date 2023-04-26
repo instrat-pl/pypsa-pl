@@ -594,7 +594,7 @@ def get_reserve(output_dir):
 
         df_p_nom = pd.merge(df_p_nom, df_bus, on="name", how="right")
 
-        df_is_reserve = read_variable(output_dir, components, "is_reserve")
+        df_is_reserve = read_variable(output_dir, components, "is_warm_reserve")
         df_is_reserve = df_is_reserve[df_is_reserve == True]
 
         df_p_nom = pd.merge(df_p_nom, df_is_reserve, on="name", how="right")
