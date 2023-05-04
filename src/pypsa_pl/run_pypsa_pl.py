@@ -28,6 +28,7 @@ from pypsa_pl.custom_constraints import (
     cold_reserve,
     maximum_capacity_per_voivodeship,
     maximum_growth_per_carrier,
+    maximum_snsp,
 )
 
 
@@ -103,6 +104,18 @@ class Params:
         self.cold_reserve_need_per_demand = 0.09
         self.cold_reserve_need_per_import = 1.0
         self.max_r_over_p = 1.0
+        self.max_snsp = 0.75
+        self.ns_sources = [
+            "Wind onshore",
+            "Wind offshore",
+            "PV roof",
+            "PV ground",
+            "DC",
+            "Battery large",
+            "Battery large 1h",
+            "Battery large 4h",
+            "Battery small 2h",
+        ]
         self.random_seed = 0
         self.extension_years = 5
         self.virtual_dsr = True
@@ -762,6 +775,13 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             )
         maximum_capacity_per_voivodeship(network, snapshots)
         maximum_growth_per_carrier(network, snapshots)
+        if params.max_snsp < 1:
+            maximum_snsp(
+                network,
+                snapshots,
+                max_snsp=params.max_snsp,
+                ns_sources=params.ns_sources,
+            )
 
     if params.mode == "lopf":
         network.lopf(

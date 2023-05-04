@@ -576,3 +576,22 @@ def maximum_growth_per_carrier(network, snapshots):
         "Generator",
         "maximum_growth_per_carrier",
     )
+
+
+def maximum_snsp(network, snapshots, max_snsp, ns_sources):
+    fixed_max_ns_supply = get_fixed_demand(network, snapshots) * max_snsp
+    minus_variable_max_ns_supply = get_variable_demand(
+        network, snapshots, scale_factor=-max_snsp
+    )
+    ns_supply = get_variable_supply(network, snapshots, carriers=ns_sources)
+    ac_supply = get_variable_supply(
+        network, snapshots, scale_factor=max_snsp, carriers=["AC"]
+    )
+    define_constraints(
+        network,
+        ns_supply + ac_supply + minus_variable_max_ns_supply,
+        "<=",
+        fixed_max_ns_supply,
+        "Generator+StorageUnit+Link",
+        "maximum_snsp",
+    )
