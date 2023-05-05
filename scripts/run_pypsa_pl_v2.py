@@ -19,7 +19,7 @@ if __name__ == "__main__":
         params = Params(
             scenario=f"pypsa_pl_v2;{dict_to_str(run)}",
             years=[run["year"]],
-            enforce_bio=0.8,
+            solver="gurobi",
         )
         try:
             run_pypsa_pl(params, use_cache=False, dry=False)
