@@ -55,10 +55,16 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "is_cold_reserve",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
-        if "p_max_pu" in kwargs.keys():
-            kwargs["p_max_pu"] = kwargs["p_max_pu"].fillna(1.0)
-        if "p_min_pu" in kwargs.keys():
-            kwargs["p_min_pu"] = kwargs["p_min_pu"].fillna(0.0)
+        for attribute, default in {
+            "p_min_pu": 0.0,
+            "p_max_pu": 1.0,
+            "p_min_pu_annual": 0.0,
+            "p_max_pu_annual": 1.0,
+        }.items():
+            if attribute in kwargs.keys():
+                kwargs[attribute] = kwargs[attribute].fillna(default)
+            else:
+                kwargs[attribute] = default
 
         # TODO: cleaner duplication of columns
         if cat == "CHP":  # or cat == "JWCD":
@@ -173,10 +179,14 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
             "is_cold_reserve",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
-        if "p_min_pu" in kwargs.keys():
-            kwargs["p_min_pu"] = kwargs["p_min_pu"].fillna(-1.0)
-        if "inflow" in kwargs.keys():
-            kwargs["inflow"] = kwargs["inflow"].fillna(0.0)
+        for attribute, default in {
+            "p_min_pu": -1.0,
+            "inflow": 0.0,
+        }.items():
+            if attribute in kwargs.keys():
+                kwargs[attribute] = kwargs[attribute].fillna(default)
+            else:
+                kwargs[attribute] = default
 
         srmc_names = [name for name in names if name in df_srmc.columns]
         if len(srmc_names) > 0:
