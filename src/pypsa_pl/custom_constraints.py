@@ -351,7 +351,7 @@ def warm_reserve(
                 network,
                 snapshots,
                 scale_factor=-warm_reserve_need_per_pv,
-                carriers=["PV", "PV ground", "PV roof"],
+                carriers=["PV ground", "PV roof"],
             )
         )
     if warm_reserve_need_per_wind > 0:
@@ -360,7 +360,7 @@ def warm_reserve(
                 network,
                 snapshots,
                 scale_factor=-warm_reserve_need_per_wind,
-                carriers=["Wind", "Wind onshore", "Wind offshore"],
+                carriers=["Wind onshore", "Wind offshore"],
             )
         )
     minus_variable_r_target = minus_variable_r_target_list[0]
@@ -502,7 +502,7 @@ def cold_reserve(
     )
 
 
-def maximum_capacity_per_voivodeship(network, snapshots):
+def maximum_capacity_per_area(network, snapshots):
     ext_i = network.get_extendable_i("Generator")
     constraint_i = ext_i.intersection(
         network.generators[
@@ -513,35 +513,35 @@ def maximum_capacity_per_voivodeship(network, snapshots):
     if constraint_i.empty:
         return
     p_nom = get_var(network, "Generator", "p_nom")[constraint_i]
-    p_nom_per_carrier_voivodeship = (
+    p_nom_per_carrier_area = (
         linexpr((1, p_nom))
         .groupby(
             [
                 network.generators["carrier"][constraint_i],
-                network.generators["voivodeship"][constraint_i],
+                network.generators["area"][constraint_i],
             ]
         )
         .apply(join_exprs)
     )
-    df = network.voivodeships.reset_index().melt(
-        id_vars="voivodeship", var_name="carrier_period", value_name="p_nom_max"
+    df = network.area.reset_index().melt(
+        id_vars="area", var_name="carrier_period", value_name="p_nom_max"
     )
     df = df[df["p_nom_max"] < np.inf]
     df["carrier"] = df["carrier_period"].str[8:-5]
     df["period"] = df["carrier_period"].str[-4:].astype(int)
     # TODO: implement for multi-period optimization
     df = df[df["period"] == df["period"].max()]
-    p_nom_max = df.set_index(["carrier", "voivodeship"])["p_nom_max"]
-    carrier_voivodeship_i = p_nom_per_carrier_voivodeship.index.intersection(
+    p_nom_max = df.set_index(["carrier", "area"])["p_nom_max"]
+    carrier_area_i = p_nom_per_carrier_area.index.intersection(
         p_nom_max.index
     )
     define_constraints(
         network,
-        p_nom_per_carrier_voivodeship[carrier_voivodeship_i],
+        p_nom_per_carrier_area[carrier_area_i],
         "<=",
-        p_nom_max[carrier_voivodeship_i],
+        p_nom_max[carrier_area_i],
         "Generator",
-        "maximum_capacity_per_voivodeship",
+        "maximum_capacity_per_area",
     )
 
 
@@ -578,12 +578,12 @@ def maximum_growth_per_carrier(network, snapshots):
     )
 
 
-def maximum_snsp(network, snapshots, max_snsp, ns_sources):
+def maximum_snsp(network, snapshots, max_snsp, ns_carriers):
     fixed_max_ns_supply = get_fixed_demand(network, snapshots) * max_snsp
     minus_variable_max_ns_supply = get_variable_demand(
         network, snapshots, scale_factor=-max_snsp
     )
-    ns_supply = get_variable_supply(network, snapshots, carriers=ns_sources)
+    ns_supply = get_variable_supply(network, snapshots, carriers=ns_carriers)
     ac_supply = get_variable_supply(
         network, snapshots, scale_factor=max_snsp, carriers=["AC"]
     )

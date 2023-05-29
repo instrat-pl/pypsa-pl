@@ -30,65 +30,42 @@ def process_srmc_data(
     # Cross join with generation units dataframe
     df = pd.merge(df, df_prices, how="cross")
 
-    if (
-        source_prices == "pypsa_pl_v1"
-        and "Fuel transport distance (round) [km]" in df.columns
-    ):
-        assert sum(year % 5 == 0 for year in years) == len(years)
-        # Read transport cost table and merge
-        file = data_dir("input", f"transport_prices;source={source_prices}.xlsx")
-        df_transport = read_excel(file, sheet_name="coal_transport")
-        df_transport = df_transport[["Transport distance [km]", *years]]
-        df_transport = df_transport.melt(
-            id_vars="Transport distance [km]",
-            var_name="year",
-            value_name="Fuel transport cost [PLN/t]",
-        )
-        df = pd.merge(
-            df,
-            df_transport,
-            left_on=["Fuel transport distance (round) [km]", "year"],
-            right_on=["Transport distance [km]", "year"],
-            how="left",
-        )
-        df["Fuel transport cost [PLN/MWh_t]"] = (
-            df["Fuel transport cost [PLN/t]"]
-            / df["Fuel calorific value [MWh_t/t or MWh_t/1000m3 for gas]"]
-        )
-
     # Read technological assumptions and merge (but only when data missing)
-    df["technology_year"] = get_technology_year(df["year"]).astype(int)
+    df["technology_year"] = get_technology_year(df["build_year"]).astype(int)
     technology_years = df["technology_year"].drop_duplicates().tolist()
     df_tech = load_technology_data(source_technology, years=technology_years)
     param_cols = [
-        "Fuel CO2 emission factor [tCO2/MWh_t]",
         "Variable cost [PLN/MWh_e]",
+        "Fuel CO2 emission factor [tCO2/MWh_t]",
         "Fuel transport cost [PLN/MWh_t]",
     ]
-    df_tech = df_tech[["year", "technology", *param_cols]]
-    df_tech = df_tech.rename(columns={"year": "technology_year"})
-
-    df = (
-        df.set_index("name")
-        .combine_first(
-            pd.merge(
-                df.drop(columns=[col for col in param_cols if col in df.columns]),
-                df_tech,
-                on=["technology_year", "technology"],
-                how="left",
-            ).set_index("name"),
-        )
-        .reset_index()
+    df_tech = df_tech[["technology_year", "technology", *param_cols]]
+    df = pd.merge(
+        df.drop(columns=[col for col in param_cols if col in df.columns]),
+        df_tech,
+        on=["technology_year", "technology"],
+        how="left",
     )
 
+    if "fuel_co2_emissions" in df.columns:
+        df["fuel_co2_emissions"] = df["fuel_co2_emissions"].fillna(
+            df["Fuel CO2 emission factor [tCO2/MWh_t]"]
+        )
+    else:
+        df["fuel_co2_emissions"] = df["Fuel CO2 emission factor [tCO2/MWh_t]"]
+
+    if "fuel_transport_cost" in df.columns:
+        df["fuel_transport_cost"] = df["fuel_transport_cost"].fillna(
+            df["Fuel transport cost [PLN/MWh_t]"]
+        )
+    else:
+        df["fuel_transport_cost"] = df["Fuel transport cost [PLN/MWh_t]"]
+
     # Calculate generation costs for each unit
-    df["Net electrical efficiency"] = df["efficiency"]
 
     # CO2 cost
     df["CO2 cost [PLN/MWh_e]"] = (
-        df["CO2 price [PLN/tCO2]"]
-        * df["Fuel CO2 emission factor [tCO2/MWh_t]"]
-        / df["Net electrical efficiency"]
+        df["CO2 price [PLN/tCO2]"] * df["fuel_co2_emissions"] / df["efficiency"]
     )
 
     # Fuel cost
@@ -123,13 +100,9 @@ def process_srmc_data(
                 is_fuel, f"{fuel} price [PLN/MWh_t]"
             ]
 
-    df["Fuel cost [PLN/MWh_e]"] = (
-        df["Fuel cost [PLN/MWh_t]"] / df["Net electrical efficiency"]
-    )
+    df["Fuel cost [PLN/MWh_e]"] = df["Fuel cost [PLN/MWh_t]"] / df["efficiency"]
 
-    df["Fuel transport cost [PLN/MWh_e]"] = (
-        df["Fuel transport cost [PLN/MWh_t]"] / df["Net electrical efficiency"]
-    )
+    df["Fuel transport cost [PLN/MWh_e]"] = df["fuel_transport_cost"] / df["efficiency"]
 
     # Total short run marginal cost
     df["SRMC [PLN/MWh_e]"] = df[

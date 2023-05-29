@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 
@@ -41,3 +42,27 @@ def calculate_annuity(lifetime, discount_rate):
         return discount_rate / (1.0 - 1.0 / (1.0 + discount_rate) ** lifetime)
     else:
         return 1 / lifetime
+
+
+def filter_lifetimes(df, years):
+    year_min, year_max = min(years), max(years)
+    df = df[
+        (df["build_year"] <= year_min) & (year_max < df["build_year"] + df["lifetime"])
+    ]
+    return df
+
+
+def update_lifetime(df, default_build_year, decommission_year_inclusive):
+    # Determine build_year and lifetime parameters
+    if "build_year" not in df.columns:
+        df["build_year"] = default_build_year
+    else:
+        df["build_year"] = df["build_year"].fillna(default_build_year)
+    if "retire_year" not in df.columns:
+        df["retire_year"] = np.inf
+    else:
+        df["retire_year"] = df["retire_year"].fillna(np.inf)
+    df["lifetime"] = df["retire_year"] - df["build_year"]
+    if decommission_year_inclusive:
+        df["lifetime"] += 1
+    return df

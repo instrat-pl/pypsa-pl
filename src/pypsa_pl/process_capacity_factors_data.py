@@ -35,34 +35,33 @@ def process_utilization_profiles(
     domestic=True,
 ):
     dfs = {}
-    for cat in ["CHP", "PV", "Wind offshore", "Wind onshore", "Wind onshore old"]:
-        if not domestic and cat == "Wind onshore old":
+    for cat in [
+        "CHP Coal",
+        "CHP Natural gas",
+        "PV ground",
+        "PV roof",
+        "Wind offshore",
+        "Wind onshore",
+        "Wind onshore old",
+    ]:
+        if not domestic and cat in ["CHP Coal", "CHP Natural gas", "Wind onshore old"]:
             continue
 
-        source = source_renewable if cat != "CHP" else source_chp
+        source = source_renewable if not cat.startswith("CHP") else source_chp
         prefix = cat.lower().replace(" ", "_")
-
-        # Use modified wind onshore for wind onshore old for non-PyPSA-PL v1 sources
-        create_wind_onshore_old_cf = (
-            cat == "Wind onshore old" and source != "pypsa_pl_v1"
-        )
-        if create_wind_onshore_old_cf:
+        if cat == "Wind onshore old":
             prefix = "wind_onshore"
-
-        file = data_dir("input", f"{prefix}_utilization_profile;source={source}.xlsx")
-
-        # Ignore weather year for PyPSA-PL v1 source
-        sheet_name = str(weather_year) if source != "pypsa_pl_v1" else 0
-
-        column_filter = (
-            lambda col: (col == "hour")
-            or (col == "Fuel")
-            or (col.startswith("PL") if domestic else not col.startswith("PL"))
+        file = data_dir(
+            "input",
+            "timeseries",
+            f"{prefix}_utilization_profile;source={source};year={weather_year}.csv",
         )
+        column_filter = lambda col: (col == "hour") or (
+            col.startswith("PL") if domestic else not col.startswith("PL")
+        )
+        df = pd.read_csv(file, usecols=column_filter)
 
-        df = read_excel(file, sheet_name=sheet_name, usecols=column_filter)
-
-        if cat.startswith("Wind onshore"):
+        if domestic and cat.startswith("Wind onshore"):
             df = df.set_index("hour")
             for col in df.columns:
                 df[col] = modify_wind_utilization_profile(
@@ -73,17 +72,6 @@ def process_utilization_profiles(
                 )
             df = df.reset_index()
 
-        if "Fuel" in df.columns:
-            df = df.melt(
-                id_vars=["hour", "Fuel"],
-                var_name="Area",
-                value_name="cf",
-            )
-            df = df.pivot(
-                index="hour",
-                columns=["Area", "Fuel"],
-                values="cf",
-            ).reset_index()
         # Aggregate the capacity factors timeseries to the temporal resolution of the snapshots
         df["hour"] = pd.to_datetime(df["hour"])
         df = (

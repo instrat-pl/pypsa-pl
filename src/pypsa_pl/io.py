@@ -20,12 +20,14 @@ def read_excel(file, sheet_var=None, **kwargs):
         df = pd.read_excel(file, **kwargs)
         # Remove columns that start with "#"
         df = df.drop(columns=[col for col in df.columns if str(col).startswith("#")])
+        # Remove rows that start with "#"
+        df = df.loc[~df.iloc[:, 0].astype(str).str.startswith("#")]
         return df
     else:
         # Read all sheets
         dfs = pd.read_excel(file, sheet_name=None, **kwargs)
 
-        # Concatenate DataFrames from each sheet after removing columns that start with "#" and adding sheet_var column
+        # Concatenate DataFrames from each sheet after removing columns and rows that start with "#" and adding sheet_var column
         df_full = pd.concat(
             [
                 df.drop(
@@ -35,6 +37,7 @@ def read_excel(file, sheet_var=None, **kwargs):
                 if not sheet_name.startswith("#")
             ]
         )
+        df_full = df_full.loc[~df_full.iloc[:, 0].astype(str).str.startswith("#")]
 
         # Sheet names are always strings. Convert the sheet_var column to numeric if possible.
         df_full.loc[:, sheet_var] = pd.to_numeric(df_full[sheet_var], errors="ignore")

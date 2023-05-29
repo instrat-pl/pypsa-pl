@@ -22,9 +22,9 @@ if __name__ == "__main__":
             solver="gurobi",
         )
         try:
-            run_pypsa_pl(params, use_cache=False, dry=False)
+            run_pypsa_pl(params, use_cache=False, dry=True)
         except Exception as e:
-            print(f"Error in {params['scenario']}: {e}")
+            print(f"Error in {params.scenario}: {e}")
 
     for plot_function in [
         plot_production,

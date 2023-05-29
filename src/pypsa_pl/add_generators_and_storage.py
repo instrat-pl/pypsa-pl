@@ -5,50 +5,48 @@ from pypsa_pl.helper_functions import select_subset, repeat_over_timesteps
 
 
 def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
-    categories = [
-        "JWCD",
-        "nJWCD",
-        "CHP",
+    carriers = [
         "Wind onshore",
-        "Wind onshore old",
         "Wind offshore",
         "PV roof",
         "PV ground",
-        "PV",
         "DSR",
-        "Hard coal industrial",
-        "Natural gas industrial",
-        "Biogas",
-        "Biomass wood",
-        "Biomass straw",
-        "Biomass straw old",
         "Hard coal",
+        "Natural gas",
         "Lignite",
-        "Natural gas OCGT",
-        "Natural gas CCGT",
+        "Biogas",
+        "Biomass wood chips",
+        "Biomass straw",
+        "Coke-oven gas",
         "Oil",
         "Nuclear",
         "Hydro ROR",
     ]
-    df_generators = select_subset(df_generators, "category", categories)
+    df_generators = select_subset(df_generators, "carrier", carriers)
 
-    for cat, df in df_generators.groupby("category"):
+    for category, df in df_generators.groupby("category"):
         names = df["name"].tolist()
         df = df.set_index("name")
         attributes = [
             "bus",
+            "area",
+            "category",
             "carrier",
+            "technology",
             "p_nom",
             "p_nom_min",
             "p_nom_max",
             "p_min_pu",
             "p_max_pu",
+            "p_set",
             "p_min_pu_annual",
             "p_max_pu_annual",
             "efficiency",
             "marginal_cost",
             "capital_cost",
+            "technology_year",
             "build_year",
+            "retire_year",
             "lifetime",
             "p_nom_extendable",
             "is_warm_reserve",
@@ -66,32 +64,20 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             else:
                 kwargs[attribute] = default
 
-        # TODO: cleaner duplication of columns
-        if cat == "CHP":  # or cat == "JWCD":
-            df_cf = dfs_capacity_factors["CHP"].set_index(["period", "timestep"])
-
+        if category.startswith("CHP"):
             # CHP units are considered only for PL
-            assert (df["Country"] == "PL").all()
-            names = df.index
-            # if cat == "JWCD":
-            #     names = df.index[df.index.str.startswith("EC")]
+            assert df["area"].str.startswith("PL").all()
 
-            areas_fuels = df[["Voivodeship", "carrier"]].copy()
-            areas_fuels.loc[
-                areas_fuels["carrier"].isin(
-                    ["Hard coal", "Lignite", "Biomass wood chips"]
-                ),
-                "carrier",
-            ] = "Coal"
-            generators_per_area_fuel = areas_fuels.groupby(
-                ["Voivodeship", "carrier"]
-            ).groups
+            df_cf = dfs_capacity_factors[category].set_index(["period", "timestep"])
 
-            assert set(generators_per_area_fuel.keys()).issubset(df_cf.columns)
+            areas = df["area"]
+            generators_per_area = areas.groupby(areas).groups
+
+            assert set(generators_per_area.keys()).issubset(df_cf.columns)
             df_cf = pd.concat(
                 [
-                    df_cf[[area_fuel]].rename(columns={area_fuel: generator})
-                    for area_fuel, generators in generators_per_area_fuel.items()
+                    df_cf[[area]].rename(columns={area: generator})
+                    for area, generators in generators_per_area.items()
                     for generator in generators
                 ],
                 axis=1,
@@ -99,21 +85,10 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             p_max = df.loc[names, ["p_nom", "p_max_pu"]].product(axis=1).transpose()
             kwargs["p_set"] = (p_max * df_cf).round(3)
 
-        if cat.startswith("Wind") or cat.startswith("PV"):
-            if cat.startswith("PV"):
-                key = "PV"
-            # elif cat == "Wind onshore old" and cat not in dfs_capacity_factors.keys():
-            #     key = "Wind onshore"
-            else:
-                key = cat
-            df_cf = dfs_capacity_factors[key].set_index(["period", "timestep"])
+        if category.startswith("Wind") or category.startswith("PV"):
+            df_cf = dfs_capacity_factors[category].set_index(["period", "timestep"])
 
-            areas = df["Country"].copy()
-            if "Voivodeship" in df.columns:
-                has_voivodeship = df["Voivodeship"].notna()
-                areas.loc[has_voivodeship] += (
-                    " " + df.loc[has_voivodeship, "Voivodeship"]
-                )
+            areas = df["area"]
             generators_per_area = areas.groupby(areas).groups
             assert set(generators_per_area.keys()).issubset(df_cf.columns)
             df_cf = pd.concat(
@@ -129,28 +104,30 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
         srmc_names = [name for name in names if name in df_srmc.columns]
         if len(srmc_names) > 0:
             df_srmc_cat = df_srmc[["year", *srmc_names]]
-            df_srmc_cat = repeat_over_timesteps(df_srmc_cat, network).set_index(
-                ["period", "timestep"]
-            )
+            if len(df_srmc_cat["year"].unique()) > 1:
+                df_srmc_cat = repeat_over_timesteps(df_srmc_cat, network).set_index(
+                    ["period", "timestep"]
+                )
+            else:
+                df_srmc_cat = df_srmc_cat.drop(columns="year").iloc[0, :]
             kwargs["marginal_cost"] = df_srmc_cat
+
+        kwargs = {key: kwargs[key] for key in attributes if key in kwargs.keys()}
 
         network.madd(
             "Generator",
             names,
-            suffix=f" {cat}",
             **kwargs,
         )
 
 
 def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
-    categories = [
+    carriers = [
         "Hydro PSH",
         "Battery large",
-        "Battery large 1h",
-        "Battery large 4h",
-        "Battery small 2h",
+        "Battery small",
     ]
-    df_storage_units = select_subset(df_storage_units, "category", categories)
+    df_storage_units = select_subset(df_storage_units, "carrier", carriers)
 
     for cat, df in df_storage_units.groupby("category"):
         names = df["name"].tolist()
@@ -166,13 +143,17 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
             # "p_min_pu_annual",
             # "p_max_pu_annual",
             "max_hours",
+            "efficiency_round",
             "efficiency_store",
             "efficiency_dispatch",
             "inflow",
             "standing_loss",
+            "cyclic_state_of_charge",
             "marginal_cost",
             "capital_cost",
+            "technology_year",
             "build_year",
+            "retire_year",
             "lifetime",
             "p_nom_extendable",
             "is_warm_reserve",
@@ -182,6 +163,7 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
         for attribute, default in {
             "p_min_pu": -1.0,
             "inflow": 0.0,
+            "cyclic_state_of_charge": True,
         }.items():
             if attribute in kwargs.keys():
                 kwargs[attribute] = kwargs[attribute].fillna(default)
@@ -191,15 +173,18 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
         srmc_names = [name for name in names if name in df_srmc.columns]
         if len(srmc_names) > 0:
             df_srmc_cat = df_srmc[["year", *srmc_names]]
-            df_srmc_cat = repeat_over_timesteps(df_srmc_cat, network).set_index(
-                ["period", "timestep"]
-            )
+            if len(df_srmc_cat["year"].unique()) > 1:
+                df_srmc_cat = repeat_over_timesteps(df_srmc_cat, network).set_index(
+                    ["period", "timestep"]
+                )
+            else:
+                df_srmc_cat = df_srmc_cat.drop(columns="year").iloc[0, :]
             kwargs["marginal_cost"] = df_srmc_cat
+
+        kwargs = {key: kwargs[key] for key in attributes if key in kwargs.keys()}
 
         network.madd(
             "StorageUnit",
             names,
-            suffix=f" {cat}",
-            cyclic_state_of_charge=True,
             **kwargs,
         )

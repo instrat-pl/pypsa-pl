@@ -295,6 +295,8 @@ def get_capacity(output_dir, aggregate_by="Technology"):
     links = output_dir.joinpath("links.csv")
     if links.exists():
         df_trade = read_variable(output_dir, "links", "p_nom").to_frame()
+        # TODO: select only trade links in a more robust way
+        df_trade = df_trade[df_trade.index.str[2] == "-"].copy()
         df_trade["Installed Capacity [GW]"] = df_trade["p_nom"] / 1e3
         df_trade = df_trade.drop(columns=["p_nom"])
         df_trade["Exporter"] = df_trade.index.str[:2]
@@ -327,6 +329,28 @@ def get_capacity(output_dir, aggregate_by="Technology"):
     df_cap = df_cap.round(2)
 
     return df_cap.reset_index()
+
+
+def get_line_load(output_dir):
+    df_s_nom = read_variable(output_dir, "lines", "s_nom")
+    df_s_nom.name = "s_nom"
+    df_s_nom = df_s_nom.reset_index()
+
+    df_p0 = read_variable(output_dir, "lines", "p0", time_dependent=True)
+    df_p0 = df_p0.reset_index(names="snapshot_id").melt(
+        id_vars="snapshot_id", var_name="name", value_name="p0"
+    )
+    df = pd.merge(df_p0, df_s_nom, on="name", how="left")
+    is_p0_positive = df["p0"] > 0
+
+    df["p0_pu"] = df["p0"] / df["s_nom"]
+    df.loc[is_p0_positive, "p0_pos_pu"] = df.loc[is_p0_positive, "p0_pu"]
+    df.loc[~is_p0_positive, "p0_neg_pu"] = df.loc[~is_p0_positive, "p0_pu"]
+
+    df = df.groupby("name").agg(
+        {"p0_pu": ["mean", "max", "min"], "p0_pos_pu": "mean", "p0_neg_pu": "mean"}
+    )
+    return df
 
 
 def get_curtailment(output_dir, aggregate=True):
@@ -533,6 +557,8 @@ def get_production(output_dir, aggregate=True, aggregate_by="Technology"):
         )
 
         # df_trade.columns = ["Electricity Production [TWh]"]
+        # TODO: select only trade links in a more robust way
+        df_trade = df_trade[df_trade["link"].str[2] == "-"].copy()
         df_trade["Exporter"] = df_trade["link"].str[:2]
         df_trade["Importer"] = df_trade["link"].str[3:5]
         df_imports = (
