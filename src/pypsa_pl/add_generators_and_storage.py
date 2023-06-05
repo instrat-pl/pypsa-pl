@@ -51,6 +51,15 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "p_nom_extendable",
             "is_warm_reserve",
             "is_cold_reserve",
+            "committable",
+            "start_up_cost",
+            "shut_down_cost",
+            "min_up_time",
+            "min_down_time",
+            "ramp_limit_start_up",
+            "ramp_limit_shut_down",
+            "ramp_limit_up",
+            "ramp_limit_down",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
         for attribute, default in {
@@ -58,6 +67,9 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "p_max_pu": 1.0,
             "p_min_pu_annual": 0.0,
             "p_max_pu_annual": 1.0,
+            "min_up_time": 0,
+            "min_down_time": 0,
+            "committable": False,
         }.items():
             if attribute in kwargs.keys():
                 kwargs[attribute] = kwargs[attribute].fillna(default)

@@ -88,6 +88,7 @@ class Params:
         self.scenario = "pypsa_pl_v2"
         self.solver = "highs"
         self.mode = "lopf"
+        self.use_pyomo = False
         self.decommission_year_inclusive = True
         self.srmc_wind = 8.0
         self.srmc_pv = 1.0
@@ -123,6 +124,7 @@ class Params:
             "Battery large",
             "Battery small",
         ]
+        self.unit_commitment_categories = None
         self.random_seed = 0
         self.extension_years = 5
         self.virtual_dsr = True
@@ -474,6 +476,8 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             decommission_year_inclusive=params.decommission_year_inclusive,
             warm_reserve_categories=params.warm_reserve_categories,
             cold_reserve_categories=params.cold_reserve_categories,
+            unit_commitment_categories=params.unit_commitment_categories,
+            hours_per_timestep=int(params.temporal_resolution[:-1]),  # e.g. 1H -> 1,
         )
 
         # Spatial attribution
@@ -784,15 +788,19 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
     solver_options = {}
     if params.solver == "gurobi":
         solver_options = {
-            "threads": 4,
-            "method": 2,  # barrier
-            "crossover": 0,
+            "Threads": 4,
+            "Method": 2,  # barrier
+            "PreSolve": -1 if params.unit_commitment_categories is None else 1,
+            "PrePasses": -1 if params.unit_commitment_categories is None else 1,
+            "MIPFocus": 1, # affects only MIPs
+            "MIPGap": 0.99, # affects only MIPs - basically return the first feasible solution
+            "Crossover": 0,
             "BarConvTol": 1e-6,
-            "FeasibilityTol": 1e-6,
+            "FeasibilityTol": 1e-5,
             "AggFill": 0,
             "PreDual": 0,
             "GURO_PAR_BARDENSETHRESH": 200,
-            "Seed": 11,
+            "Seed": 0,
         }
     if params.solver == "highs":
         solver_options = {
@@ -805,7 +813,7 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             "dual_feasibility_tolerance": 1e-5,
             "ipm_optimality_tolerance": 1e-4,
             "parallel": "on",
-            "random_seed": 11,
+            "random_seed": 0,
         }
 
     if params.mode == "lopf":
@@ -813,7 +821,7 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             multi_investment_periods=len(params.years) > 1,
             solver_name=params.solver,
             solver_options=solver_options,
-            pyomo=False,
+            pyomo=params.use_pyomo,
             extra_functionality=extra_functionality,
         )
 

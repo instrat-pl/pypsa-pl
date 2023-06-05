@@ -16,6 +16,8 @@ def process_utility_units_data(
     decommission_year_inclusive=True,
     warm_reserve_categories=None,
     cold_reserve_categories=None,
+    unit_commitment_categories=None,
+    hours_per_timestep=1,
 ):
     """
     Process data on individual utility units (thermal, renewable, storage).
@@ -28,6 +30,8 @@ def process_utility_units_data(
         ("renewable", source_renewable),
         ("storage", source_storage),
     ]:
+        if source is None:
+            continue
         df = read_excel(
             data_dir("input", f"{prefix}_units;source={source}.xlsx"),
             sheet_var="group",
@@ -126,6 +130,71 @@ def process_utility_units_data(
                 is_domestic & df["category"].isin(cold_reserve_categories),
                 "is_cold_reserve",
             ] = True
+
+        if unit_commitment_categories:
+            df["committable"] = False
+            is_committable = df["category"].isin(unit_commitment_categories) & df[
+                "area"
+            ].str.startswith("PL")
+            df.loc[is_committable, "committable"] = True
+            df.loc[is_committable, "start_up_cost"] = (
+                df.loc[is_committable, "Startup cost [PLN/MW]"]
+                * df.loc[is_committable, "p_nom"]
+            ).fillna(0)
+            df.loc[is_committable, "shut_down_cost"] = (
+                df.loc[is_committable, "Shutdown cost [PLN/MW]"]
+                * df.loc[is_committable, "p_nom"]
+            ).fillna(0)
+            df.loc[is_committable, "min_up_time"] = (
+                (df.loc[is_committable, "Minimum time on [hours]"] / hours_per_timestep)
+                .round()
+                .astype(int)
+                .fillna(0)
+            )
+            df.loc[is_committable, "min_down_time"] = (
+                (
+                    df.loc[is_committable, "Minimum time off [hours]"]
+                    / hours_per_timestep
+                )
+                .round()
+                .astype(int)
+                .fillna(0)
+            )
+            df.loc[is_committable, "ramp_limit_start_up"] = (
+                df.loc[
+                    is_committable,
+                    "Ramp up rate limit at startup [% of max output / hour]",
+                ]
+                * hours_per_timestep
+            ).fillna(1)
+            df.loc[is_committable, "ramp_limit_shut_down"] = (
+                df.loc[
+                    is_committable,
+                    "Ramp down rate limit at shutdown [% of max output / hour]",
+                ]
+                * hours_per_timestep
+            ).fillna(1)
+            df.loc[is_committable, "ramp_limit_up"] = (
+                df.loc[is_committable, "Ramp up rate limit [% of max output / min]"]
+                * 60
+                * hours_per_timestep
+            ).fillna(np.nan)
+            df.loc[is_committable, "ramp_limit_down"] = (
+                df.loc[is_committable, "Ramp down rate limit [% of max output / min]"]
+                * 60
+                * hours_per_timestep
+            ).fillna(np.nan)
+            for attr in [
+                "ramp_limit_up",
+                "ramp_limit_down",
+                "ramp_limit_start_up",
+                "ramp_limit_shut_down",
+            ]:
+                df.loc[df[attr] > 1, attr] = 1
+            df.loc[is_committable, "p_min_pu"] = (
+                df.loc[is_committable, "Minimum generation [% of max output]"]
+                * df.loc[is_committable, "p_max_pu"].fillna(1)
+            ).fillna(0)
 
         df = df.dropna(axis=1, how="all")
         dfs.append(df)
@@ -234,7 +303,7 @@ def process_aggregate_capacity_data(
     ] = 1
     # For biomass and biogas enforce 80% of the maximum annual capacity utilization factor
     if enforce_bio > 0:
-        is_bioenergy = df["carrier"].str.startswith("Bio")
+        is_bioenergy = df["category"].str.startswith("Bio")
         df.loc[is_bioenergy, "p_min_pu_annual"] = (
             enforce_bio * df.loc[is_bioenergy, "p_max_pu_annual"]
         ).round(3)
@@ -275,12 +344,14 @@ def process_aggregate_capacity_data(
     df["is_warm_reserve"] = False
     if warm_reserve_categories:
         df.loc[
-            is_domestic & df["category"].isin(warm_reserve_categories), "is_warm_reserve"
+            is_domestic & df["category"].isin(warm_reserve_categories),
+            "is_warm_reserve",
         ] = True
     df["is_cold_reserve"] = False
     if cold_reserve_categories:
         df.loc[
-            is_domestic & df["category"].isin(cold_reserve_categories), "is_cold_reserve"
+            is_domestic & df["category"].isin(cold_reserve_categories),
+            "is_cold_reserve",
         ] = True
 
     return df
