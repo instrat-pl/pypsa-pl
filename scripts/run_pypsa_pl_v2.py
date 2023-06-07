@@ -26,16 +26,16 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Error in {params.scenario}: {e}")
 
-    for plot_function in [
-        plot_production,
-        plot_capacity,
-        plot_capacity_utilisation,
-        plot_reserve_by_technology,
-        plot_reserve_margin,
-        plot_curtailment,
-        plot_fuel_consumption,
-        plot_co2_emissions,
-    ]:
-        plot_function(
-            "pypsa_pl_v2", extra_params=param_space, extension="png", force=True
-        )
+    # for plot_function in [
+    #     plot_production,
+    #     plot_capacity,
+    #     plot_capacity_utilisation,
+    #     plot_reserve_by_technology,
+    #     plot_reserve_margin,
+    #     plot_curtailment,
+    #     plot_fuel_consumption,
+    #     plot_co2_emissions,
+    # ]:
+    #     plot_function(
+    #         "pypsa_pl_v2", extra_params=param_space, extension="png", force=True
+    #     )

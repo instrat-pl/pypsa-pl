@@ -26,7 +26,7 @@ from pypsa_pl.process_generator_storage_data import (
 from pypsa_pl.process_srmc_data import process_srmc_data
 from pypsa_pl.add_generators_and_storage import add_generators, add_storage
 from pypsa_pl.custom_constraints import (
-    p_set_constraint,
+    # p_set_constraint,
     maximum_annual_capacity_factor,
     minimum_annual_capacity_factor,
     warm_reserve,
@@ -88,7 +88,6 @@ class Params:
         self.scenario = "pypsa_pl_v2"
         self.solver = "highs"
         self.mode = "lopf"
-        self.use_pyomo = False
         self.decommission_year_inclusive = True
         self.srmc_wind = 8.0
         self.srmc_pv = 1.0
@@ -745,7 +744,7 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
     # Do the computation
 
     def extra_functionality(network, snapshots):
-        p_set_constraint(network, snapshots)
+        # p_set_constraint(network, snapshots)
         maximum_annual_capacity_factor(network, snapshots)
         minimum_annual_capacity_factor(network, snapshots)
         warm_reserve_flag = False
@@ -785,6 +784,15 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                 ns_carriers=params.ns_carriers,
             )
 
+        if params.grid_resolution == "copper_plate":
+            # Remove all subnetworks as done here: https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/components.py#LL1279C1-L1283C20
+            # Otherwise this code causes trouble: https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/optimize.py#L431
+            for sub_network in network.sub_networks.index:
+                obj = network.sub_networks.at[sub_network, "obj"]
+                network.remove("SubNetwork", sub_network)
+                del obj
+            network.sub_networks = network.sub_networks.drop(columns="obj")
+
     solver_options = {}
     if params.solver == "gurobi":
         solver_options = {
@@ -792,8 +800,8 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             "Method": 2,  # barrier
             "PreSolve": -1 if params.unit_commitment_categories is None else 1,
             "PrePasses": -1 if params.unit_commitment_categories is None else 1,
-            "MIPFocus": 1, # affects only MIPs
-            "MIPGap": 0.99, # affects only MIPs - basically return the first feasible solution
+            "MIPFocus": 1,  # affects only MIPs
+            "MIPGap": 0.99,  # affects only MIPs - basically return the first feasible solution
             "Crossover": 0,
             "BarConvTol": 1e-6,
             "FeasibilityTol": 1e-5,
@@ -817,12 +825,13 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
         }
 
     if params.mode == "lopf":
-        network.lopf(
+        network.optimize(
             multi_investment_periods=len(params.years) > 1,
             solver_name=params.solver,
             solver_options=solver_options,
-            pyomo=params.use_pyomo,
             extra_functionality=extra_functionality,
+            # linearized_unit_commitment=True,
+            # transmission_losses=0,
         )
 
     # Save outputs

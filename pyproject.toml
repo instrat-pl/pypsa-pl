@@ -9,7 +9,7 @@ packages = [{include = "src/pypsa_pl"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pypsa = "^0.21.3"
+pypsa = "^0.23.0"
 pandas = "^1.5.3"
 numpy = "^1.24.2"
 openpyxl = "^3.1.2"

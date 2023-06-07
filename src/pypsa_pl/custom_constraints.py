@@ -1,13 +1,22 @@
 import pandas as pd
 import numpy as np
+import xarray as xr
 
 from pypsa.linopt import (
+    # get_var,
+    # linexpr,
+    join_exprs,
+    # define_constraints,
+    # define_variables,
+)
+
+from pypsa.optimization.compat import (
     get_var,
     linexpr,
-    join_exprs,
     define_constraints,
     define_variables,
 )
+import linopy
 from pypsa.descriptors import get_switchable_as_dense
 
 
@@ -23,17 +32,24 @@ def get_fixed_demand(network, snapshots):
     loads = network.loads_t["p_set"]
     loads = loads[[name for name in loads.columns if name.startswith("PL")]]
     demand_t = loads.sum(axis=1)
-
+    demand_t = xr.DataArray(demand_t, dims=["snapshot"])
     return demand_t
 
 
 def get_variable_demand(network, snapshots, scale_factor=1):
     """Get variable demand for each snapshot."""
+    demand_t_list = []
 
     # Demand from charging storage units
     components = network.storage_units
     store_i = components[components["bus"].str.startswith("PL")].index
-    store_t = get_var(network, "StorageUnit", "p_store")[store_i]
+    if not store_i.empty:
+        store_t = (
+            get_var(network, "StorageUnit", "p_dispatch")
+            .sel({"StorageUnit": store_i})
+            .sum("StorageUnit")
+        )
+        demand_t_list.append(store_t)
 
     # Demand from export links
     components = network.links
@@ -41,16 +57,18 @@ def get_variable_demand(network, snapshots, scale_factor=1):
         components["bus0"].str.startswith("PL")
         & ~components["bus1"].str.startswith("PL")
     ].index
-    export_t = get_var(network, "Link", "p")[export_i]
+    if not export_i.empty:
+        export_t = get_var(network, "Link", "p").sel({"Link": export_i}).sum("Link")
+        demand_t_list.append(export_t)
 
     # Aggregate variable demand
-    demand_t = pd.concat([store_t, export_t], axis=1)
-    demand_t = linexpr((scale_factor, demand_t)).apply(join_exprs, axis=1)
+    demand_t = scale_factor * sum(demand_t_list)
     return demand_t
 
 
 def get_variable_supply(network, snapshots, scale_factor=1, carriers=None):
     """Get variable supply for each snapshot."""
+    supply_t_list = []
 
     # Supply from generators
     components = network.generators
@@ -58,7 +76,13 @@ def get_variable_supply(network, snapshots, scale_factor=1, carriers=None):
         components["bus"].str.startswith("PL")
         & (components["carrier"].isin(carriers) if carriers else True)
     ].index
-    generator_t = get_var(network, "Generator", "p")[generator_i]
+    if not generator_i.empty:
+        generator_t = (
+            get_var(network, "Generator", "p")
+            .sel({"Generator": generator_i})
+            .sum("Generator")
+        )
+        supply_t_list.append(generator_t)
 
     # Supply from discharging storage units
     components = network.storage_units
@@ -66,7 +90,13 @@ def get_variable_supply(network, snapshots, scale_factor=1, carriers=None):
         components["bus"].str.startswith("PL")
         & (components["carrier"].isin(carriers) if carriers else True)
     ].index
-    dispatch_t = get_var(network, "StorageUnit", "p_dispatch")[dispatch_i]
+    if not dispatch_i.empty:
+        dispatch_t = (
+            get_var(network, "StorageUnit", "p_dispatch")
+            .sel({"StorageUnit": dispatch_i})
+            .sum("StorageUnit")
+        )
+        supply_t_list.append(dispatch_t)
 
     # Supply from import links
     components = network.links
@@ -75,29 +105,30 @@ def get_variable_supply(network, snapshots, scale_factor=1, carriers=None):
         & components["bus1"].str.startswith("PL")
         & (components["carrier"].isin(carriers) if carriers else True)
     ].index
-    import_t = get_var(network, "Link", "p")[import_i]
+    if not import_i.empty:
+        import_t = get_var(network, "Link", "p").sel({"Link": import_i}).sum("Link")
+        supply_t_list.append(import_t)
 
     # Aggregate variable supply
-    supply_t = pd.concat([generator_t, dispatch_t, import_t], axis=1)
-    supply_t = linexpr((scale_factor, supply_t)).apply(join_exprs, axis=1)
+    supply_t = scale_factor * sum(supply_t_list)
     return supply_t
 
 
-def p_set_constraint(network, snapshots):
-    p_set = network.generators_t["p_set"]
-    constraint_i = p_set.columns
-    if constraint_i.empty:
-        return
-    p_t = get_var(network, "Generator", "p")[constraint_i]
-    p = linexpr((1, p_t))
-    define_constraints(
-        network,
-        p,
-        "==",
-        p_set,
-        "Generator",
-        "p_set_constraint",
-    )
+# def p_set_constraint(network, snapshots):
+#     p_set = network.generators_t["p_set"]
+#     constraint_i = p_set.columns
+#     if constraint_i.empty:
+#         return
+#     p_t = get_var(network, "Generator", "p")[constraint_i]
+#     p = linexpr((1, p_t))
+#     define_constraints(
+#         network,
+#         p,
+#         "==",
+#         p_set,
+#         "Generator",
+#         "p_set_constraint",
+#     )
 
 
 def maximum_annual_capacity_factor_ext(network, snapshots):
@@ -107,13 +138,16 @@ def maximum_annual_capacity_factor_ext(network, snapshots):
     )
     if constraint_i.empty:
         return
-    p_t = get_var(network, "Generator", "p")[constraint_i]
-    p_max_pu_annual = network.generators["p_max_pu_annual"][constraint_i]
-    p_nom = get_var(network, "Generator", "p_nom")[constraint_i]
+    p_t = get_var(network, "Generator", "p").sel({"Generator": constraint_i})
+    p_max_pu_annual = (
+        network.generators.loc[constraint_i, "p_max_pu_annual"]
+        .rename_axis("Generator")
+        .to_xarray()
+    )
+    p_nom = get_var(network, "Generator", "p_nom").sel({"Generator": constraint_i})
     N = len(snapshots)
-    p_annual = linexpr((1, p_t)).apply(join_exprs)
+    p_annual = linexpr((1, p_t)).sum("snapshot")
     minus_p_max_annual = linexpr((-N * p_max_pu_annual, p_nom))
-    # lhs = pd.concat([p_annual, minus_p_max_annual], axis=1).apply(join_exprs, axis=1)
     define_constraints(
         network,
         p_annual + minus_p_max_annual,
@@ -131,16 +165,17 @@ def maximum_annual_capacity_factor_non_ext(network, snapshots):
     )
     if constraint_i.empty:
         return
-    p_t = get_var(network, "Generator", "p")[constraint_i]
-    p_max_pu_annual = network.generators["p_max_pu_annual"][constraint_i]
-    p_nom = network.generators["p_nom"][constraint_i]
+    p_t = get_var(network, "Generator", "p").sel({"Generator": constraint_i})
+    p_max_pu_annual = network.generators.loc[constraint_i, "p_max_pu_annual"]
+    p_nom = network.generators.loc[constraint_i, "p_nom"]
     N = len(snapshots)
-    p_annual = linexpr((1, p_t)).apply(join_exprs)
+    p_annual = linexpr((1, p_t)).sum("snapshot")
+    p_annual_max = (N * p_max_pu_annual * p_nom).rename_axis("Generator").to_xarray()
     define_constraints(
         network,
         p_annual,
         "<=",
-        N * p_max_pu_annual * p_nom,
+        p_annual_max,
         "Generator",
         "maximum_annual_capacity_factor_non_ext",
     )
@@ -158,13 +193,16 @@ def minimum_annual_capacity_factor_ext(network, snapshots):
     )
     if constraint_i.empty:
         return
-    p_t = get_var(network, "Generator", "p")[constraint_i]
-    p_min_pu_annual = network.generators["p_min_pu_annual"][constraint_i]
-    p_nom = get_var(network, "Generator", "p_nom")[constraint_i]
+    p_t = get_var(network, "Generator", "p").sel({"Generator": constraint_i})
+    p_min_pu_annual = (
+        network.generators.loc[constraint_i, "p_min_pu_annual"]
+        .rename_axis("Generator")
+        .to_xarray()
+    )
+    p_nom = get_var(network, "Generator", "p_nom").sel({"Generator": constraint_i})
     N = len(snapshots)
-    p_annual = linexpr((1, p_t)).apply(join_exprs)
+    p_annual = linexpr((1, p_t)).sum("snapshot")
     minus_p_min_annual = linexpr((-N * p_min_pu_annual, p_nom))
-    # lhs = pd.concat([p_annual, minus_p_min_annual], axis=1).apply(join_exprs, axis=1)
     define_constraints(
         network,
         p_annual + minus_p_min_annual,
@@ -182,16 +220,17 @@ def minimum_annual_capacity_factor_non_ext(network, snapshots):
     )
     if constraint_i.empty:
         return
-    p_t = get_var(network, "Generator", "p")[constraint_i]
-    p_min_pu_annual = network.generators["p_min_pu_annual"][constraint_i]
-    p_nom = network.generators["p_nom"][constraint_i]
+    p_t = get_var(network, "Generator", "p").sel({"Generator": constraint_i})
+    p_min_pu_annual = network.generators.loc[constraint_i, "p_min_pu_annual"]
+    p_nom = network.generators.loc[constraint_i, "p_nom"]
     N = len(snapshots)
-    p_annual = linexpr((1, p_t)).apply(join_exprs)
+    p_annual = linexpr((1, p_t)).sum("snapshot")
+    p_annual_min = (N * p_min_pu_annual * p_nom).rename_axis("Generator").to_xarray()
     define_constraints(
         network,
         p_annual,
         ">=",
-        N * p_min_pu_annual * p_nom,
+        p_annual_min,
         "Generator",
         "minimum_annual_capacity_factor_non_ext",
     )
@@ -217,15 +256,18 @@ def warm_reserve_non_ext(
     constraint_i = non_ext_i.intersection(reserve_units)
     if constraint_i.empty:
         return
-    r_t = get_var(network, component, "r")[constraint_i]
+    r_t = get_var(network, component, "r").sel({component: constraint_i})
     p_t = get_var(
         network, component, "p" if component == "Generator" else "p_dispatch"
-    )[constraint_i]
-    p_nom = components["p_nom"][constraint_i]
+    ).sel({component: constraint_i})
+    p_nom = components.loc[constraint_i, "p_nom"]
     p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[constraint_i]
     r = linexpr((1, r_t))
     p = linexpr((1, p_t))
     p_max = p_max_pu * p_nom
+    p_max = xr.DataArray(
+        p_max.values, coords={"snapshot": p_max.index, component: p_max.columns}
+    )
     define_constraints(
         network,
         r + p,
@@ -247,13 +289,19 @@ def warm_reserve_non_ext(
     if component == "StorageUnit":
         # https://github.com/PyPSA/PyPSA/blob/master/pypsa/linopf.py#L529
         # (dispatch power + reserve power) * hours per timestep / efficiency <= stored energy
-        eff = components["efficiency_dispatch"][constraint_i]
-        soc_end_t = get_var(network, component, "state_of_charge")[constraint_i]
-        soc_begin_t = soc_end_t.groupby(level=0, group_keys=False).apply(
-            lambda df: pd.DataFrame(
-                np.roll(df, 1, axis=0), index=df.index, columns=df.columns
-            )
+        eff = components.loc[constraint_i, "efficiency_dispatch"]
+        eff = eff.rename_axis(component).to_xarray()
+        soc_end_t = get_var(network, component, "state_of_charge").sel(
+            {component: constraint_i}
         )
+        # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
+        ps = network.investment_periods.rename("period")
+        sl = slice(None, None)
+        soc_begin_t = [
+            soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
+        ]
+        soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
+        soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
         minus_soc_times_eff_over_hours = linexpr(
             (-eff / hours_per_timestep, soc_begin_t)
         )
@@ -277,12 +325,16 @@ def warm_reserve_ext(
     constraint_i = ext_i.intersection(reserve_units)
     if constraint_i.empty:
         return
-    r_t = get_var(network, component, "r")[constraint_i]
+    r_t = get_var(network, component, "r").sel({component: constraint_i})
     p_t = get_var(
         network, component, "p" if component == "Generator" else "p_dispatch"
-    )[constraint_i]
-    p_nom = get_var(network, component, "p_nom")[constraint_i]
+    ).sel({component: constraint_i})
+    p_nom = get_var(network, component, "p_nom").sel({component: constraint_i})
     p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[constraint_i]
+    p_max_pu = xr.DataArray(
+        p_max_pu.values,
+        coords={"snapshot": p_max_pu.index, component: p_max_pu.columns},
+    )
     r = linexpr((1, r_t))
     p = linexpr((1, p_t))
     minus_p_max = linexpr((-p_max_pu, p_nom))
@@ -307,13 +359,19 @@ def warm_reserve_ext(
     if component == "StorageUnit":
         # https://github.com/PyPSA/PyPSA/blob/master/pypsa/linopf.py#L529
         # (dispatch power + reserve power) * hours per timestep / efficiency <= stored energy
-        eff = components["efficiency_dispatch"][constraint_i]
-        soc_end_t = get_var(network, component, "state_of_charge")[constraint_i]
-        soc_begin_t = soc_end_t.groupby(level=0, group_keys=False).apply(
-            lambda df: pd.DataFrame(
-                np.roll(df, 1, axis=0), index=df.index, columns=df.columns
-            )
+        eff = components.loc[constraint_i, "efficiency_dispatch"]
+        eff = eff.rename_axis(component).to_xarray()
+        soc_end_t = get_var(network, component, "state_of_charge").sel(
+            {component: constraint_i}
         )
+        # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
+        ps = network.investment_periods.rename("period")
+        sl = slice(None, None)
+        soc_begin_t = [
+            soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
+        ]
+        soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
+        soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
         minus_soc_times_eff_over_hours = linexpr(
             (-eff / hours_per_timestep, soc_begin_t)
         )
@@ -363,9 +421,7 @@ def warm_reserve(
                 carriers=["Wind onshore", "Wind offshore"],
             )
         )
-    minus_variable_r_target = minus_variable_r_target_list[0]
-    for el in minus_variable_r_target_list[1:]:
-        minus_variable_r_target += el
+    minus_variable_r_target = sum(minus_variable_r_target_list)
 
     r_t_list = []
     for component in ["Generator", "StorageUnit"]:
@@ -402,10 +458,11 @@ def warm_reserve(
             max_r_over_p=max_r_over_p,
             hours_per_timestep=hours_per_timestep,
         )
-        r_t = get_var(network, component, "r")[reserve_i]
+        r_t = (
+            get_var(network, component, "r").sel({component: reserve_i}).sum(component)
+        )
         r_t_list.append(r_t)
-    r_t = pd.concat(r_t_list, axis=1)
-    total_r = linexpr((1, r_t)).apply(join_exprs, axis=1)
+    total_r = sum(r_t_list)
     define_constraints(
         network,
         total_r + minus_variable_r_target,
@@ -440,9 +497,7 @@ def cold_reserve(
                 carriers=["AC", "DC"],
             )
         )
-    minus_variable_r_target = minus_variable_r_target_list[0]
-    for el in minus_variable_r_target_list[1:]:
-        minus_variable_r_target += el
+    minus_variable_r_target = sum(minus_variable_r_target_list)
 
     components = network.generators
     reserve_i = components[
@@ -456,13 +511,14 @@ def cold_reserve(
     non_ext_i = network.get_non_extendable_i("Generator")
     non_ext_reserve_i = non_ext_i.intersection(reserve_i)
     if not non_ext_i.empty:
-        p_t = get_var(network, "Generator", "p")[non_ext_reserve_i]
-        p_nom = components["p_nom"][non_ext_reserve_i]
+        p_t = get_var(network, "Generator", "p").sel({"Generator": non_ext_reserve_i})
+        p_nom = components.loc[non_ext_reserve_i, "p_nom"]
         p_max_pu = get_switchable_as_dense(network, "Generator", "p_max_pu")[
             non_ext_reserve_i
         ]
-        minus_p = linexpr((-1, p_t)).apply(join_exprs, axis=1)
+        minus_p = linexpr((-1, p_t)).sum("Generator")
         p_max = (p_max_pu * p_nom).sum(axis=1)
+        p_max = xr.DataArray(p_max, dims="snapshot")
         variable_r_list.append(minus_p)
         fixed_r_list.append(p_max)
 
@@ -470,25 +526,27 @@ def cold_reserve(
     ext_i = network.get_extendable_i("Generator")
     ext_reserve_i = ext_i.intersection(reserve_i)
     if not ext_i.empty:
-        p_t = get_var(network, "Generator", "p")[ext_reserve_i]
-        p_nom = get_var(network, "Generator", "p_nom")[ext_reserve_i]
+        p_t = get_var(network, "Generator", "p").sel({"Generator": ext_reserve_i})
+        p_nom = get_var(network, "Generator", "p_nom").sel({"Generator": ext_reserve_i})
         p_max_pu = get_switchable_as_dense(network, "Generator", "p_max_pu")[
             ext_reserve_i
         ]
-        minus_p = linexpr((-1, p_t)).apply(join_exprs, axis=1)
-        p_max = linexpr((p_max_pu, p_nom)).apply(join_exprs, axis=1)
+        p_max_pu = xr.DataArray(
+            p_max_pu.values,
+            coord={"snapshot": p_max_pu.index, "Generator": p_max_pu.columns},
+        )
+        minus_p = linexpr((-1, p_t)).sum("Generator")
+        p_max = linexpr((p_max_pu, p_nom)).sum("Generator")
         variable_r_list.append(p_max + minus_p)
 
     # Cold + warm reserve
-    variable_r = variable_r_list[0]
-    for el in variable_r_list[1:]:
-        variable_r += el
+    variable_r = sum(variable_r_list)
     fixed_r = sum(fixed_r_list)
 
     # Warm reserve
     if warm_reserve:
-        r_t = get_var(network, "Generator", "r")[reserve_i]
-        minus_warm_r = linexpr((-1, r_t)).apply(join_exprs, axis=1)
+        r_t = get_var(network, "Generator", "r").sel({"Generator": reserve_i})
+        minus_warm_r = linexpr((-1, r_t)).sum("Generator")
     else:
         minus_warm_r = ""
 
@@ -503,6 +561,7 @@ def cold_reserve(
 
 
 def maximum_capacity_per_area(network, snapshots):
+    # TODO: test implementation
     ext_i = network.get_extendable_i("Generator")
     constraint_i = ext_i.intersection(
         network.generators[
@@ -512,17 +571,18 @@ def maximum_capacity_per_area(network, snapshots):
     )
     if constraint_i.empty:
         return
-    p_nom = get_var(network, "Generator", "p_nom")[constraint_i]
-    p_nom_per_carrier_area = (
-        linexpr((1, p_nom))
-        .groupby(
-            [
-                network.generators["carrier"][constraint_i],
-                network.generators["area"][constraint_i],
-            ]
+    p_nom = get_var(network, "Generator", "p_nom").sel({"Generator": constraint_i})
+    carrier_area = (
+        (
+            network.generators.loc[constraint_i, "carrier"]
+            + "_"
+            + network.generators.loc[constraint_i, "area"]
         )
-        .apply(join_exprs)
+        .rename("carrier_area")
+        .rename_axis("Generator")
+        .to_xarray()
     )
+    p_nom_per_carrier_area = p_nom.groupby_sum(carrier_area)
     df = network.area.reset_index().melt(
         id_vars="area", var_name="carrier_period", value_name="p_nom_max"
     )
@@ -531,21 +591,27 @@ def maximum_capacity_per_area(network, snapshots):
     df["period"] = df["carrier_period"].str[-4:].astype(int)
     # TODO: implement for multi-period optimization
     df = df[df["period"] == df["period"].max()]
-    p_nom_max = df.set_index(["carrier", "area"])["p_nom_max"]
-    carrier_area_i = p_nom_per_carrier_area.index.intersection(
+    df["carrier_area"] = df["carrier"] + "_" + df["area"]
+    p_nom_max = df.set_index("carrier_area")["p_nom_max"]
+    carrier_area_i = p_nom_per_carrier_area.indexes["carrier_area"].intersection(
         p_nom_max.index
     )
+    p_nom_per_carrier_area = p_nom_per_carrier_area.sel(
+        {"carrier_area": carrier_area_i}
+    )
+    p_nom_max = p_nom_max.rename_axis("carrier_area").to_xarray()
     define_constraints(
         network,
-        p_nom_per_carrier_area[carrier_area_i],
+        p_nom_per_carrier_area,
         "<=",
-        p_nom_max[carrier_area_i],
+        p_nom_max,
         "Generator",
         "maximum_capacity_per_area",
     )
 
 
 def maximum_growth_per_carrier(network, snapshots):
+    # TODO: test implementation
     ext_i = network.get_extendable_i("Generator")
     constraint_i = ext_i.intersection(
         network.generators[
@@ -555,24 +621,25 @@ def maximum_growth_per_carrier(network, snapshots):
     )
     if constraint_i.empty:
         return
-    p_nom = get_var(network, "Generator", "p_nom")[constraint_i]
-    p_nom_start = network.generators["p_nom_min"][constraint_i]
-    p_nom_per_carrier = (
-        linexpr((1, p_nom))
-        .groupby(network.generators["carrier"][constraint_i])
-        .apply(join_exprs)
-    )
-    p_nom_start_per_carrier = p_nom_start.groupby(
-        network.generators["carrier"][constraint_i]
-    ).sum()
+    p_nom = get_var(network, "Generator", "p_nom").sel({"Generator": constraint_i})
+    p_nom_start = network.generators.loc[constraint_i, "p_nom_min"]
+    carrier = network.generators.loc[constraint_i, "carrier"]
+    p_nom_per_carrier = p_nom.groupby_sum(carrier.rename_axis("Generator").to_xarray())
+    p_nom_start_per_carrier = p_nom_start.groupby(carrier).sum()
     max_growth = network.carriers["max_growth"]
     max_growth = max_growth[max_growth < np.inf]
-    carrier_i = p_nom_per_carrier.index.intersection(max_growth.index)
+    carrier_i = p_nom_per_carrier.indexes["carrier"].intersection(max_growth.index)
+    p_nom_per_carrier = p_nom_per_carrier.sel({"carrier": carrier_i})
+    p_nom_per_carrier_max = (
+        (p_nom_start_per_carrier[carrier_i] + max_growth[carrier_i])
+        .rename_axis("carrier")
+        .to_xarray()
+    )
     define_constraints(
         network,
-        p_nom_per_carrier[carrier_i],
+        p_nom_per_carrier,
         "<=",
-        p_nom_start_per_carrier[carrier_i] + max_growth[carrier_i],
+        p_nom_per_carrier_max,
         "Generator",
         "maximum_growth_per_carrier",
     )
