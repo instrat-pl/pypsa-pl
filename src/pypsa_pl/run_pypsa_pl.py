@@ -124,6 +124,7 @@ class Params:
             "Battery small",
         ]
         self.unit_commitment_categories = None
+        self.linearized_unit_commitment = True
         self.random_seed = 0
         self.extension_years = 5
         self.virtual_dsr = True
@@ -798,10 +799,6 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
         solver_options = {
             "Threads": 4,
             "Method": 2,  # barrier
-            "PreSolve": -1 if params.unit_commitment_categories is None else 1,
-            "PrePasses": -1 if params.unit_commitment_categories is None else 1,
-            "MIPFocus": 1,  # affects only MIPs
-            "MIPGap": 0.99,  # affects only MIPs - basically return the first feasible solution
             "Crossover": 0,
             "BarConvTol": 1e-6,
             "FeasibilityTol": 1e-5,
@@ -810,6 +807,17 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             "GURO_PAR_BARDENSETHRESH": 200,
             "Seed": 0,
         }
+        if (
+            params.unit_commitment_categories is not None
+            and not params.linearized_unit_commitment
+        ):
+            solver_options = {
+                **solver_options,
+                "PreSolve": 1,
+                "PrePasses": 1,
+                "MIPFocus": 1,
+                "MIPGap": 0.5,  # basically return the first feasible solution
+            }
     if params.solver == "highs":
         solver_options = {
             "threads": 4,
@@ -830,7 +838,7 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             solver_name=params.solver,
             solver_options=solver_options,
             extra_functionality=extra_functionality,
-            # linearized_unit_commitment=True,
+            linearized_unit_commitment=params.linearized_unit_commitment,
             # transmission_losses=0,
         )
 
