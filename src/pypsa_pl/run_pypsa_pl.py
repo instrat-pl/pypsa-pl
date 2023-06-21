@@ -125,6 +125,7 @@ class Params:
         ]
         self.unit_commitment_categories = None
         self.linearized_unit_commitment = True
+        self.thermal_constraints_factor = 1
         self.random_seed = 0
         self.extension_years = 5
         self.virtual_dsr = True
@@ -477,6 +478,7 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             warm_reserve_categories=params.warm_reserve_categories,
             cold_reserve_categories=params.cold_reserve_categories,
             unit_commitment_categories=params.unit_commitment_categories,
+            thermal_constraints_factor=params.thermal_constraints_factor,
             hours_per_timestep=int(params.temporal_resolution[:-1]),  # e.g. 1H -> 1,
         )
 
@@ -841,6 +843,8 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             linearized_unit_commitment=params.linearized_unit_commitment,
             # transmission_losses=0,
         )
+
+    print(network.model.constraints)
 
     # Save outputs
     network.export_to_csv_folder(runs_dir(params.scenario, "output"))

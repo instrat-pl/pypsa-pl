@@ -17,6 +17,7 @@ def process_utility_units_data(
     warm_reserve_categories=None,
     cold_reserve_categories=None,
     unit_commitment_categories=None,
+    thermal_constraints_factor=1,
     hours_per_timestep=1,
 ):
     """
@@ -140,13 +141,19 @@ def process_utility_units_data(
             df.loc[is_committable, "start_up_cost"] = (
                 df.loc[is_committable, "Startup cost [PLN/MW]"]
                 * df.loc[is_committable, "p_nom"]
+                * thermal_constraints_factor
             ).fillna(0)
             df.loc[is_committable, "shut_down_cost"] = (
                 df.loc[is_committable, "Shutdown cost [PLN/MW]"]
                 * df.loc[is_committable, "p_nom"]
+                * thermal_constraints_factor
             ).fillna(0)
             df.loc[is_committable, "min_up_time"] = (
-                (df.loc[is_committable, "Minimum time on [hours]"] / hours_per_timestep)
+                (
+                    df.loc[is_committable, "Minimum time on [hours]"]
+                    / hours_per_timestep
+                    * thermal_constraints_factor
+                )
                 .round()
                 .astype(int)
                 .fillna(0)
@@ -155,6 +162,7 @@ def process_utility_units_data(
                 (
                     df.loc[is_committable, "Minimum time off [hours]"]
                     / hours_per_timestep
+                    * thermal_constraints_factor
                 )
                 .round()
                 .astype(int)
@@ -166,6 +174,7 @@ def process_utility_units_data(
                     "Ramp up rate limit at startup [% of max output / hour]",
                 ]
                 * hours_per_timestep
+                / thermal_constraints_factor
             ).fillna(1)
             df.loc[is_committable, "ramp_limit_shut_down"] = (
                 df.loc[
@@ -173,16 +182,19 @@ def process_utility_units_data(
                     "Ramp down rate limit at shutdown [% of max output / hour]",
                 ]
                 * hours_per_timestep
+                / thermal_constraints_factor
             ).fillna(1)
             df.loc[is_committable, "ramp_limit_up"] = (
                 df.loc[is_committable, "Ramp up rate limit [% of max output / min]"]
                 * 60
                 * hours_per_timestep
+                / thermal_constraints_factor
             ).fillna(np.nan)
             df.loc[is_committable, "ramp_limit_down"] = (
                 df.loc[is_committable, "Ramp down rate limit [% of max output / min]"]
                 * 60
                 * hours_per_timestep
+                / thermal_constraints_factor
             ).fillna(np.nan)
             for attr in [
                 "ramp_limit_up",

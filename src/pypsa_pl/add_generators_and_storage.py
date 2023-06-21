@@ -146,7 +146,10 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
         df = df.set_index("name")
         attributes = [
             "bus",
+            "area",
+            "category",
             "carrier",
+            "technology",
             "p_nom",
             "p_nom_min",
             "p_nom_max",
