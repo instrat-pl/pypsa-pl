@@ -22,11 +22,32 @@ def make_snapshots(years, freq="1H", leap_days="remove"):
     return snapshots
 
 
+def make_custom_component_attrs(reserves):
+    if not reserves:
+        return None
+    custom_component_attrs = pypsa.descriptors.Dict(
+        {k: v.copy() for k, v in pypsa.components.component_attrs.items()}
+    )
+    for component in ["Generator", "StorageUnit"]:
+        for reserve in reserves:
+            custom_component_attrs[component].loc[f"r_{reserve}"] = [
+                "series",
+                "MW",
+                "0",
+                f"reserve: {reserve.replace('_', ' ')}",
+                "Output",
+            ]
+    return custom_component_attrs
+
+
 @ignore_future_warnings
 def make_network(
-    temporal_resolution="1H", years=[2020, 2030, 2040, 2050], discount_rate=0.03
+    temporal_resolution="1H",
+    years=[2020, 2030, 2040, 2050],
+    discount_rate=0.03,
+    custom_component_attrs=None,
 ):
-    network = pypsa.Network()
+    network = pypsa.Network(override_component_attrs=custom_component_attrs)
     network.set_snapshots(make_snapshots(years, freq=temporal_resolution))
     network.snapshot_weightings.loc[:, :] = int(
         temporal_resolution[:-1]

@@ -17,11 +17,12 @@ from pypsa_pl.helper_functions import (
     repeat_over_periods,
     update_lifetime,
 )
-from pypsa_pl.make_network import make_network
+from pypsa_pl.make_network import make_network, make_custom_component_attrs
 from pypsa_pl.process_capacity_factors_data import process_utilization_profiles
 from pypsa_pl.process_generator_storage_data import (
     process_utility_units_data,
     process_aggregate_capacity_data,
+    assign_reserve_assumptions,
 )
 from pypsa_pl.process_srmc_data import process_srmc_data
 from pypsa_pl.add_generators_and_storage import add_generators, add_storage
@@ -29,7 +30,7 @@ from pypsa_pl.custom_constraints import (
     # p_set_constraint,
     maximum_annual_capacity_factor,
     minimum_annual_capacity_factor,
-    warm_reserve,
+    make_warm_reserve_constraints,
     cold_reserve,
     maximum_capacity_per_area,
     maximum_growth_per_carrier,
@@ -58,6 +59,7 @@ class Params:
         self.trade_factor = 1
         self.dynamic_trade_prices = True
         self.trade_prices = "pypsa_pl_v1"
+        self.fixed_trade_flows = None
         self.buses = "voivodeships"
         self.lines = "OSM+PSE_existing"
         self.line_factor = 1
@@ -91,7 +93,7 @@ class Params:
         self.decommission_year_inclusive = True
         self.srmc_wind = 8.0
         self.srmc_pv = 1.0
-        self.srmc_dsr = 1200.0
+        self.srmc_dsr = 5000
         self.enforce_bio = 0
         self.industrial_utilization = 0.5
         self.correction_factor_wind_old = 0.91
@@ -99,21 +101,31 @@ class Params:
         self.discount_rate = 0.03
         self.extendable_technologies = None
         self.extend_from_zero = False
-        self.warm_reserve_categories = [
+        self.primary_reserve_categories = [
+            "JWCD",
+            "Battery large",
+            "Battery large 1h",
+            "Battery large 4h",
+        ]
+        self.primary_reserve_minutes = 0.5
+        self.tertiary_reserve_categories = [
             "JWCD",
             "Hydro PSH",
             "Battery large",
             "Battery large 1h",
             "Battery large 4h",
         ]
+        self.tertiary_reserve_minutes = 30
         self.cold_reserve_categories = ["JWCD"]
         self.warm_reserve_need_per_demand = 0.09
-        self.warm_reserve_need_per_pv = 0.15
-        self.warm_reserve_need_per_wind = 0.10
+        self.warm_reserve_need_per_pv = 0.1
+        self.warm_reserve_need_per_wind = 0.1
+        self.primary_reserve_factor = 0.1
+        self.tertiary_reserve_factor = 0.9
         self.cold_reserve_need_per_demand = 0.09
         self.cold_reserve_need_per_import = 1.0
         self.max_r_over_p = 1.0
-        self.max_snsp = 0.75
+        self.max_snsp = 1.0
         self.ns_carriers = [
             "Wind onshore",
             "Wind offshore",
@@ -239,10 +251,18 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
     if not use_cache:
         os.makedirs(runs_dir(params.scenario, "input"), exist_ok=True)
 
+        reserves = []
+        if params.primary_reserve_categories:
+            reserves += ["primary_up", "primary_down"]
+        if params.tertiary_reserve_categories:
+            reserves += ["tertiary_up"]
+        custom_component_attrs = make_custom_component_attrs(reserves=reserves)
+
         network = make_network(
             temporal_resolution=params.temporal_resolution,
             years=params.years,
             discount_rate=params.discount_rate,
+            custom_component_attrs=custom_component_attrs,
         )
         logging.info("Created the network")
 
@@ -465,6 +485,16 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                     df_exports.set_index("name"), "Link"
                 )
 
+            if params.fixed_trade_flows is not None:
+                file = data_dir(
+                    "input",
+                    "timeseries",
+                    f"interconnector_utilization;source={params.fixed_trade_flows}.csv",
+                )
+                df_trade_flows = pd.read_csv(file, parse_dates=["timestep"])
+                df_trade_flows = df_trade_flows.set_index(["period", "timestep"])
+                network.import_series_from_dataframe(df_trade_flows, "Link", "p_set")
+
             logging.info("Added foreign nodes, links, generators, and loads")
 
         # Generators and storage units
@@ -475,9 +505,8 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             source_technology=params.technology_data,
             default_build_year=params.default_build_year,
             decommission_year_inclusive=params.decommission_year_inclusive,
-            warm_reserve_categories=params.warm_reserve_categories,
-            cold_reserve_categories=params.cold_reserve_categories,
             unit_commitment_categories=params.unit_commitment_categories,
+            linearized_unit_commitment=params.linearized_unit_commitment,
             thermal_constraints_factor=params.thermal_constraints_factor,
             hours_per_timestep=int(params.temporal_resolution[:-1]),  # e.g. 1H -> 1,
         )
@@ -547,8 +576,6 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             extendable_technologies=params.extendable_technologies,
             active_investment_years=params.years,
             extend_from_zero=params.extend_from_zero,
-            warm_reserve_categories=params.warm_reserve_categories,
-            cold_reserve_categories=params.cold_reserve_categories,
             enforce_bio=params.enforce_bio,
             industrial_utilization=params.industrial_utilization,
             decommission_year_inclusive=params.decommission_year_inclusive,
@@ -568,6 +595,15 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
         df_capacity = filter_lifetimes(df_capacity, years=params.years)
 
         df_generators_storage = pd.concat([df_units, df_capacity])
+
+        df_generators_storage = assign_reserve_assumptions(
+            df_generators_storage,
+            primary_reserve_categories=params.primary_reserve_categories,
+            tertiary_reserve_categories=params.tertiary_reserve_categories,
+            primary_reserve_minutes=params.primary_reserve_minutes,
+            tertiary_reserve_minutes=params.tertiary_reserve_minutes,
+            cold_reserve_categories=params.cold_reserve_categories,
+        )
 
         dfs_capacity_factors = process_utilization_profiles(
             source_renewable=params.renewable_utilization_profiles,
@@ -664,6 +700,17 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                 network.investment_period_weightings
             )
 
+            # Preserve custom components
+            for c in ["Generator", "StorageUnit"]:
+                for reserve in reserves:
+                    clustering.network.pnl(c)[f"r_{reserve}"] = network.pnl(c)[
+                        f"r_{reserve}"
+                    ]
+
+            # Preserve p_set for links if present
+            if "p_set" in network.links_t.keys():
+                clustering.network.links_t["p_set"] = network.links_t["p_set"]
+
             network = clustering.network
 
             network.linemap = clustering.linemap.drop(index="fictional")
@@ -750,15 +797,29 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
         # p_set_constraint(network, snapshots)
         maximum_annual_capacity_factor(network, snapshots)
         minimum_annual_capacity_factor(network, snapshots)
-        warm_reserve_flag = False
+        warm_reserve_names = []
         if (
             params.warm_reserve_need_per_demand
             + params.warm_reserve_need_per_pv
             + params.warm_reserve_need_per_wind
             > 0
-        ):
-            warm_reserve_flag = True
-            warm_reserve(
+        ) and (params.primary_reserve_categories or params.tertiary_reserve_categories):
+            # Only one kind of warm reserves can be active at a time
+            # TODO: allow more than one kind of warm reserves to be active at a time
+            assert len(warm_reserve_names) < 1
+            if params.primary_reserve_categories:
+                directions = ["up", "down"]
+                reserve_factor = params.primary_reserve_factor
+                warm_reserve_names += ["primary"]
+            if params.tertiary_reserve_categories:
+                directions = ["up"]
+                reserve_factor = params.tertiary_reserve_factor
+                warm_reserve_names += ["tertiary"]
+            make_warm_reserve_constraints(
+                reserve_name=warm_reserve_names[0],
+                reserve_factor=reserve_factor,
+                directions=directions,
+            )(
                 network,
                 snapshots,
                 warm_reserve_need_per_demand=params.warm_reserve_need_per_demand,
@@ -769,13 +830,13 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                     params.temporal_resolution[:-1]
                 ),  # e.g. 1H -> 1,
             )
-        if params.cold_reserve_need_per_import > 0:
+        if (params.cold_reserve_need_per_import > 0) and params.cold_reserve_categories:
             cold_reserve(
                 network,
                 snapshots,
                 cold_reserve_need_per_demand=params.cold_reserve_need_per_demand,
                 cold_reserve_need_per_import=params.cold_reserve_need_per_import,
-                warm_reserve=warm_reserve_flag,
+                warm_reserve_names=warm_reserve_names,
             )
         maximum_capacity_per_area(network, snapshots)
         maximum_growth_per_carrier(network, snapshots)
@@ -795,6 +856,14 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
                 network.remove("SubNetwork", sub_network)
                 del obj
             network.sub_networks = network.sub_networks.drop(columns="obj")
+
+        constraints = repr(network.model.constraints)
+        with open(runs_dir(params.scenario, "input", "constraints.txt"), "w") as f:
+            f.write(constraints)
+
+        variables = repr(network.model.variables)
+        with open(runs_dir(params.scenario, "input", "variables.txt"), "w") as f:
+            f.write(variables)
 
     solver_options = {}
     if params.solver == "gurobi":
@@ -844,8 +913,6 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
             # transmission_losses=0,
         )
 
-    print(network.model.constraints)
-
     # Save outputs
     network.export_to_csv_folder(runs_dir(params.scenario, "output"))
 
@@ -854,3 +921,5 @@ def run_pypsa_pl(params=Params(), use_cache=False, dry=False):
     ).reset_index()
     df_stat.columns = ["Component"] + [col for col in df_stat.columns[1:]]
     df_stat.to_csv(runs_dir(params.scenario, "output", "statistics.csv"), index=False)
+
+    return network

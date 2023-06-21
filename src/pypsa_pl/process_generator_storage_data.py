@@ -7,6 +7,70 @@ from pypsa_pl.process_technology_data import load_technology_data, get_technolog
 from pypsa_pl.helper_functions import calculate_annuity, update_lifetime
 
 
+def assign_reserve_assumptions(
+    df,
+    primary_reserve_categories=None,
+    tertiary_reserve_categories=None,
+    primary_reserve_minutes=1,
+    tertiary_reserve_minutes=30,
+    cold_reserve_categories=None,
+):
+    is_domestic = df["area"].str.startswith("PL")
+
+    df["is_primary_reserve"] = False
+    if primary_reserve_categories:
+        df.loc[
+            is_domestic & df["category"].isin(primary_reserve_categories),
+            "is_primary_reserve",
+        ] = True
+        for direction in ["up", "down"]:
+            df.loc[
+                df["is_primary_reserve"], f"primary_reserve_ramp_limit_{direction}"
+            ] = (
+                primary_reserve_minutes
+                * df.loc[
+                    df["is_primary_reserve"],
+                    f"Ramp {direction} rate limit [% of max output / min]",
+                ]
+            )
+            df.loc[
+                df["is_primary_reserve"]
+                & ~(df[f"primary_reserve_ramp_limit_{direction}"] <= 1),
+                f"primary_reserve_ramp_limit_{direction}",
+            ] = 1.0
+    df["is_tertiary_reserve"] = False
+    if tertiary_reserve_categories:
+        df.loc[
+            is_domestic & df["category"].isin(tertiary_reserve_categories),
+            "is_tertiary_reserve",
+        ] = True
+        df.loc[df["is_tertiary_reserve"], f"tertiary_reserve_ramp_limit_up"] = (
+            tertiary_reserve_minutes
+            * df.loc[
+                df["is_tertiary_reserve"],
+                f"Ramp up rate limit [% of max output / min]",
+            ]
+        )
+        df.loc[
+            df["is_tertiary_reserve"] & ~(df[f"tertiary_reserve_ramp_limit_up"] <= 1),
+            f"tertiary_reserve_ramp_limit_up",
+        ] = 1.0
+
+    df["is_cold_reserve"] = False
+    if cold_reserve_categories:
+        df.loc[
+            is_domestic & df["category"].isin(cold_reserve_categories),
+            "is_cold_reserve",
+        ] = True
+
+    is_warm_reserve = df["is_primary_reserve"] | df["is_tertiary_reserve"]
+    df.loc[is_warm_reserve, "p_min_pu_stable"] = (
+        df.loc[is_warm_reserve, "Minimum generation [% of max output]"]
+        * df.loc[is_warm_reserve, "p_max_pu"].fillna(1)
+    ).fillna(0)
+    return df
+
+
 def process_utility_units_data(
     source_thermal,
     source_renewable,
@@ -14,9 +78,8 @@ def process_utility_units_data(
     source_technology,
     default_build_year=2020,
     decommission_year_inclusive=True,
-    warm_reserve_categories=None,
-    cold_reserve_categories=None,
     unit_commitment_categories=None,
+    linearized_unit_commitment=True,
     thermal_constraints_factor=1,
     hours_per_timestep=1,
 ):
@@ -117,37 +180,22 @@ def process_utility_units_data(
         # Capacity of individual units is not to be extended
         df["p_nom_extendable"] = False
 
-        # Contribution to reserve
-        is_domestic = df["area"].str.startswith("PL")
-        df["is_warm_reserve"] = False
-        if warm_reserve_categories:
-            df.loc[
-                is_domestic & df["category"].isin(warm_reserve_categories),
-                "is_warm_reserve",
-            ] = True
-        df["is_cold_reserve"] = False
-        if cold_reserve_categories:
-            df.loc[
-                is_domestic & df["category"].isin(cold_reserve_categories),
-                "is_cold_reserve",
-            ] = True
-
         if unit_commitment_categories:
             df["committable"] = False
             is_committable = df["category"].isin(unit_commitment_categories) & df[
                 "area"
             ].str.startswith("PL")
             df.loc[is_committable, "committable"] = True
+            # Split input startup cost into PyPSA's shutdown_cost and startup_cost
             df.loc[is_committable, "start_up_cost"] = (
                 df.loc[is_committable, "Startup cost [PLN/MW]"]
                 * df.loc[is_committable, "p_nom"]
                 * thermal_constraints_factor
+                / 2
             ).fillna(0)
-            df.loc[is_committable, "shut_down_cost"] = (
-                df.loc[is_committable, "Shutdown cost [PLN/MW]"]
-                * df.loc[is_committable, "p_nom"]
-                * thermal_constraints_factor
-            ).fillna(0)
+            df.loc[is_committable, "shut_down_cost"] = df.loc[
+                is_committable, "start_up_cost"
+            ]
             df.loc[is_committable, "min_up_time"] = (
                 (
                     df.loc[is_committable, "Minimum time on [hours]"]
@@ -196,6 +244,7 @@ def process_utility_units_data(
                 * hours_per_timestep
                 / thermal_constraints_factor
             ).fillna(np.nan)
+            # If ramp limits are higher than 1, set them to 1
             for attr in [
                 "ramp_limit_up",
                 "ramp_limit_down",
@@ -203,10 +252,16 @@ def process_utility_units_data(
                 "ramp_limit_shut_down",
             ]:
                 df.loc[df[attr] > 1, attr] = 1
+
             df.loc[is_committable, "p_min_pu"] = (
                 df.loc[is_committable, "Minimum generation [% of max output]"]
                 * df.loc[is_committable, "p_max_pu"].fillna(1)
             ).fillna(0)
+            # For MILP problem, ramp limits for start up and shut down cannot be smaller than p_min_pu
+            if not linearized_unit_commitment:
+                for attr in ["ramp_limit_start_up", "ramp_limit_shut_down"]:
+                    condition = is_committable & (df[attr] < df["p_min_pu"])
+                    df.loc[condition, attr] = df.loc[condition, "p_min_pu"]
 
         df = df.dropna(axis=1, how="all")
         dfs.append(df)
@@ -223,8 +278,6 @@ def process_aggregate_capacity_data(
     industrial_utilization=0.5,
     enforce_bio=0,
     extendable_technologies=None,
-    warm_reserve_categories=None,
-    cold_reserve_categories=None,
     default_build_year=2020,
     decommission_year_inclusive=True,
     active_investment_years=None,
@@ -351,19 +404,5 @@ def process_aggregate_capacity_data(
         df = df[df["p_nom_max"] > 0]
     else:
         df = df[df["p_nom"] > 0]
-
-    is_domestic = df["area"].str.startswith("PL")
-    df["is_warm_reserve"] = False
-    if warm_reserve_categories:
-        df.loc[
-            is_domestic & df["category"].isin(warm_reserve_categories),
-            "is_warm_reserve",
-        ] = True
-    df["is_cold_reserve"] = False
-    if cold_reserve_categories:
-        df.loc[
-            is_domestic & df["category"].isin(cold_reserve_categories),
-            "is_cold_reserve",
-        ] = True
 
     return df

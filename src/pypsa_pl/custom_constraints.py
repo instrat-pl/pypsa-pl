@@ -2,14 +2,6 @@ import pandas as pd
 import numpy as np
 import xarray as xr
 
-from pypsa.linopt import (
-    # get_var,
-    # linexpr,
-    join_exprs,
-    # define_constraints,
-    # define_variables,
-)
-
 from pypsa.optimization.compat import (
     get_var,
     linexpr,
@@ -241,236 +233,373 @@ def minimum_annual_capacity_factor(network, snapshots):
     minimum_annual_capacity_factor_non_ext(network, snapshots)
 
 
-def warm_reserve_non_ext(
-    network,
-    snapshots,
-    component,
-    reserve_units,
-    max_r_over_p,
-    hours_per_timestep,
-):
-    components = (
-        network.generators if component == "Generator" else network.storage_units
-    )
-    non_ext_i = network.get_non_extendable_i(component)
-    constraint_i = non_ext_i.intersection(reserve_units)
-    if constraint_i.empty:
-        return
-    r_t = get_var(network, component, "r").sel({component: constraint_i})
-    p_t = get_var(
-        network, component, "p" if component == "Generator" else "p_dispatch"
-    ).sel({component: constraint_i})
-    p_nom = components.loc[constraint_i, "p_nom"]
-    p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[constraint_i]
-    r = linexpr((1, r_t))
-    p = linexpr((1, p_t))
-    p_max = p_max_pu * p_nom
-    p_max = xr.DataArray(
-        p_max.values, coords={"snapshot": p_max.index, component: p_max.columns}
-    )
-    define_constraints(
+# TODO: allow for different warm reserves at the same time
+def make_warm_reserve_non_ext_constraints(reserve_name="warm", direction="up"):
+    def warm_reserve_non_ext(
         network,
-        r + p,
-        "<=",
-        p_max,
+        snapshots,
         component,
-        "reserve_headroom_non_ext",
-    )
-    if component == "Generator":
-        minus_max_r = linexpr((-max_r_over_p, p_t))
-        define_constraints(
-            network,
-            r + minus_max_r,
-            "<=",
-            0,
-            component,
-            "symmetric_reserves_non_ext",
-        )
-    if component == "StorageUnit":
-        # https://github.com/PyPSA/PyPSA/blob/master/pypsa/linopf.py#L529
-        # (dispatch power + reserve power) * hours per timestep / efficiency <= stored energy
-        eff = components.loc[constraint_i, "efficiency_dispatch"]
-        eff = eff.rename_axis(component).to_xarray()
-        soc_end_t = get_var(network, component, "state_of_charge").sel(
-            {component: constraint_i}
-        )
-        # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
-        ps = network.investment_periods.rename("period")
-        sl = slice(None, None)
-        soc_begin_t = [
-            soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
-        ]
-        soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
-        soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
-        minus_soc_times_eff_over_hours = linexpr(
-            (-eff / hours_per_timestep, soc_begin_t)
-        )
-        define_constraints(
-            network,
-            r + p + minus_soc_times_eff_over_hours,
-            "<=",
-            0,
-            component,
-            "reserve_charge_constraint_non_ext",
-        )
-
-
-def warm_reserve_ext(
-    network, snapshots, component, reserve_units, max_r_over_p, hours_per_timestep
-):
-    components = (
-        network.generators if component == "Generator" else network.storage_units
-    )
-    ext_i = network.get_extendable_i(component)
-    constraint_i = ext_i.intersection(reserve_units)
-    if constraint_i.empty:
-        return
-    r_t = get_var(network, component, "r").sel({component: constraint_i})
-    p_t = get_var(
-        network, component, "p" if component == "Generator" else "p_dispatch"
-    ).sel({component: constraint_i})
-    p_nom = get_var(network, component, "p_nom").sel({component: constraint_i})
-    p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[constraint_i]
-    p_max_pu = xr.DataArray(
-        p_max_pu.values,
-        coords={"snapshot": p_max_pu.index, component: p_max_pu.columns},
-    )
-    r = linexpr((1, r_t))
-    p = linexpr((1, p_t))
-    minus_p_max = linexpr((-p_max_pu, p_nom))
-    define_constraints(
-        network,
-        r + p + minus_p_max,
-        "<=",
-        0,
-        component,
-        "reserve_headroom_ext",
-    )
-    if component == "Generator":
-        minus_max_r = linexpr((-max_r_over_p, p_t))
-        define_constraints(
-            network,
-            r + minus_max_r,
-            "<=",
-            0,
-            component,
-            "symmetric_reserves_ext",
-        )
-    if component == "StorageUnit":
-        # https://github.com/PyPSA/PyPSA/blob/master/pypsa/linopf.py#L529
-        # (dispatch power + reserve power) * hours per timestep / efficiency <= stored energy
-        eff = components.loc[constraint_i, "efficiency_dispatch"]
-        eff = eff.rename_axis(component).to_xarray()
-        soc_end_t = get_var(network, component, "state_of_charge").sel(
-            {component: constraint_i}
-        )
-        # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
-        ps = network.investment_periods.rename("period")
-        sl = slice(None, None)
-        soc_begin_t = [
-            soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
-        ]
-        soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
-        soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
-        minus_soc_times_eff_over_hours = linexpr(
-            (-eff / hours_per_timestep, soc_begin_t)
-        )
-        define_constraints(
-            network,
-            r + p + minus_soc_times_eff_over_hours,
-            "<=",
-            0,
-            component,
-            "reserve_charge_constraint_ext",
-        )
-
-
-def warm_reserve(
-    network,
-    snapshots,
-    warm_reserve_need_per_demand,
-    warm_reserve_need_per_pv,
-    warm_reserve_need_per_wind,
-    max_r_over_p,
-    hours_per_timestep,
-):
-    # https://github.com/PyPSA/pypsa-eur/blob/378d1ef82bf874d23e900b5933c16d5081fcfec9/scripts/solve_network.py#L319
-    fixed_r_target = get_fixed_demand(network, snapshots) * warm_reserve_need_per_demand
-    minus_variable_r_target_list = []
-    if warm_reserve_need_per_demand > 0:
-        minus_variable_r_target_list.append(
-            get_variable_demand(
-                network, snapshots, scale_factor=-warm_reserve_need_per_demand
-            )
-        )
-    if warm_reserve_need_per_pv > 0:
-        minus_variable_r_target_list.append(
-            get_variable_supply(
-                network,
-                snapshots,
-                scale_factor=-warm_reserve_need_per_pv,
-                carriers=["PV ground", "PV roof"],
-            )
-        )
-    if warm_reserve_need_per_wind > 0:
-        minus_variable_r_target_list.append(
-            get_variable_supply(
-                network,
-                snapshots,
-                scale_factor=-warm_reserve_need_per_wind,
-                carriers=["Wind onshore", "Wind offshore"],
-            )
-        )
-    minus_variable_r_target = sum(minus_variable_r_target_list)
-
-    r_t_list = []
-    for component in ["Generator", "StorageUnit"]:
+        reserve_units,
+        max_r_over_p,
+        hours_per_timestep,
+    ):
         components = (
             network.generators if component == "Generator" else network.storage_units
         )
-        reserve_i = components[
-            components["bus"].str.startswith("PL")
-            & (components["is_warm_reserve"] == True)
-        ].index
-        if reserve_i.empty:
-            continue
-        define_variables(
+        non_ext_i = network.get_non_extendable_i(component)
+        constraint_i = non_ext_i.intersection(reserve_units)
+        if constraint_i.empty:
+            return
+        r_t = get_var(network, component, f"r_{reserve_name}_{direction}")
+        r = linexpr((1, r_t)).sel({component: constraint_i})
+
+        if component == "Generator":
+            p_t = get_var(network, component, "p")
+            p = linexpr((1, p_t)).sel({component: constraint_i})
+        if component == "StorageUnit":
+            p_t_dispatch = get_var(network, component, "p_dispatch")
+            p_t_store = get_var(network, component, "p_store")
+            p = (p_t_dispatch + p_t_store).sel({component: constraint_i})
+        p_nom = components.loc[constraint_i, "p_nom"]
+        if direction == "up":
+            p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[
+                constraint_i
+            ]
+            p_max = p_max_pu * p_nom
+            p_max = xr.DataArray(
+                p_max.values, coords={"snapshot": p_max.index, component: p_max.columns}
+            )
+            define_constraints(
+                network,
+                r + p,
+                "<=",
+                p_max,
+                component,
+                f"{reserve_name}_up_reserve_headroom_non_ext",
+            )
+        if direction == "down":
+            p_min_pu = get_switchable_as_dense(network, component, "p_min_pu")[
+                constraint_i
+            ]
+            p_min = p_min_pu * p_nom
+            p_min = xr.DataArray(
+                p_min.values, coords={"snapshot": p_min.index, component: p_min.columns}
+            )
+            committable_i = network.get_committable_i(component).intersection(
+                constraint_i
+            )
+            non_commmitable_i = constraint_i.difference(committable_i)
+            if not committable_i.empty:
+                status_t = (
+                    get_var(network, component, "status")
+                    .rename({f"{component}-com": component})
+                    .sel({component: committable_i})
+                )
+                p_min_comm = p_min.sel({component: committable_i}) * status_t
+                lhs = (p - r).sel({component: committable_i}) - p_min_comm
+                define_constraints(
+                    network,
+                    lhs,
+                    ">=",
+                    0,
+                    component,
+                    f"{reserve_name}_down_reserve_headroom_non_ext_comm",
+                )
+            if not non_commmitable_i.empty:
+                lhs = (p - r).sel({component: non_commmitable_i})
+                rhs = p_min.sel({component: non_commmitable_i})
+                define_constraints(
+                    network,
+                    lhs,
+                    ">=",
+                    rhs,
+                    component,
+                    f"{reserve_name}_down_reserve_headroom_non_ext_non_comm",
+                )
+
+        if component == "Generator":
+            # Linear approximation of the status = 1 constraint
+            # r_max_pu = min(ramp_limit, p_max_pu - p_min_pu)
+            r_max_pu = components.loc[
+                constraint_i, f"{reserve_name}_reserve_ramp_limit_{direction}"
+            ]
+            p_max_pu = components.loc[constraint_i, "p_max_pu"]
+            p_min_pu_stable = components.loc[constraint_i, "p_min_pu_stable"]
+            operational_band = p_max_pu - p_min_pu_stable
+            r_max_pu.loc[operational_band < r_max_pu] = operational_band.loc[
+                operational_band < r_max_pu
+            ]
+
+            spinning_i = p_min_pu_stable[p_min_pu_stable > 0].index
+
+            if direction == "up":
+                max_r_over_p = r_max_pu[spinning_i] / p_min_pu_stable[spinning_i]
+            elif direction == "down":
+                max_r_over_p = 1 / (
+                    p_min_pu_stable[spinning_i] / r_max_pu[spinning_i] + 1
+                )
+            max_r_over_p = max_r_over_p.rename_axis(component).to_xarray()
+
+            minus_max_r = linexpr((-max_r_over_p, p_t.sel({component: spinning_i})))
+            define_constraints(
+                network,
+                r + minus_max_r,
+                "<=",
+                0,
+                component,
+                f"{reserve_name}_{direction}_reserve_spinning_non_ext",
+            )
+        if component == "StorageUnit":
+            soc_end_t = get_var(network, component, "state_of_charge").sel(
+                {component: constraint_i}
+            )
+            # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
+            ps = network.investment_periods.rename("period")
+            sl = slice(None, None)
+            soc_begin_t = [
+                soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
+            ]
+            soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
+            soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
+
+            if direction == "up":
+                # (dispatch power + reserve up power) * hours per timestep / dispatch efficiency <= stored energy
+                eff = components.loc[constraint_i, "efficiency_dispatch"]
+                eff = eff.rename_axis(component).to_xarray()
+                minus_soc_times_eff_over_hours = linexpr(
+                    (-eff / hours_per_timestep, soc_begin_t)
+                )
+                define_constraints(
+                    network,
+                    r + p + minus_soc_times_eff_over_hours,
+                    "<=",
+                    0,
+                    component,
+                    f"{reserve_name}_up_reserve_charge_constraint_non_ext",
+                )
+            if direction == "down":
+                # (store power + reserve down power) * hours per timestep * store efficiency <= storage capacity - stored energy
+                eff = components.loc[constraint_i, "efficiency_store"]
+                eff = eff.rename_axis(component).to_xarray()
+                soc_over_eff_over_hours = linexpr(
+                    (1 / (eff * hours_per_timestep), soc_begin_t)
+                )
+                soc_max = (
+                    components.loc[constraint_i, "p_nom"]
+                    * components.loc[constraint_i, "max_hours"]
+                )
+                soc_max = soc_max.rename_axis(component).to_xarray()
+                define_constraints(
+                    network,
+                    r - p + soc_over_eff_over_hours,
+                    "<=",
+                    soc_max / (eff * hours_per_timestep),
+                    component,
+                    f"{reserve_name}_down_reserve_charge_constraint_non_ext",
+                )
+
+        ramp_limit = components.loc[
+            constraint_i, f"{reserve_name}_reserve_ramp_limit_{direction}"
+        ]
+        ramp_limit_i = ramp_limit[ramp_limit < 1].index
+        r_max = (p_nom * ramp_limit).rename_axis(component).to_xarray()
+        define_constraints(
             network,
+            r.sel({component: ramp_limit_i}),
+            "<=",
+            r_max.sel({component: ramp_limit_i}),
+            component,
+            f"{reserve_name}_{direction}_ramp_limit_non_ext",
+        )
+
+    return warm_reserve_non_ext
+
+
+# WARNING: currently not functional
+# TODO: adapt to the new warm reserve constraint formulation
+def make_warm_reserve_ext_constraints(reserve_name="warm", direction="up"):
+    def warm_reserve_ext(
+        network, snapshots, component, reserve_units, max_r_over_p, hours_per_timestep
+    ):
+        components = (
+            network.generators if component == "Generator" else network.storage_units
+        )
+        ext_i = network.get_extendable_i(component)
+        constraint_i = ext_i.intersection(reserve_units)
+        if constraint_i.empty:
+            return
+        r_t = get_var(network, component, f"r_{reserve_name}_{direction}").sel(
+            {component: constraint_i}
+        )
+        p_t = get_var(
+            network, component, "p" if component == "Generator" else "p_dispatch"
+        ).sel({component: constraint_i})
+        p_nom = get_var(network, component, "p_nom").sel({component: constraint_i})
+        p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[constraint_i]
+        p_max_pu = xr.DataArray(
+            p_max_pu.values,
+            coords={"snapshot": p_max_pu.index, component: p_max_pu.columns},
+        )
+        r = linexpr((1, r_t))
+        p = linexpr((1, p_t))
+        minus_p_max = linexpr((-p_max_pu, p_nom))
+        define_constraints(
+            network,
+            r + p + minus_p_max,
+            "<=",
             0,
-            np.inf,
             component,
-            "r",
-            axes=[snapshots, reserve_i],
+            f"reserve_{reserve_name}_{direction}_headroom_ext",
         )
-        warm_reserve_ext(
-            network,
-            snapshots,
-            component,
-            reserve_units=reserve_i,
-            max_r_over_p=max_r_over_p,
-            hours_per_timestep=hours_per_timestep,
-        )
-        warm_reserve_non_ext(
-            network,
-            snapshots,
-            component,
-            reserve_units=reserve_i,
-            max_r_over_p=max_r_over_p,
-            hours_per_timestep=hours_per_timestep,
-        )
-        r_t = (
-            get_var(network, component, "r").sel({component: reserve_i}).sum(component)
-        )
-        r_t_list.append(r_t)
-    total_r = sum(r_t_list)
-    define_constraints(
+        if component == "Generator":
+            minus_max_r = linexpr((-max_r_over_p, p_t))
+            define_constraints(
+                network,
+                r + minus_max_r,
+                "<=",
+                0,
+                component,
+                f"symmetric_{reserve_name}_{direction}_reserves_ext",
+            )
+        if component == "StorageUnit":
+            # https://github.com/PyPSA/PyPSA/blob/master/pypsa/linopf.py#L529
+            # (dispatch power + reserve power) * hours per timestep / efficiency <= stored energy
+            eff = components.loc[constraint_i, "efficiency_dispatch"]
+            eff = eff.rename_axis(component).to_xarray()
+            soc_end_t = get_var(network, component, "state_of_charge").sel(
+                {component: constraint_i}
+            )
+            # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
+            ps = network.investment_periods.rename("period")
+            sl = slice(None, None)
+            soc_begin_t = [
+                soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
+            ]
+            soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
+            soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
+            minus_soc_times_eff_over_hours = linexpr(
+                (-eff / hours_per_timestep, soc_begin_t)
+            )
+            define_constraints(
+                network,
+                r + p + minus_soc_times_eff_over_hours,
+                "<=",
+                0,
+                component,
+                f"{reserve_name}_{direction}_reserve_charge_constraint_ext",
+            )
+
+    return warm_reserve_ext
+
+
+# WARNING: currently functional for non extendable capacities and for one type of warm reserve only
+# TODO: allow for different warm reserves at the same time
+# TODO: implement the new warm reserve constraint for extendable capacities
+def make_warm_reserve_constraints(
+    reserve_name="warm",
+    reserve_factor=1,
+    directions=["up"],
+):
+    def warm_reserve(
         network,
-        total_r + minus_variable_r_target,
-        ">=",
-        fixed_r_target,
-        "Generator+StorageUnit",
-        "total_warm_reserve",
-    )
+        snapshots,
+        warm_reserve_need_per_demand,
+        warm_reserve_need_per_pv,
+        warm_reserve_need_per_wind,
+        max_r_over_p,
+        hours_per_timestep,
+    ):
+        # https://github.com/PyPSA/pypsa-eur/blob/378d1ef82bf874d23e900b5933c16d5081fcfec9/scripts/solve_network.py#L319
+        fixed_r_target = (
+            get_fixed_demand(network, snapshots)
+            * warm_reserve_need_per_demand
+            * reserve_factor
+        )
+        minus_variable_r_target_list = []
+        if warm_reserve_need_per_demand > 0:
+            minus_variable_r_target_list.append(
+                get_variable_demand(
+                    network,
+                    snapshots,
+                    scale_factor=-warm_reserve_need_per_demand * reserve_factor,
+                )
+            )
+        if warm_reserve_need_per_pv > 0:
+            minus_variable_r_target_list.append(
+                get_variable_supply(
+                    network,
+                    snapshots,
+                    scale_factor=-warm_reserve_need_per_pv * reserve_factor,
+                    carriers=["PV ground", "PV roof"],
+                )
+            )
+        if warm_reserve_need_per_wind > 0:
+            minus_variable_r_target_list.append(
+                get_variable_supply(
+                    network,
+                    snapshots,
+                    scale_factor=-warm_reserve_need_per_wind * reserve_factor,
+                    carriers=["Wind onshore", "Wind offshore"],
+                )
+            )
+        minus_variable_r_target = sum(minus_variable_r_target_list)
+
+        for direction in directions:
+            r_t_list = []
+            for component in ["Generator", "StorageUnit"]:
+                components = (
+                    network.generators
+                    if component == "Generator"
+                    else network.storage_units
+                )
+                reserve_i = components[
+                    components["bus"].str.startswith("PL")
+                    & (components[f"is_{reserve_name}_reserve"] == True)
+                ].index
+                if reserve_i.empty:
+                    continue
+
+                define_variables(
+                    network,
+                    0,
+                    np.inf,
+                    component,
+                    f"r_{reserve_name}_{direction}",
+                    axes=[snapshots, reserve_i],
+                )
+                make_warm_reserve_ext_constraints(reserve_name, direction)(
+                    network,
+                    snapshots,
+                    component,
+                    reserve_units=reserve_i,
+                    max_r_over_p=max_r_over_p,
+                    hours_per_timestep=hours_per_timestep,
+                )
+                make_warm_reserve_non_ext_constraints(reserve_name, direction)(
+                    network,
+                    snapshots,
+                    component,
+                    reserve_units=reserve_i,
+                    max_r_over_p=max_r_over_p,
+                    hours_per_timestep=hours_per_timestep,
+                )
+                r_t = (
+                    get_var(network, component, f"r_{reserve_name}_{direction}")
+                    .sel({component: reserve_i})
+                    .sum(component)
+                )
+                r_t_list.append(r_t)
+            total_r = sum(r_t_list)
+            define_constraints(
+                network,
+                total_r + minus_variable_r_target,
+                ">=",
+                fixed_r_target,
+                "Generator+StorageUnit",
+                f"total_{reserve_name}_{direction}_reserve",
+            )
+
+    return warm_reserve
 
 
 def cold_reserve(
@@ -478,7 +607,7 @@ def cold_reserve(
     snapshots,
     cold_reserve_need_per_demand,
     cold_reserve_need_per_import,
-    warm_reserve=True,
+    warm_reserve_names=["warm"],
 ):
     fixed_r_target = get_fixed_demand(network, snapshots) * cold_reserve_need_per_demand
     minus_variable_r_target_list = []
@@ -544,15 +673,22 @@ def cold_reserve(
     fixed_r = sum(fixed_r_list)
 
     # Warm reserve
-    if warm_reserve:
-        r_t = get_var(network, "Generator", "r").sel({"Generator": reserve_i})
-        minus_warm_r = linexpr((-1, r_t)).sum("Generator")
+    if warm_reserve_names:
+        r_t_list = []
+        for reserve_name in warm_reserve_names:
+            r_t_list.append(
+                get_var(network, "Generator", f"r_{reserve_name}_up").sel(
+                    {"Generator": reserve_i}
+                )
+            )
+        minus_warm_r = -sum(r_t_list).sum("Generator")
+        lhs = variable_r + minus_warm_r + minus_variable_r_target
     else:
-        minus_warm_r = ""
+        lhs = variable_r + minus_variable_r_target
 
     define_constraints(
         network,
-        variable_r + minus_warm_r + minus_variable_r_target,
+        lhs,
         ">=",
         -fixed_r + fixed_r_target,
         "Generator",

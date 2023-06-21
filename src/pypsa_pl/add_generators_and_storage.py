@@ -37,6 +37,7 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "p_nom_min",
             "p_nom_max",
             "p_min_pu",
+            "p_min_pu_stable",
             "p_max_pu",
             "p_set",
             "p_min_pu_annual",
@@ -49,8 +50,6 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "retire_year",
             "lifetime",
             "p_nom_extendable",
-            "is_warm_reserve",
-            "is_cold_reserve",
             "committable",
             "start_up_cost",
             "shut_down_cost",
@@ -60,6 +59,12 @@ def add_generators(network, df_generators, dfs_capacity_factors, df_srmc):
             "ramp_limit_shut_down",
             "ramp_limit_up",
             "ramp_limit_down",
+            "is_primary_reserve",
+            "is_tertiary_reserve",
+            "is_cold_reserve",
+            "primary_reserve_ramp_limit_up",
+            "primary_reserve_ramp_limit_down",
+            "tertiary_reserve_ramp_limit_up",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
         for attribute, default in {
@@ -171,8 +176,12 @@ def add_storage(network, df_storage_units, df_capacity_factors, df_srmc):
             "retire_year",
             "lifetime",
             "p_nom_extendable",
-            "is_warm_reserve",
+            "is_primary_reserve",
+            "is_tertiary_reserve",
             "is_cold_reserve",
+            "primary_reserve_ramp_limit_up",
+            "primary_reserve_ramp_limit_down",
+            "tertiary_reserve_ramp_limit_up",
         ]
         kwargs = {key: df[key] for key in attributes if key in df.columns}
         for attribute, default in {
