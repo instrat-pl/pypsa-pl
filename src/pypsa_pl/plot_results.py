@@ -445,17 +445,6 @@ def get_fuel_consumption(output_dir, fuel_emissions=False):
 
     df_eff_fuel = pd.merge(df_eff, df_fuel, left_index=True, right_index=True)
 
-    # Efficiencies for hard coal CHP units include only fuel used for electricity
-    # They are over 0.5
-    # Calculate total emissions by changing the efficiency
-    # Assume 0.35 mean electric efficiency for hard coal CHP units
-
-    is_hard_coal_chp = (df_eff_fuel["Fuel"] == "Hard coal") & (
-        df_eff_fuel.index.str.startswith("EC") | df_eff_fuel.index.str.endswith("CHP")
-    )
-    # df_eff_fuel[is_hard_coal_chp].to_csv("hard_coal_chp.csv")
-    df_eff_fuel.loc[is_hard_coal_chp, "Efficiency"] = 0.35
-
     for df_unit in [df_country, df_eff_fuel]:
         df = pd.merge(df, df_unit, left_on="unit", right_index=True, how="left")
 
