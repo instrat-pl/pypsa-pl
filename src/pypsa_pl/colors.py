@@ -1,5 +1,7 @@
 technology_colors = {
     "": "rgba(255,255,255,0)",
+    "Non-RES": "#B5C6CF",
+    "Coal and other non-RES": "#B5C6CF",
     "Hard coal": "#B5C6CF",
     "Lignite": "#72A0B7",
     "Natural gas": "#4B7689",
@@ -25,6 +27,7 @@ technology_colors = {
     "Battery": "#B6B6B7",
     "DSR": "#1B1C1E",
     "Import": "#767778",
+    "Net import": "#767778",
     "Export": "#49494b",
     "Import/export": "#767778",
     "Hydro PSH store": "#82B1FF",
@@ -38,7 +41,9 @@ technology_colors = {
 
 technology_names_pl = {
     "": "",
+    "Non-RES": "Nie-OZE",
     "Hard coal": "Węgiel kamienny",
+    "Coal and other non-RES": "Węgiel i inne nie-OZE",
     "Lignite": "Węgiel brunatny",
     "Natural gas": "Gaz ziemny",
     "Biomass/biogas": "Biomasa/biogaz",
@@ -63,6 +68,7 @@ technology_names_pl = {
     "Battery": "Baterie",
     "DSR": "DSR",
     "Import": "Import",
+    "Net import": "Import netto",
     "Export": "Eksport",
     "Import/export": "Import/eksport",
     "Hydro PSH store": "ESP - ładowanie",

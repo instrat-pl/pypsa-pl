@@ -56,7 +56,7 @@ def plot_bars(
     figsize=None,
     template=None,
     barmode="relative",
-    total_digits_round=2,
+    total_digits_round=1,
     show_total=True,
     commas=False,
 ):
@@ -353,6 +353,62 @@ def get_line_load(output_dir):
     return df
 
 
+def get_costs(output_dir, cost_component="opex"):
+    df = pd.read_csv(output_dir.joinpath("statistics.csv"))
+    if cost_component == "opex":
+        column = "Operational Expenditure"
+    if cost_component == "capex":
+        column = "Capital Expenditure"
+    df = df[["carrier", "bus", column]]
+    df = df[df["bus"].str.startswith("PL")].drop(columns=["bus"])
+    df = df[~df["carrier"].isin(["AC", "DC", "Virtual DSR"])]
+    df = df.groupby("carrier").sum().reset_index()
+    # TODO: verify why statistics are per snapshot
+    df[column] = df[column] * 8760 / 1e9
+    df = df.rename(columns={"carrier": "Technology", column: f"{column} [bln PLN]"})
+
+    df = df.set_index("Technology")
+    df.loc["Import", f"{column} [bln PLN]"] = 0
+    df.loc["Export", f"{column} [bln PLN]"] = 0
+    df = df.reset_index()
+    if cost_component == "opex" and output_dir.joinpath("links-p0.csv").exists():
+        df_trade = read_variable(output_dir, "links", "p0", time_dependent=True)
+        df_price = read_variable(
+            output_dir, "buses", "marginal_price", time_dependent=True
+        )
+        price_domestic = df_price[
+            [col for col in df_price.columns if col.startswith("PL")]
+        ].mean(axis=1)
+        df_bus0 = read_variable(output_dir, "links", "bus0")
+        df_bus1 = read_variable(output_dir, "links", "bus1")
+        df_bus = pd.concat([df_bus0, df_bus1], axis=1)
+        df_bus = df_bus[
+            (~df_bus["bus0"].str.startswith("PL") & df_bus["bus1"].str.startswith("PL"))
+            | df_bus["bus0"].str.startswith("PL") & ~df_bus["bus1"].str.startswith("PL")
+        ]
+        neighbors = [
+            n
+            for n in set(df_bus["bus0"]).union(set(df_bus["bus1"]))
+            if not n.startswith("PL")
+        ]
+
+        for neighbor in neighbors:
+            imports_i = df_bus[df_bus["bus0"] == neighbor].index
+            exports_i = df_bus[df_bus["bus1"] == neighbor].index
+            imports = df_trade[imports_i].sum(axis=1)
+            exports = df_trade[exports_i].sum(axis=1)
+            price_neighbor = df_price[neighbor]
+            imports_value = (imports * price_domestic).sum()
+            exports_value = (exports * price_neighbor).sum()
+            df = df.set_index("Technology")
+            df.loc["Import", f"{column} [bln PLN]"] += imports_value / 1e9
+            df.loc["Export", f"{column} [bln PLN]"] += -exports_value / 1e9
+            df = df.reset_index()
+
+    df[f"{column} [bln PLN]"] = df[f"{column} [bln PLN]"].round(2)
+    return df
+
+
 def get_curtailment(output_dir, aggregate=True):
     df_bus = read_variable(output_dir, "generators", "bus")
     df_bus.name = "bus"
@@ -413,7 +469,7 @@ def get_curtailment(output_dir, aggregate=True):
 
         df["Curtailment share [%]"] = (
             df["Curtailment [GWh]"] / df["Maximum production [GWh]"] * 100
-        ).round(1)
+        ).round(2)
         df = df[["Technology", "Curtailment share [%]"]]
 
     else:
@@ -588,14 +644,11 @@ def get_production(output_dir, aggregate=True, aggregate_by="Technology"):
     return df_prod
 
 
-def get_reserve(output_dir):
+def get_reserve(output_dir, reserve_name, aggregate=True, aggregate_by="Technology"):
     dfs = []
 
     for components in ["generators", "storage_units"]:
-        if not (
-            output_dir.joinpath(f"{components}-p.csv").exists()
-            or output_dir.joinpath(f"{components}-p_dispatch.csv").exists()
-        ):
+        if not output_dir.joinpath(f"{components}-r_{reserve_name}.csv").exists():
             continue
 
         df_bus = read_variable(output_dir, components, "bus")
@@ -603,77 +656,22 @@ def get_reserve(output_dir):
         df_bus = df_bus[df_bus.str.startswith("PL")]
         df_bus = df_bus.reset_index()
 
-        df_p_nom = read_variable(output_dir, components, "p_nom_opt")
-        df_p_nom.name = "p_nom"
-        df_p_nom = df_p_nom.reset_index()
-
-        df_p_nom = pd.merge(df_p_nom, df_bus, on="name", how="right")
-
-        df_is_reserve = read_variable(output_dir, components, "is_warm_reserve")
-        df_is_reserve = df_is_reserve[df_is_reserve == True]
-
-        df_p_nom = pd.merge(df_p_nom, df_is_reserve, on="name", how="right")
-
-        df_p = read_variable(
+        df_r = read_variable(
             output_dir,
             components,
-            "p" if components == "generators" else "p_dispatch",
+            f"r_{reserve_name}",
             time_dependent=True,
         )
-        df_p = df_p.reset_index(names="snapshot_id").melt(
-            id_vars="snapshot_id", var_name="name", value_name="p"
+        df_r = df_r.reset_index(names="snapshot_id").melt(
+            id_vars="snapshot_id", var_name="name", value_name="r"
         )
 
-        df_p_max_pu_static = read_variable(
-            output_dir, components, "p_max_pu", default_value=1.0
-        )
-        df_p_max_pu_static.name = "p_max_pu"
-        df_p_max_pu_static = df_p_max_pu_static.reset_index()
+        dfs.append(df_r)
 
-        if output_dir.joinpath(f"{components}-p_max_pu.csv").exists():
-            df_p_max_pu = read_variable(
-                output_dir, components, "p_max_pu", time_dependent=True
-            )
-            df_p_max_pu = df_p_max_pu.reset_index(names="snapshot_id").melt(
-                id_vars="snapshot_id", var_name="name", value_name="p_max_pu"
-            )
-
-            static_p_max_pu_i = set(df_p_max_pu_static["name"].drop_duplicates()) - set(
-                df_p_max_pu["name"].drop_duplicates()
-            )
-            df_p_max_pu_static = df_p_max_pu_static[
-                df_p_max_pu_static["name"].isin(static_p_max_pu_i)
-            ]
-
-        df_snapshot = df_p["snapshot_id"].drop_duplicates()
-        df_p_max_pu_static = pd.merge(df_snapshot, df_p_max_pu_static, how="cross")
-
-        if output_dir.joinpath(f"{components}-p_max_pu.csv").exists():
-            df_p_max_pu = pd.concat([df_p_max_pu, df_p_max_pu_static])
-        else:
-            df_p_max_pu = df_p_max_pu_static
-
-        df_p_max = pd.merge(df_p_nom, df_p_max_pu, how="left", on="name")
-
-        df_p_max["p_max"] = df_p_max["p_nom"] * df_p_max["p_max_pu"]
-
-        df = pd.merge(df_p_max, df_p, how="left", on=["snapshot_id", "name"])
-        df["p"] = df["p"].fillna(0)
-        df["r"] = df["p_max"] - df["p"]
-
-        if components == "generators":
-            max_r_over_p = 1.0
-            is_r_max = df["r"] > max_r_over_p * df["p"]
-            df.loc[is_r_max, "r"] = max_r_over_p * df.loc[is_r_max, "p"]
-            # TODO: include also the SOC condition, as implemented in pypsa constraint
-
-        dfs.append(df)
-
+    if len(dfs) == 0:
+        return pd.DataFrame()
     df = pd.concat(dfs)
-    return df
 
-
-def get_reserve_by_technology(output_dir, aggregate=True, trim=False):
     df_tech = pd.concat(
         [
             read_variable(output_dir, components, "carrier")
@@ -683,86 +681,31 @@ def get_reserve_by_technology(output_dir, aggregate=True, trim=False):
     df_tech.name = "Technology"
     df_tech = df_tech.dropna()
 
-    df_reserve = get_reserve(output_dir)
-    df_reserve = pd.merge(
-        df_reserve, df_tech, left_on="name", right_index=True, how="right"
-    )
-    df_reserve = (
-        df_reserve.groupby(["snapshot_id", "Technology"])[["r"]].sum().reset_index()
-    )
-
-    # Load
-    df_load = read_variable(output_dir, "loads", "p_set", time_dependent=True)
-    df_load = df_load.reset_index(names="snapshot_id").melt(
-        id_vars="snapshot_id", var_name="name", value_name="load"
-    )
-
-    df_bus = read_variable(output_dir, "loads", "bus")
-    df_bus.name = "bus"
-    df_bus = df_bus[df_bus.str.startswith("PL")]
-    df_bus = df_bus.reset_index()
-    df_load = pd.merge(df_load, df_bus, how="right", on="name")
-    df_load = df_load.groupby("snapshot_id").agg({"load": "sum"}).reset_index()
-
-    # Calculate reserve and reserve needed
-    df_delta = df_reserve.groupby("snapshot_id").sum().reset_index()
-    df_delta = pd.merge(df_delta, df_load, how="left", on="snapshot_id")
-    df_delta["r_min"] = 0.09 * df_delta["load"]
-    df_delta["delta_r"] = df_delta["r"] - df_delta["r_min"]
-    df_delta = df_delta[["snapshot_id", "delta_r"]]
-
-    technologies = df_reserve["Technology"].drop_duplicates()
-    df = df_reserve.pivot(index="snapshot_id", columns="Technology", values="r")
-    df = pd.merge(df, df_delta, how="left", on="snapshot_id")
-
-    df_deficit = df[df["delta_r"] <= 0].copy()
-    df = df[df["delta_r"] > 0].copy()
-
-    # Reduce r by delta_r
-    if trim:
-        order = ["Lignite", "Hard coal", "Natural gas", "Biomass wood chips"]
-        for tech in order:
-            if tech in df.columns:
-                reduction = np.minimum(df["delta_r"], df[tech])
-                reduction = np.maximum(reduction, 0)
-                df[tech] -= reduction
-                df["delta_r"] -= reduction
-        df["r"] = df[technologies].sum(axis=1)
-        for tech in technologies:
-            df[tech] -= df[tech] / df["r"] * df["delta_r"]
-        df = df.drop(columns=["r"])
-
-    df = pd.concat([df, df_deficit])
-
-    df = (
-        df.drop(columns=["delta_r"])
-        .melt(
-            id_vars="snapshot_id",
-            value_vars=technologies,
-            var_name="Technology",
-            value_name="r",
-        )
-        .reset_index()
-    )
-
-    df["r"] = df["r"].round(2)
+    df_r = pd.merge(df_r, df_tech, left_on="name", right_index=True, how="right")
 
     if aggregate:
-        df = df.groupby("Technology").mean()["r"] / 1e3
-        df.name = "Mean Reserve [GW]"
-        df = df.dropna()
-        df = df.round(2).reset_index()
-
+        df_r = (
+            df_r.groupby(["snapshot_id", aggregate_by])
+            .agg({"r": "sum"})
+            .reset_index()
+            .groupby(aggregate_by)
+            .agg({"r": "mean"})
+            .reset_index()
+        )
+        df_r["r"] = df_r["r"].round(2)
+        df_r = df_r.rename(
+            columns={"r": f"Mean {reserve_name.replace('_', ' ').title()} Reserve [MW]"}
+        )
     else:
         snapshots = read_variable(output_dir, "snapshots", "timestep")
-        df = pd.merge(
-            df, snapshots, left_on="snapshot_id", right_index=True, how="left"
+        df_r = pd.merge(
+            df_r, snapshots, left_on="snapshot_id", right_index=True, how="left"
         )
-        df = df[["Technology", "timestep", "r"]]
+        df_r = df_r[[aggregate_by, "timestep", "r"]]
+    return df_r
 
-    return df
 
-
+# TODO: this function is obsolete, do not use
 def get_reserve_margin(output_dir):
     df = get_reserve(output_dir)
     df = df.groupby(["snapshot_id", "bus"]).agg({"r": "sum"}).reset_index()
@@ -866,7 +809,7 @@ def plot_production(
         for var, val in extra_params_values.items():
             df = df[df[var] == val].drop(columns=[var])
     df = df[[x_var, cat_var, y_var]]
-    df[y_var] = df[y_var].round(1)
+    df[y_var] = df[y_var].round(2)
 
     if cat_var == "Technology" and exclude_technologies:
         df = df[~df["Technology"].isin(exclude_technologies)]
@@ -889,6 +832,84 @@ def plot_production(
     )
     fig.write_image(plot_file)
     fig.show()
+
+
+def plot_costs(
+    cost_component,
+    scenario_name,
+    extra_params_values=None,
+    extra_params=None,
+    force=False,
+    extension="png",
+    plot_name=None,
+    x_var="year",
+    cat_var="Technology",
+    # y_range=(-80, 280),
+    exclude_technologies=None,
+):
+    if plot_name is None:
+        plot_name = cost_component
+
+    for dir in ["data", "plots"]:
+        os.makedirs(output_dir(scenario_name, dir), exist_ok=True)
+
+    suffix_dict = {"scenario": scenario_name}
+    if extra_params_values is not None:
+        suffix_dict.update(extra_params_values)
+    suffix = dict_to_str(suffix_dict)
+
+    data_file = output_dir(scenario_name, "data", f"{plot_name};{suffix}.csv")
+    plot_file = output_dir(scenario_name, "plots", f"{plot_name};{suffix}.{extension}")
+
+    if cost_component == "capex":
+        y_var = "Capital Expenditure [bln PLN]"
+    elif cost_component == "opex":
+        y_var = "Operational Expenditure [bln PLN]"
+
+    if not data_file.exists() or force:
+        get_costs_fun = lambda *args, **kwargs: get_costs(
+            *args, cost_component=cost_component, **kwargs
+        )
+        df = combine_data(get_costs_fun, scenario_name, extra_params)
+        df.to_csv(data_file, index=False)
+    else:
+        df = pd.read_csv(data_file)
+
+    if extra_params_values is not None:
+        for var, val in extra_params_values.items():
+            df = df[df[var] == val].drop(columns=[var])
+    df = df[[x_var, cat_var, y_var]]
+    df[y_var] = df[y_var].round(3)
+
+    if cat_var == "Technology" and exclude_technologies:
+        df = df[~df["Technology"].isin(exclude_technologies)]
+
+    cat_vals = [val for val in technology_colors.keys() if val in set(df[cat_var])]
+    colors = {cat_val: technology_colors[cat_val] for cat_val in cat_vals}
+
+    fig = plot_bars(
+        df,
+        x_var=x_var,
+        y_var=y_var,
+        cat_var=cat_var,
+        cat_vals=cat_vals,
+        colors=colors,
+        title=y_var,
+        y_label="",
+        x_label="",
+        template=make_pypsa_pl_template(),
+        # y_range=y_range,
+    )
+    fig.write_image(plot_file)
+    fig.show()
+
+
+def plot_capex(*args, **kwargs):
+    plot_costs("capex", *args, **kwargs)
+
+
+def plot_opex(*args, **kwargs):
+    plot_costs("opex", *args, **kwargs)
 
 
 def plot_curtailment(
@@ -945,22 +966,27 @@ def plot_curtailment(
         x_label=x_var,
         template=make_pypsa_pl_template(),
         barmode="group",
-        # y_range=(-80, 280),
+        show_total=False,
+        # y_range=(0, 50),
     )
     fig.write_image(plot_file)
     fig.show()
 
 
-def plot_reserve_by_technology(
+def plot_reserve(
     scenario_name,
+    reserve_name,
     extra_params_values=None,
     extra_params=None,
     force=False,
     extension="png",
-    plot_name="reserve_by_technology",
+    plot_name=None,
     x_var="year",
     cat_var="Technology",
 ):
+    if plot_name is None:
+        plot_name = f"reserve_{reserve_name}"
+
     for dir in ["data", "plots"]:
         os.makedirs(output_dir(scenario_name, dir), exist_ok=True)
 
@@ -972,11 +998,16 @@ def plot_reserve_by_technology(
     data_file = output_dir(scenario_name, "data", f"{plot_name};{suffix}.csv")
     plot_file = output_dir(scenario_name, "plots", f"{plot_name};{suffix}.{extension}")
 
-    y_var = "Mean Reserve [GW]"
+    y_var = f"Mean {reserve_name.replace('_', ' ').title()} Reserve [MW]"
     cat_var = "Technology"
 
     if not data_file.exists() or force:
-        df = combine_data(get_reserve_by_technology, scenario_name, extra_params)
+        get_reserve_func = lambda *args, **kwargs: get_reserve(
+            *args, reserve_name=reserve_name, **kwargs
+        )
+        df = combine_data(get_reserve_func, scenario_name, extra_params)
+        if df.empty:
+            return
         if extra_params_values is not None:
             for var, val in extra_params_values.items():
                 df = df[df[var] == val].drop(columns=[var])
@@ -998,11 +1029,23 @@ def plot_reserve_by_technology(
         title=y_var,
         y_label="",
         x_label="",
-        y_range=(0, 4),
+        # y_range=(0, 4000),
         template=make_pypsa_pl_template(),
     )
     fig.write_image(plot_file)
     fig.show()
+
+
+def plot_primary_up_reserve(*args, **kwargs):
+    plot_reserve(*args, reserve_name="primary_up", **kwargs)
+
+
+def plot_primary_down_reserve(*args, **kwargs):
+    plot_reserve(*args, reserve_name="primary_down", **kwargs)
+
+
+def plot_tertiary_up_reserve(*args, **kwargs):
+    plot_reserve(*args, reserve_name="tertiary_up", **kwargs)
 
 
 def plot_capacity(
@@ -1046,7 +1089,7 @@ def plot_capacity(
         for var, val in extra_params_values.items():
             df = df[df[var] == val].drop(columns=[var])
     df = df[[x_var, cat_var, y_var]]
-    df[y_var] = df[y_var].round(1)
+    df[y_var] = df[y_var].round(2)
 
     if cat_var == "Technology" and exclude_technologies:
         df = df[~df["Technology"].isin(exclude_technologies)]
@@ -1122,7 +1165,7 @@ def plot_capacity_utilisation(
             / df["Installed Capacity [GW]"]
             * 1000
             / 8760
-        ).round(1)
+        ).round(2)
         df.to_csv(data_file, index=False)
     else:
         df = pd.read_csv(data_file)
@@ -1206,7 +1249,8 @@ def plot_fuel_consumption(
         title=y_var,
         y_label="",
         x_label="",
-        y_range=(0, 170),
+        # y_range=(0, 170),
+        show_total=False,
         template=make_pypsa_pl_template(),
         barmode="group",
     )
@@ -1267,13 +1311,14 @@ def plot_co2_emissions(
         title=y_var,
         y_label="",
         x_label="",
-        y_range=(0, 110),
+        # y_range=(0, 110),
         template=make_pypsa_pl_template(),
     )
     fig.write_image(plot_file)
     fig.show()
 
 
+# TODO: this function is obsolete, do not use
 def plot_reserve_margin(
     scenario_name,
     extra_params_values=None,

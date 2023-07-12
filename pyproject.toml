@@ -15,6 +15,17 @@ numpy = "^1.24.2"
 openpyxl = "^3.1.2"
 plotly = "^5.13.1"
 kaleido = "0.2.1"
+<<<<<<< HEAD
+=======
+gurobipy = "10.0"
+tabulate = "^0.9.0"
+pypandoc = "^1.11"
+<<<<<<< HEAD
+=======
+xarray = "^2023.5.0"
+linopy = "0.1.5"
+>>>>>>> 8c81fa9 (Update source code)
+>>>>>>> e18c042 (Update source code)
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"

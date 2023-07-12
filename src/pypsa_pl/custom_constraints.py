@@ -37,7 +37,7 @@ def get_variable_demand(network, snapshots, scale_factor=1):
     store_i = components[components["bus"].str.startswith("PL")].index
     if not store_i.empty:
         store_t = (
-            get_var(network, "StorageUnit", "p_dispatch")
+            get_var(network, "StorageUnit", "p_store")
             .sel({"StorageUnit": store_i})
             .sum("StorageUnit")
         )
@@ -259,7 +259,7 @@ def make_warm_reserve_non_ext_constraints(reserve_name="warm", direction="up"):
         if component == "StorageUnit":
             p_t_dispatch = get_var(network, component, "p_dispatch")
             p_t_store = get_var(network, component, "p_store")
-            p = (p_t_dispatch + p_t_store).sel({component: constraint_i})
+            p = (p_t_dispatch - p_t_store).sel({component: constraint_i})
         p_nom = components.loc[constraint_i, "p_nom"]
         if direction == "up":
             p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[
@@ -318,6 +318,7 @@ def make_warm_reserve_non_ext_constraints(reserve_name="warm", direction="up"):
                 )
 
         if component == "Generator":
+            # TODO: omit for committable units after status incorporated into ramping constraint
             # Linear approximation of the status = 1 constraint
             # r_max_pu = min(ramp_limit, p_max_pu - p_min_pu)
             r_max_pu = components.loc[
@@ -356,11 +357,14 @@ def make_warm_reserve_non_ext_constraints(reserve_name="warm", direction="up"):
             # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
             ps = network.investment_periods.rename("period")
             sl = slice(None, None)
+            soc_name = soc_end_t.name
             soc_begin_t = [
                 soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
             ]
             soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
-            soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
+            soc_begin_t = linopy.variables.Variable(
+                soc_begin_t, network.model
+            )  # , soc_name)
 
             if direction == "up":
                 # (dispatch power + reserve up power) * hours per timestep / dispatch efficiency <= stored energy
@@ -397,7 +401,7 @@ def make_warm_reserve_non_ext_constraints(reserve_name="warm", direction="up"):
                     component,
                     f"{reserve_name}_down_reserve_charge_constraint_non_ext",
                 )
-
+        # TODO: incorporate status variable in this constraint for committable units
         ramp_limit = components.loc[
             constraint_i, f"{reserve_name}_reserve_ramp_limit_{direction}"
         ]
@@ -472,11 +476,14 @@ def make_warm_reserve_ext_constraints(reserve_name="warm", direction="up"):
             # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
             ps = network.investment_periods.rename("period")
             sl = slice(None, None)
+            soc_name = soc_end_t.name
             soc_begin_t = [
                 soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
             ]
             soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
-            soc_begin_t = linopy.variables.Variable(soc_begin_t, network.model)
+            soc_begin_t = linopy.variables.Variable(
+                soc_begin_t, network.model
+            )  # , soc_name)
             minus_soc_times_eff_over_hours = linexpr(
                 (-eff / hours_per_timestep, soc_begin_t)
             )
