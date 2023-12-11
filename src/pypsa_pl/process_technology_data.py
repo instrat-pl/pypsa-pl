@@ -10,7 +10,7 @@ def get_technology_year(investment_year):
 def load_technology_data(source, years):
     file = data_dir("input", f"technology_data;source={source}.xlsx")
     df = read_excel(file, sheet_var="technology")
-    df = df[["parameter", "technology", *years]]
+    df = df[["parameter", "technology"] + [str(year) for year in years]]
     df = df.melt(
         id_vars=["parameter", "technology"],
         var_name="technology_year",

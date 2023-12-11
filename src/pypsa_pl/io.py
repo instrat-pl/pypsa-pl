@@ -30,9 +30,9 @@ def read_excel(file, sheet_var=None, **kwargs):
         # Concatenate DataFrames from each sheet after removing columns and rows that start with "#" and adding sheet_var column
         df_full = pd.concat(
             [
-                df.drop(
-                    columns=[col for col in df.columns if str(col).startswith("#")]
-                ).assign(**{sheet_var: sheet_name})
+                df.drop(columns=[col for col in df.columns if str(col).startswith("#")])
+                .assign(**{sheet_var: sheet_name})
+                .rename(columns=lambda col: str(col))
                 for sheet_name, df in dfs.items()
                 if not sheet_name.startswith("#")
             ]
@@ -44,11 +44,62 @@ def read_excel(file, sheet_var=None, **kwargs):
         return df_full
 
 
-def product_dict(**kwargs):
+def order_dict(d):
+    return {k: v for k, v in sorted(d.items(), key=lambda item: item[0])}
+
+
+def product_dicts(sort=False, **kwargs):
+    if sort:
+        kwargs = order_dict(kwargs)
     keys = kwargs.keys()
     vals = kwargs.values()
     return [dict(zip(keys, instance)) for instance in itertools.product(*vals)]
 
 
-def dict_to_str(d):
+def ordered_product_dicts(**kwargs):
+    return product_dicts(sort=True, **kwargs)
+
+
+def extend_param_list(core_param_list, **kwargs):
+    if len(kwargs) == 0:
+        return core_param_list
+    else:
+        return [
+            {**core_params, param: value}
+            for core_params in core_param_list
+            for param, values in kwargs.items()
+            for value in values
+        ]
+
+
+def make_param_list(
+    core_param_space, extended_param_space={}, exclude_params=[], sort=True
+):
+    core_param_list = product_dicts(
+        **{
+            param: value
+            for param, value in core_param_space.items()
+            if param not in exclude_params
+        }
+    )
+    full_param_list = extend_param_list(
+        core_param_list,
+        **{
+            param: value
+            for param, value in extended_param_space.items()
+            if param not in exclude_params
+        },
+    )
+    if sort:
+        full_param_list = [order_dict(p) for p in full_param_list]
+    return full_param_list
+
+
+def dict_to_str(d, sort=False):
+    if sort:
+        d = order_dict(d)
     return ";".join(f"{key}={value}" for key, value in d.items())
+
+
+def dict_to_ordered_str(d):
+    return dict_to_str(d, sort=True)

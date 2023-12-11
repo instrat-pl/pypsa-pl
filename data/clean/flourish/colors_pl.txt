@@ -1,0 +1,112 @@
+Nie-OZE: #B5C6CF
+Paliwa kopalne: #B5C6CF
+Węgiel i inne nie-OZE: #B5C6CF
+Węgiel: #B5C6CF
+Węgiel kamienny: #B5C6CF
+Węgiel kamienny - nadkrytyczne: #B5C6CF
+Węgiel kamienny - kogeneracja: #B5C6CF
+Węgiel brunatny: #72A0B7
+Węgiel brunatny - nadkrytyczne: #72A0B7
+Węgiel brunatny - kogeneracja: #72A0B7
+Gaz ziemny: #4B7689
+Gaz ziemny CCGT: #4B7689
+Gaz ziemny CCGT - kogeneracja: #4B7689
+Gaz ziemny OCGT: #263b46
+Gaz koksowniczy: #263b46
+Olej opałowy: #263B46
+Energia jądrowa: #d6c0bd
+Energia jądrowa - duża: #f4a6a5
+Energia jądrowa - mała: #e3201f
+Inne OZE: #816d66
+Biomasa/biogaz: #263b46
+Biomasa i biogaz: #816d66
+Biomasa i biogaz - kogeneracja: #816d66
+Biomasa drzewna: #d6c0bd
+Biomasa drzewna - kogeneracja: #d6c0bd
+Biomasa agro: #ab9d99
+Biomasa agro - kogeneracja: #ab9d99
+Biogaz: #816d66
+Biogaz - kogeneracja: #816d66
+Silnik na biogaz: #816d66
+Silnik na biogaz - kogeneracja: #816d66
+Biogazownia: #816d66
+Magazyn biogazu: #816d66
+Woda - przepływowe: #573c33
+Wiatr: #69F0AE
+Wiatr - ląd: #B9F6CA
+Wiatr - morze: #01E677
+PV: #EC8CFD
+Słońce: #EC8CFD
+PV - dach: #F3B3FD
+PV - gruntowe: #E040FB
+Straty magazynów: #767778
+ESP/Baterie: #458aff
+Woda - szczytowo-pompowe: #82b1ff
+ESP - generacja: #82b1ff
+ESP - pompowanie: #82b1ff
+Baterie: #458aff
+Baterie - rozładowanie: #458aff
+Baterie - ładowanie: #458aff
+Baterie duże: #458aff
+Baterie duże - rozładowanie: #458aff
+Baterie duże - ładowanie: #458aff
+Baterie małe: #2979ff
+Baterie małe - rozładowanie: #2979ff
+Baterie małe - ładowanie: #2979ff
+BEV V2G: #153d80
+BEV - ładowanie: #153d80
+BEV - energia odzyskana: #153d80
+Wodór: #2ad4ff
+Wodór CCGT: #2ad4ff
+Wodór CCGT - kogeneracja: #2ad4ff
+Wodór OCGT: #2ad4ff
+Interkonektor: #767778
+Import/eksport: #767778
+Import lub eksport: #767778
+Import/eksport netto: #767778
+Import netto: #767778
+Eksport netto: #767778
+Import: #767778
+Eksport: #767778
+DSR: #49494b
+BEV - netto: #2979ff
+Silnik spalinowy: #767778
+BEV: #2979ff
+Reforming gazu ziemnego: #4B7689
+Elektroliza: #80e5ff
+Magazyn wodoru: #00aad4
+Magazyn wodoru - rozładowanie: #00aad4
+Magazyn wodoru - ładowanie: #00aad4
+Kogeneracja: #767778
+Gaz ziemny - kogeneracja: #4B7689
+Inne nie-OZE - kogeneracja: #131e23
+Ciepłownia konwencjonalna: #263b46
+Kocioł szczytowy: #263b46
+Power-to-heat - systemowe: #e94d4c
+Pompa ciepła duża: #f4a6a5
+Kocioł elektrodowy duży: #e94d4c
+Kocioł konwencjonalny: #767778
+Kocioł na węgiel kamienny: #B5C6CF
+Kocioł na gaz ziemny: #4B7689
+Kocioł na olej: #263B46
+Kocioł na biomasę: #816d66
+Power-to-heat: #f4a6a5
+Power-to-heat - indywidualne: #f4a6a5
+Pompa ciepła mała: #f4a6a5
+Grzałka szczytowa: #e94d4c
+Magazyn ciepła - ładowanie: #aa1817
+Magazyn ciepła - rozładowanie: #aa1817
+Magazyn ciepła duży: #aa1817
+Magazyn ciepła duży - rozładowanie: #aa1817
+Magazyn ciepła duży - ładowanie: #aa1817
+Magazyn ciepła mały: #aa1817
+Magazyn ciepła mały - rozładowanie: #aa1817
+Magazyn ciepła mały - ładowanie: #aa1817
+Straty ciepła w sieci: #49494b
+Dystrybucja ciepła sieciowego: #49494b
+Elektryczność - zużycie końcowe: #b6b6b7
+Ciepło - zużycie końcowe: #b6b6b7
+Wodór - zużycie końcowe: #b6b6b7
+Lekkie pojazdy - zużycie końcowe: #b6b6b7
+DSR wirtualne: #1b1c1e
+Razem: #C1843D

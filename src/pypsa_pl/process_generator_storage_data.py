@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 
 from pypsa_pl.config import data_dir
+from pypsa_pl.ignore_warnings import ignore_performance_warnings
 from pypsa_pl.io import read_excel
 from pypsa_pl.process_technology_data import load_technology_data, get_technology_year
 from pypsa_pl.helper_functions import calculate_annuity, update_lifetime
 
 
+@ignore_performance_warnings
 def assign_reserve_assumptions(
     df,
     primary_reserve_categories=None,
@@ -71,6 +73,114 @@ def assign_reserve_assumptions(
     return df
 
 
+def add_heat_cogeneration(df):
+    """
+    Adds cogenerating heat units for each CHP plant in the model.
+    Their output and capacity is fixed by the output and capacity of the electricity-producing component.
+    """
+    is_chp = df["technology"].str.contains("CHP")
+
+    # List of variables to inherit
+    inherited_variables = [
+        "p_nom",
+        "value_type",
+        "technology",
+        "carrier",
+        "category",
+        "group",
+        "name",
+        "area",
+        "technology_year",
+        "build_year",
+        "retire_year",
+        "lifetime",
+        "Net thermal efficiency",
+        "Net electrical efficiency",
+    ]
+
+    # Copy relevant columns for CHP units
+    df_chp = df.loc[
+        is_chp, [col for col in inherited_variables if col in df.columns]
+    ].copy()
+
+    # Modify technology, carrier, category, and group columns for heat output
+    for col in ["technology", "carrier", "category"]:
+        df_chp[col] += " heat output"
+    if "group" in df_chp.columns:
+        df_chp["group"] = df_chp["group"].str.replace("CHP", "CHP heat output")
+
+    # Calculate heat capacity based on backpressure CHP assumption
+    df_chp["p_nom"] = (
+        (df_chp["Net thermal efficiency"] / df_chp["Net electrical efficiency"])
+        * df_chp["p_nom"]
+    ).round(2)
+
+    # Capital cost is assigned to the electricity producing component
+    df_chp["capital_cost"] = 0
+
+    # Assign efficiency, sector and technology bundle
+    df_chp["efficiency"] = df_chp["Net thermal efficiency"]
+    df_chp["sector"] = "heat"
+    df_chp["technology_bundle"] = "District heating"
+
+    df = pd.concat([df, df_chp])
+
+    return df
+
+
+def determine_extendability(
+    df,
+    store_technologies,
+    extendable_technologies,
+    decommission_only_technologies,
+    active_investment_years,
+    extend_from_zero,
+):
+    df = df.copy()
+    for nom in ["p_nom", "e_nom"]:
+        if nom == "p_nom":
+            sel = ~df["technology"].isin(store_technologies)
+        if nom == "e_nom":
+            if not store_technologies:
+                continue
+            sel = df["technology"].isin(store_technologies)
+        # By default do not extend capacities
+        df.loc[sel, f"{nom}_extendable"] = False
+
+        if extendable_technologies:
+            is_extendable = (
+                df["technology"].isin(extendable_technologies)
+                & df["build_year"].isin(active_investment_years)
+                & (df["value_type"] == "addition")
+            )
+            df.loc[sel & is_extendable, f"{nom}_extendable"] = True
+
+            df.loc[sel & is_extendable, f"{nom}_min"] = (
+                df.loc[sel & is_extendable, f"{nom}"] if not extend_from_zero else 0
+            )
+            df.loc[sel & is_extendable, f"{nom}_max"] = np.inf
+
+        if decommission_only_technologies:
+            is_decommission_only = (
+                df["technology"].isin(decommission_only_technologies)
+                & df["build_year"].isin(active_investment_years)
+                & (df["value_type"] == "total")
+            )
+            df.loc[sel & is_decommission_only, f"{nom}_extendable"] = True
+
+            df.loc[sel & is_decommission_only, f"{nom}_min"] = 0
+            df.loc[sel & is_decommission_only, f"{nom}_max"] = df.loc[
+                sel & is_decommission_only, f"{nom}"
+            ]
+
+        # Remove capacities with zero nominal power if they are not to be extended
+        if extendable_technologies:
+            df = df[~sel | (df[f"{nom}"] > 0) | (df[f"{nom}_max"] > 0)]
+        else:
+            df = df[~sel | (df[f"{nom}"] > 0)]
+    return df
+
+
 def process_utility_units_data(
     source_thermal,
     source_renewable,
@@ -81,7 +191,10 @@ def process_utility_units_data(
     unit_commitment_categories=None,
     linearized_unit_commitment=True,
     thermal_constraints_factor=1,
+    enforce_jwcd=0,
     hours_per_timestep=1,
+    decommission_only_technologies=[],
+    sectors=["electricity"],
 ):
     """
     Process data on individual utility units (thermal, renewable, storage).
@@ -151,7 +264,16 @@ def process_utility_units_data(
         # thermal unit assumptions
         if prefix == "thermal":
             df["efficiency"] = df["efficiency"].fillna(df["Net electrical efficiency"])
-
+            # Nuclear - assume minimum generation
+            is_nuclear = df["carrier"].str.startswith("Nuclear")
+            df.loc[is_nuclear, "p_min_pu"] = df.loc[
+                is_nuclear, "Minimum generation [% of max output]"
+            ]
+            if enforce_jwcd > 0:
+                is_jwcd = df["category"] == "JWCD"
+                df.loc[is_jwcd, "p_min_pu_annual"] = (
+                    enforce_jwcd * df.loc[is_jwcd, "p_max_pu_annual"]
+                ).round(3)
         # Renewable unit assumptions
         if prefix == "renewable":
             df["efficiency"] = 1.0
@@ -168,17 +290,34 @@ def process_utility_units_data(
             sqrt_efficiency = np.round(np.sqrt(df["efficiency_round"]), 3)
             df["efficiency_store"] = sqrt_efficiency
             df["efficiency_dispatch"] = sqrt_efficiency
+            if "Standing loss per hour" in df.columns:
+                df["Standing loss per day"] = df["Standing loss per day"].fillna(
+                    df["Standing loss per hour"] * 24
+                )
             df["standing_loss"] = (df["Standing loss per day"] / 24).round(5).fillna(0)
             if "p_nom_store" in df.columns:
                 df["p_min_pu"] = (-1) * np.minimum(
                     (df["p_nom_store"] / df["p_nom"]).round(3), 1
                 )
 
-        # For fixed units don't calculate the capital cost
-        df["capital_cost"] = 0
+        # For fixed units don't calculate the investment cost
+        df["capital_cost"] = df["Fixed cost [PLN/MW_e/year]"].fillna(0).round()
 
-        # Capacity of individual units is not to be extended
-        df["p_nom_extendable"] = False
+        if "heat" in sectors:
+            df = add_heat_cogeneration(df)
+            decommission_only_technologies += [
+                tech.replace("CHP", "CHP heat output")
+                for tech in decommission_only_technologies
+                if "CHP" in tech
+            ]
+
+        # Capacity of individual units is not to be extended, it can only be reduced
+        is_decommission_only = df["technology"].isin(decommission_only_technologies)
+        df["p_nom_extendable"] = is_decommission_only
+        df.loc[is_decommission_only, "p_nom_min"] = 0
+        df.loc[is_decommission_only, "p_nom_max"] = df.loc[
+            is_decommission_only, "p_nom"
+        ]
 
         if unit_commitment_categories:
             df["committable"] = False
@@ -277,18 +416,27 @@ def process_aggregate_capacity_data(
     discount_rate=0,
     industrial_utilization=0.5,
     enforce_bio=0,
-    extendable_technologies=None,
+    enforce_jwcd=0,
+    extendable_technologies=[],
+    decommission_only_technologies=[],
     default_build_year=2020,
     decommission_year_inclusive=True,
     active_investment_years=None,
     extend_from_zero=False,
+    sectors=["electricity"],
+    store_technologies=[],
 ):
     """
     Process data on aggregate generation and storage capacities by year and by area (voivodeship or country).
     """
 
+    df = df.copy()
+
+    is_store = df["technology"].isin(store_technologies)
+
     # Round the values
-    df["p_nom"] = df["p_nom"].round(3)
+    df.loc[~is_store, "p_nom"] = df.loc[~is_store, "nom"].round(3)
+    df.loc[is_store, "e_nom"] = df.loc[is_store, "nom"].round(3)
 
     # Load default technological assumptions
     df["technology_year"] = get_technology_year(df["build_year"]).astype(int)
@@ -325,6 +473,12 @@ def process_aggregate_capacity_data(
     # The rest has to be filled with 1
     df["p_max_pu"] = df["p_max_pu"].fillna(1)
 
+    # Nuclear - assume minimum generation
+    is_nuclear = df["carrier"].str.startswith("Nuclear")
+    df.loc[is_nuclear, "p_min_pu"] = df.loc[
+        is_nuclear, "Minimum generation [% of max output]"
+    ]
+
     # Assume fixed capacity utilization for industrial units
     is_industrial = df["category"] == "Industrial"
     df.loc[is_industrial, "p_max_pu"] *= industrial_utilization
@@ -348,6 +502,10 @@ def process_aggregate_capacity_data(
     sqrt_efficiency = np.round(np.sqrt(df["efficiency_round"]), 3)
     df["efficiency_store"] = sqrt_efficiency
     df["efficiency_dispatch"] = sqrt_efficiency
+    if "Standing loss per hour" in df.columns:
+        df["Standing loss per day"] = df["Standing loss per day"].fillna(
+            df["Standing loss per hour"] * 24
+        )
     df["standing_loss"] = (df["Standing loss per day"] / 24).round(5).fillna(0)
 
     # Custom parameter p_mean_max_pu = maximum annual capacity utilization factor
@@ -368,41 +526,251 @@ def process_aggregate_capacity_data(
     ] = 1
     # For biomass and biogas enforce 80% of the maximum annual capacity utilization factor
     if enforce_bio > 0:
-        is_bioenergy = df["category"].str.startswith("Bio")
+        is_bioenergy = df["category"].str.startswith("Biogas")
         df.loc[is_bioenergy, "p_min_pu_annual"] = (
             enforce_bio * df.loc[is_bioenergy, "p_max_pu_annual"]
+        ).round(3)
+    # For JWCD enforce 1% of the maximum annual capacity utilization factor
+    if enforce_jwcd > 0:
+        is_jwcd = df["category"] == "JWCD"
+        df.loc[is_jwcd, "p_min_pu_annual"] = (
+            enforce_jwcd * df.loc[is_jwcd, "p_max_pu_annual"]
         ).round(3)
 
     # Capital cost = annualized investment cost + fixed cost
     # For fixed capacities don't calculate the capital cost
-    df["capital_cost"] = 0
-    df.loc[df["value_type"] == "addition", "capital_cost"] = (
+    df["capital_cost"] = df["Fixed cost [PLN/MW_e/year]"].fillna(0)
+    is_addition = df["value_type"] == "addition"
+    df.loc[is_addition, "capital_cost"] += (
         1e6
-        * df["Investment cost [MPLN/MW_e]"]
-        * calculate_annuity(lifetime=df["lifetime"], discount_rate=discount_rate)
-        + df["Fixed cost [PLN/MW_e/year]"]
-    ).round(3)
+        * df.loc[is_addition, "Investment cost [MPLN/MW_e]"].fillna(0)
+        * calculate_annuity(
+            lifetime=df.loc[is_addition, "lifetime"], discount_rate=discount_rate
+        )
+    )
+    df["capital_cost"] = df["capital_cost"].round(3)
 
     df = df.dropna(axis=1, how="all")
 
-    # By default do not extend capacities
-    df["p_nom_extendable"] = False
+    if "heat" in sectors:
+        df = add_heat_cogeneration(df)
+        extendable_technologies += [
+            tech.replace("CHP", "CHP heat output")
+            for tech in extendable_technologies
+            if "CHP" in tech
+        ]
+        decommission_only_technologies += [
+            tech.replace("CHP", "CHP heat output")
+            for tech in decommission_only_technologies
+            if "CHP" in tech
+        ]
 
-    # Remove capacities with zero nominal power if they are not to be extended
-    if extendable_technologies:
-        is_extendable_tech = df["technology"].isin(extendable_technologies)
-        df["p_nom_extendable"] = True
-        if extend_from_zero:
-            df.loc[is_extendable_tech, "p_nom"] = 0
-        df["p_nom_min"] = df["p_nom"]
-        df["p_nom_max"] = df["p_nom"]
-        if active_investment_years:
-            is_investment_active = (
-                df["build_year"].isin(active_investment_years) & is_extendable_tech
-            )
-            df.loc[is_investment_active, "p_nom_max"] = np.inf
-        df = df[df["p_nom_max"] > 0]
-    else:
-        df = df[df["p_nom"] > 0]
+    df = determine_extendability(
+        df,
+        store_technologies=store_technologies,
+        extendable_technologies=extendable_technologies,
+        decommission_only_technologies=decommission_only_technologies,
+        active_investment_years=active_investment_years,
+        extend_from_zero=extend_from_zero,
+    )
+
+    return df
+
+
+def process_sectoral_capacity_data(
+    df,
+    source_technology,
+    discount_rate=0,
+    extendable_technologies=[],
+    decommission_only_technologies=[],
+    default_build_year=2020,
+    decommission_year_inclusive=True,
+    active_investment_years=None,
+    extend_from_zero=False,
+    v2g_factor=1,
+    store_technologies=[
+        "Biogas storage",
+        "Hydrogen storage",
+        "Heat storage small",
+        "Heat storage large",
+        "BEV battery",
+    ],
+):
+    """
+    Process data on aggregate sectoral capacities by year and by area (voivodeship).
+    """
+
+    df = df.copy()
+    is_store = df["technology"].isin(store_technologies)
+
+    # Round the values
+    df.loc[~is_store, "p_nom"] = df.loc[~is_store, "nom"].round(3)
+    df.loc[is_store, "e_nom"] = df.loc[is_store, "nom"].round(3)
+
+    # Load default technological assumptions
+    df["technology_year"] = get_technology_year(df["build_year"]).astype(int)
+    technology_years = df["technology_year"].drop_duplicates().tolist()
+    df_tech = load_technology_data(source=source_technology, years=technology_years)
+    df = pd.merge(df, df_tech, on=["technology_year", "technology"], how="left")
+
+    # Split BEV into BEV engine, BEV battery, BEV charger
+    is_bev = df["technology"] == "BEV"
+    df_bev = df[is_bev]
+
+    df_bev_engine = df_bev.copy()
+    for col in ["technology", "carrier", "category", "group"]:
+        df_bev_engine[col] = "BEV"
+    df_bev_engine["efficiency"] = df_bev_engine["Tank-to-wheel efficiency"]
+
+    df_bev_battery = df_bev.copy()
+    for col in ["technology", "carrier", "category", "group"]:
+        df_bev_battery[col] = "BEV battery"
+    df_bev_battery["e_nom"] = (
+        df_bev_battery["p_nom"] * df_bev_battery["Battery-to-engine [MWh/MW]"]
+    ).round(3)
+
+    df_bev_charger = df_bev.copy()
+    for col in ["technology", "carrier", "category", "group"]:
+        df_bev_charger[col] = "BEV charger"
+    df_bev_charger["p_nom"] = (
+        df_bev_charger["p_nom"]
+        * df_bev_charger["Battery-to-engine [MWh/MW]"]
+        * df_bev_charger["Charging power [MW/MWh]"]
+    ).round(3)
+    df_bev_charger["efficiency"] = df_bev_charger["Charging efficiency"]
+
+    dfs_bev = [df_bev_engine, df_bev_battery, df_bev_charger]
+
+    if v2g_factor > 0:
+        df_bev_v2g = df_bev.copy()
+        for col in ["technology", "carrier", "category", "group"]:
+            df_bev_v2g[col] = "BEV V2G"
+        df_bev_v2g["p_nom"] = (
+            df_bev_v2g["p_nom"]
+            * df_bev_v2g["Battery-to-engine [MWh/MW]"]
+            * df_bev_v2g["Discharging power [MW/MWh]"]
+            * v2g_factor
+        ).round(3)
+        df_bev_v2g["efficiency"] = df_bev_v2g["Discharging efficiency"]
+        dfs_bev.append(df_bev_v2g)
+
+    df_bev = pd.concat(dfs_bev)
+    # Those variables are meant for BEV engine only
+    is_bev_engine = df_bev["technology"] == "BEV"
+    for variable in [
+        "Fixed cost [PLN/MW_w/year]",
+        "Maximum capacity utilization",
+        "Maximum annual capacity utilization",
+    ]:
+        df_bev.loc[~is_bev_engine, variable] = np.nan
+
+    # Add all BEV technologies to extendable technologies if BEV is extendable
+    if "BEV" in extendable_technologies:
+        extendable_technologies += [
+            "BEV battery",
+            "BEV charger",
+            "BEV V2G",
+        ]
+    if "BEV" in decommission_only_technologies:
+        decommission_only_technologies += [
+            "BEV battery",
+            "BEV charger",
+            "BEV V2G",
+        ]
+
+    df = pd.concat([df[~is_bev], df_bev])
+
+    is_store = df["technology"].isin(store_technologies)
+
+    # Set maximum capacity utilization
+
+    df.loc[~is_store, "p_max_pu"] = df.loc[~is_store, "Maximum capacity utilization"]
+
+    # The rest has to be filled with 1
+    df.loc[~is_store, "p_max_pu"] = df.loc[~is_store, "p_max_pu"].fillna(1)
+
+    # Set remaining parameters
+
+    # If input is of total capacity type, fix the lifetime to 1 year
+    df.loc[df["value_type"] == "total", "lifetime"] = 1
+    df["lifetime"] = df["lifetime"].fillna(df["Lifetime [years]"])
+    df["retire_year"] = df["build_year"] + df["lifetime"]
+    if decommission_year_inclusive:
+        df["retire_year"] -= 1
+
+    # Generators / Links
+    efficiency_vars = [
+        "Net electrical efficiency",  # hydrogen-fired generators
+        "Net thermal efficiency",  # CHP / heat pumps / resistive heaters
+        "Tank-to-wheel efficiency",  # ICE vehicles
+        "Conversion efficiency",  # electrolysers / natural gas reformers
+    ]
+    for var in efficiency_vars:
+        df.loc[~is_store, "efficiency"] = df.loc[~is_store, "efficiency"].fillna(
+            df.loc[~is_store, var]
+        )
+
+    df["p_max_pu_annual"] = (
+        df["Maximum annual capacity utilization"]
+        .fillna(
+            1
+            - df[
+                ["Planned outage as year fraction", "Forced outage as year fraction"]
+            ].sum(axis=1)
+        )
+        .fillna(1)
+    )
+
+    # Stores
+    if "Standing loss per hour" in df.columns:
+        df["Standing loss per day"] = df["Standing loss per day"].fillna(
+            df["Standing loss per hour"] * 24
+        )
+    df.loc[is_store, "standing_loss"] = (
+        (df.loc[is_store, "Standing loss per day"] / 24).round(5).fillna(0)
+    )
+
+    # Capital cost = annualized investment cost + fixed cost
+    # For fixed capacities don't calculate the capital cost
+    investment_vars = [
+        "Investment cost [MPLN/MW_t]",  # per thermal power (heat or lower heating value of fuels)
+        "Investment cost [MPLN/MW_e]",  # per electrical power
+        "Investment cost [MPLN/MWh_t]",  # per thermal energy (heat or lower heating value of fuels)
+    ]
+    df["Investment cost"] = np.nan
+    for var in investment_vars:
+        df["Investment cost"] = df["Investment cost"].fillna(df[var])
+
+    fixed_cost_vars = [
+        "Fixed cost [PLN/MW_t/year]",  # per thermal power
+        "Fixed cost [PLN/MW_e/year]",  # per electrical power
+        "Fixed cost [PLN/MW_w/year]",  # per wheel power
+        "Fixed cost [PLN/MWh_t/year]",  # per thermal energy
+    ]
+    df["Fixed cost"] = np.nan
+    for var in fixed_cost_vars:
+        df["Fixed cost"] = df["Fixed cost"].fillna(df[var])
+
+    df["capital_cost"] = df["Fixed cost"].fillna(0)
+    is_addition = df["value_type"] == "addition"
+    df.loc[is_addition, "capital_cost"] += (
+        1e6
+        * df.loc[is_addition, "Investment cost"].fillna(0)
+        * calculate_annuity(
+            lifetime=df.loc[is_addition, "lifetime"], discount_rate=discount_rate
+        )
+    )
+    df["capital_cost"] = df["capital_cost"].round(3)
+
+    df = df.dropna(axis=1, how="all")
+
+    df = determine_extendability(
+        df,
+        store_technologies=store_technologies,
+        extendable_technologies=extendable_technologies,
+        decommission_only_technologies=decommission_only_technologies,
+        active_investment_years=active_investment_years,
+        extend_from_zero=extend_from_zero,
+    )
 
     return df

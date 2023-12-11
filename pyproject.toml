@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pypsa-pl"
-version = "2.0.0"
+version = "2.1.0"
 description = "PyPSA-PL: optimisation model of the Polish energy system"
 authors = ["Patryk Kubiczek <patryk.kubiczek@instrat.pl>"]
 license = "MIT"
@@ -17,9 +17,15 @@ plotly = "^5.13.1"
 kaleido = "0.2.1"
 xarray = "^2023.5.0"
 linopy = "0.1.5"
+gurobipy = "^10.0.2"
+jupyter = "^1.0.0"
+seaborn = "^0.12.2"
+adjusttext = "^0.8"
+highspy = "^1.5.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
+icecream = "^2.1.3"
 
 [build-system]
 requires = ["poetry-core"]

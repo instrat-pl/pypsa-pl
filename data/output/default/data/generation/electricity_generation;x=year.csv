@@ -1,0 +1,109 @@
+year,Technology,Country,Generation [TWh]
+2025,BEV V2G,PL,0.01
+2025,BEV charger - net,PL,-0.74
+2025,BEV charger - recovered,PL,-0.01
+2025,Battery large dispatch,PL,0.17
+2025,Battery large store,PL,-0.18
+2025,Battery small dispatch,PL,0.15
+2025,Battery small store,PL,-0.16
+2025,Biogas CHP,PL,2.29
+2025,Biogas plant and engine,CZ,7.17
+2025,Biogas plant and engine,DE,26.24
+2025,Biogas plant and engine,LT,0.92
+2025,Biogas plant and engine,SE,0.0
+2025,Biogas plant and engine,SK,1.33
+2025,Biomass straw,CZ,6.65
+2025,Biomass straw,DE,24.37
+2025,Biomass straw,LT,0.85
+2025,Biomass straw,SE,0.0
+2025,Biomass straw,SK,1.24
+2025,Biomass straw CHP,PL,2.46
+2025,Biomass wood chips,CZ,6.87
+2025,Biomass wood chips,DE,25.17
+2025,Biomass wood chips,LT,0.88
+2025,Biomass wood chips,PL,2.35
+2025,Biomass wood chips,SE,0.0
+2025,Biomass wood chips,SK,1.28
+2025,Biomass wood chips CHP,PL,2.17
+2025,DSR,DE,0.12
+2025,DSR,LT,0.01
+2025,DSR,PL,0.0
+2025,DSR,SE,0.0
+2025,Electricity final use,CZ,-71.4
+2025,Electricity final use,DE,-553.44
+2025,Electricity final use,LT,-13.62
+2025,Electricity final use,PL,-168.3
+2025,Electricity final use,SE,-146.36
+2025,Electricity final use,SK,-29.41
+2025,Electrolyser,PL,-0.0
+2025,Export,PL,-19.85
+2025,Hard coal,CZ,0.04
+2025,Hard coal,DE,27.68
+2025,Hard coal,PL,11.38
+2025,Hard coal CHP,PL,21.67
+2025,Hard coal SC,PL,31.55
+2025,Heat pump small,PL,-4.54
+2025,Hydro PSH dispatch,CZ,0.0
+2025,Hydro PSH dispatch,DE,0.0
+2025,Hydro PSH dispatch,LT,0.0
+2025,Hydro PSH dispatch,PL,0.36
+2025,Hydro PSH dispatch,SK,0.0
+2025,Hydro PSH store,CZ,0.0
+2025,Hydro PSH store,DE,-0.01
+2025,Hydro PSH store,LT,-0.0
+2025,Hydro PSH store,PL,-0.21
+2025,Hydro PSH store,SK,0.0
+2025,Hydro ROR,CZ,1.94
+2025,Hydro ROR,DE,15.02
+2025,Hydro ROR,LT,0.06
+2025,Hydro ROR,PL,1.6
+2025,Hydro ROR,SE,72.05
+2025,Hydro ROR,SK,3.94
+2025,Import,PL,17.4
+2025,Lignite,CZ,0.02
+2025,Lignite,DE,6.48
+2025,Lignite,PL,0.0
+2025,Lignite,SK,0.0
+2025,Lignite SC,PL,4.23
+2025,Natural gas CCGT,CZ,5.9
+2025,Natural gas CCGT,DE,164.19
+2025,Natural gas CCGT,LT,1.86
+2025,Natural gas CCGT,PL,17.1
+2025,Natural gas CCGT,SE,0.0
+2025,Natural gas CCGT,SK,3.33
+2025,Natural gas CCGT CHP,PL,23.61
+2025,Natural gas OCGT,DE,0.49
+2025,Natural gas OCGT,SE,0.0
+2025,Nuclear large,CZ,32.01
+2025,Nuclear large,SE,32.11
+2025,Nuclear large,SK,21.05
+2025,Oil,DE,0.07
+2025,Oil,LT,0.05
+2025,Oil,SK,0.0
+2025,PV ground,CZ,1.52
+2025,PV ground,DE,33.64
+2025,PV ground,LT,0.5
+2025,PV ground,PL,9.41
+2025,PV ground,SE,1.59
+2025,PV ground,SK,0.54
+2025,PV roof,CZ,1.52
+2025,PV roof,DE,33.64
+2025,PV roof,LT,0.5
+2025,PV roof,PL,14.16
+2025,PV roof,SE,1.59
+2025,PV roof,SK,0.54
+2025,Resistive heater small,PL,-0.31
+2025,Virtual DSR,CZ,0.0
+2025,Virtual DSR,DE,0.2
+2025,Virtual DSR,LT,0.03
+2025,Virtual DSR,PL,0.0
+2025,Virtual DSR,SE,0.0
+2025,Virtual DSR,SK,0.0
+2025,Wind offshore,DE,48.2
+2025,Wind offshore,SE,1.69
+2025,Wind onshore,CZ,1.59
+2025,Wind onshore,DE,146.09
+2025,Wind onshore,LT,5.49
+2025,Wind onshore,PL,32.24
+2025,Wind onshore,SE,41.02
+2025,Wind onshore,SK,0.5

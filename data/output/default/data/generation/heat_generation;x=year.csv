@@ -1,0 +1,19 @@
+year,Country,Technology,Generation [TWh]
+2025,PL,Biogas CHP,2.77
+2025,PL,Biomass boiler,44.88
+2025,PL,Biomass straw CHP,5.34
+2025,PL,Biomass wood chips CHP,5.82
+2025,PL,Conventional boiler,92.81
+2025,PL,Conventional heating plant,22.03
+2025,PL,District heating loss,-9.79
+2025,PL,Hard coal CHP,32.51
+2025,PL,Heat final use,-224.4
+2025,PL,Heat pump small,14.84
+2025,PL,Heat pump small output,0.0
+2025,PL,Heat storage large dispatch,0.39
+2025,PL,Heat storage large store,-0.39
+2025,PL,Heat storage small dispatch,2.07
+2025,PL,Heat storage small store,-2.31
+2025,PL,Natural gas CHP,13.13
+2025,PL,Resistive heater small,0.3
+2025,PL,Virtual DSR heat,0.0

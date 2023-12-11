@@ -66,3 +66,67 @@ def update_lifetime(df, default_build_year, decommission_year_inclusive):
     if decommission_year_inclusive:
         df["lifetime"] += 1
     return df
+
+
+# Statistics
+
+
+def get_attr(attr):
+    def getter(n, c):
+        df = n.df(c)
+        if attr in df:
+            values = df[attr].fillna("")
+        else:
+            values = pd.Series("", index=df.index)
+        return values.rename(attr)
+
+    return getter
+
+
+def get_attrs(attrs):
+    def getter(n, c):
+        return [get_attr(attr)(n, c) for attr in attrs]
+
+    return getter
+
+
+def get_bus_attr(bus, attr):
+    def getter(n, c):
+        df = n.df(c)
+        if bus in df:
+            values = df[bus].map(n.buses[attr]).fillna("")
+        else:
+            values = pd.Series("", index=df.index)
+        return values.rename(f"{bus}_{attr}")
+
+    return getter
+
+
+def custom_groupby(n, c):
+    return (
+        [get_attr(attr)(n, c) for attr in ["area", "sector", "bus", "bus0", "bus1"]]
+        + [get_bus_attr(bus, "carrier")(n, c) for bus in ["bus", "bus0", "bus1"]]
+        + [
+            get_attr(attr)(n, c)
+            for attr in [
+                "build_year",
+                "lifetime",
+                "p0_sign",
+                "category",
+                "carrier",
+                "technology",
+            ]
+        ]
+    )
+
+
+def calculate_statistics(network):
+    df = (
+        network.statistics(
+            groupby=custom_groupby,
+            aggregate_time="mean",
+        )
+        .reset_index()
+        .rename(columns={"level_0": "component"})
+    )
+    return df
