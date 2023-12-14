@@ -41,7 +41,7 @@ Here you can find the list of publications based on the PyPSA-PL results and lin
 
 * Kubiczek P., Smoleń M. (2023). Poland cannot afford medium ambitions. Savings driven by fast deployment of renewables by 2030. Instrat Policy Paper 03/2023. https://instrat.pl/en/pypsa-march-2023/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7784931.svg)](https://doi.org/10.5281/zenodo.7784931)
 * Kubiczek P. (2023). Praca w podstawie. Modelowanie kosztów niskiej elastyczności polskiego systemu elektroenergetycznego. Instrat Policy Paper 04/2023. https://instrat.pl/praca-w-podstawie/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8263172.svg)](https://zenodo.org/record/8263172)
-* Kubiczek P., Smoleń M., Żelisko W. (2023). Polska prawie bezemisyjna. Cztery scenariusze transformacji energetycznej do 2040 r. Instrat Policy Paper 06/2023. https://instrat.pl/en/pypsa-march-2023/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10246018.svg)](https://doi.org/10.5281/zenodo.10246018)
+* Kubiczek P., Smoleń M., Żelisko W. (2023). Polska prawie bezemisyjna. Cztery scenariusze transformacji energetycznej do 2040 r. Instrat Policy Paper 06/2023. https://instrat.pl/polska-2040/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10246018.svg)](https://doi.org/10.5281/zenodo.10246018)
 
 
 ## Acknowledgements
