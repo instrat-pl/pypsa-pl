@@ -5,7 +5,7 @@ description = "PyPSA-PL: optimisation model of the Polish energy system"
 authors = ["Patryk Kubiczek <patryk.kubiczek@instrat.pl>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "pypsa_pl" from = "src"}]
+packages = [{include = "pypsa_pl", from = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
