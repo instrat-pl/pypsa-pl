@@ -1,1036 +1,189 @@
-import pandas as pd
-import numpy as np
-import xarray as xr
 import logging
 
-from pypsa.optimization.compat import (
-    get_var,
-    linexpr,
-    define_constraints,
-    define_variables,
-)
-import linopy
-
-from pypsa.descriptors import get_switchable_as_dense
-
-
-def get_fixed_demand(network, snapshots):
-    """Get fixed electricity demand for each snapshot."""
-
-    sector_load_suffices = (
-        " heat demand",
-        " hydrogen demand",
-        " light vehicles demand",
-    )
-    loads = network.loads_t["p_set"]
-    loads = loads[
-        [
-            name
-            for name in loads.columns
-            if name.startswith("PL") and not name.endswith(sector_load_suffices)
-        ]
-    ]
-    demand_t = loads.sum(axis=1)
-    demand_t = xr.DataArray(demand_t, dims=["snapshot"])
-    return demand_t
-
-
-def get_variable_demand(network, snapshots, scale_factor=1):
-    """Get variable electricity demand for each snapshot."""
-    demand_t_list = []
-
-    # Demand from charging storage units
-    components = network.storage_units
-    store_i = components[components["bus"].str.startswith("PL")].index
-    if not store_i.empty:
-        store_t = (
-            get_var(network, "StorageUnit", "p_store")
-            .sel({"StorageUnit": store_i})
-            .sum("StorageUnit")
-        )
-        demand_t_list.append(store_t)
-
-    # Demand from export links
-    components = network.links
-    export_i = components[
-        components["bus0"].str.startswith("PL")
-        & ~components["bus1"].str.startswith("PL")
-    ].index
-    if not export_i.empty:
-        export_t = get_var(network, "Link", "p").sel({"Link": export_i}).sum("Link")
-        demand_t_list.append(export_t)
-
-    # Demand from inter-sectoral links
-    sector_bus_suffices = (
-        " heat",
-        " hydrogen",
-        " light vehicles",
-        " BEV",
-        " biogas",
-        " Heat pump small",
-        " District heating",
-    )
-    components = network.links
-    # Electricity withdrawal at bus0
-    sector_i = components[
-        ~components["bus0"].str.endswith(sector_bus_suffices)
-        & components["bus1"].str.endswith(sector_bus_suffices)
-        & (components["p0_sign"] > 0)
-    ].index
-    if not sector_i.empty:
-        sector_t = get_var(network, "Link", "p").sel({"Link": sector_i}).sum("Link")
-        demand_t_list.append(sector_t)
-    # Electricity withdrawal at bus1
-    sector_i = components[
-        components["bus0"].str.endswith(sector_bus_suffices)
-        & ~components["bus1"].str.endswith(sector_bus_suffices)
-        & (components["p0_sign"] < 0)
-    ].index
-    if not sector_i.empty:
-        efficiency = get_switchable_as_dense(network, "Link", "efficiency")[sector_i]
-        efficiency = xr.DataArray(
-            efficiency.values,
-            coords={"snapshot": efficiency.index, "Link": efficiency.columns},
-        )
-        sector_t = (-1) * (
-            get_var(network, "Link", "p").sel({"Link": sector_i}) * efficiency
-        ).sum("Link")
-        demand_t_list.append(sector_t)
-
-    # Aggregate variable demand
-    demand_t = scale_factor * sum(demand_t_list)
-    return demand_t
-
-
-def get_variable_supply(network, snapshots, scale_factor=1, carriers=None):
-    """Get variable electricity supply for each snapshot."""
-    supply_t_list = []
-
-    # Supply from generators
-    components = network.generators
-    generator_i = components[
-        components["bus"].str.startswith("PL")
-        & (components["carrier"].isin(carriers) if carriers else True)
-    ].index
-    if not generator_i.empty:
-        generator_t = (
-            get_var(network, "Generator", "p")
-            .sel({"Generator": generator_i})
-            .sum("Generator")
-        )
-        supply_t_list.append(generator_t)
-
-    # Supply from discharging storage units
-    components = network.storage_units
-    dispatch_i = components[
-        components["bus"].str.startswith("PL")
-        & (components["carrier"].isin(carriers) if carriers else True)
-    ].index
-    if not dispatch_i.empty:
-        dispatch_t = (
-            get_var(network, "StorageUnit", "p_dispatch")
-            .sel({"StorageUnit": dispatch_i})
-            .sum("StorageUnit")
-        )
-        supply_t_list.append(dispatch_t)
-
-    # Supply from import links
-    components = network.links
-    import_i = components[
-        ~components["bus0"].str.startswith("PL")
-        & components["bus1"].str.startswith("PL")
-        & (components["carrier"].isin(carriers) if carriers else True)
-    ].index
-    if not import_i.empty:
-        import_t = get_var(network, "Link", "p").sel({"Link": import_i}).sum("Link")
-        supply_t_list.append(import_t)
-
-    # Supply from inter-sectoral links
-    sector_bus_suffices = (
-        " heat",
-        " hydrogen",
-        " light vehicles",
-        " BEV",
-        " biogas",
-        " Heat pump small",
-        " District heating",
-    )
-    components = network.links
-    # Electricity injection at bus0
-    sector_i = components[
-        ~components["bus0"].str.endswith(sector_bus_suffices)
-        & components["bus1"].str.endswith(sector_bus_suffices)
-        & (components["p0_sign"] < 0)
-        & (components["carrier"].isin(carriers) if carriers else True)
-    ].index
-    if not sector_i.empty:
-        sector_t = (-1) * get_var(network, "Link", "p").sel({"Link": sector_i}).sum(
-            "Link"
-        )
-        supply_t_list.append(sector_t)
-    # Electricity injection at bus
-    sector_i = components[
-        components["bus0"].str.endswith(sector_bus_suffices)
-        & ~components["bus1"].str.endswith(sector_bus_suffices)
-        & (components["p0_sign"] > 0)
-        & (components["carrier"].isin(carriers) if carriers else True)
-    ].index
-    if not sector_i.empty:
-        efficiency = get_switchable_as_dense(network, "Link", "efficiency")[sector_i]
-        efficiency = xr.DataArray(
-            efficiency.values,
-            coords={"snapshot": efficiency.index, "Link": efficiency.columns},
-        )
-        sector_t = (
-            get_var(network, "Link", "p").sel({"Link": sector_i}) * efficiency
-        ).sum("Link")
-        supply_t_list.append(sector_t)
-
-    # Aggregate variable supply
-    supply_t = scale_factor * sum(supply_t_list)
-    return supply_t
-
-
-def get_fixed_demand_per_sector(network, snapshots, sector):
-    """Get fixed sectoral demand for each snapshot and for each bus."""
-
-    # TODO: this will work only if p_set is time-dependent. Fix it.
-    loads = network.loads_t["p_set"]
-    loads = loads[
-        [name for name in loads.columns if name.endswith(f" {sector} demand")]
-    ]
-    # Rename loads to the buses they are attached to
-    loads = loads.rename(columns=lambda x: x.replace(" demand", ""))
-    loads.columns.name = "Bus"
-
-    demand_t = xr.DataArray(
-        loads.values,
-        coords={"snapshot": loads.index, "Bus": loads.columns},
-    )
-    return demand_t
-
-
-def get_variable_supply_per_technology_bundle(
-    network, snapshots, technology_bundle, sector
-):
-    """Get supply per technology bundle for each snapshot and for each bus."""
-
-    supply_t_list = []
-
-    # Generators
-    components = network.generators
-    generator_i = components[
-        (components["technology_bundle"] == technology_bundle)
-        & components["bus"].str.endswith(sector)
-    ].index
-    if not generator_i.empty:
-        bus = (
-            components.loc[generator_i, "bus"]
-            .rename("Bus")
-            .rename_axis("Generator")
-            .to_xarray()
-        )
-        generator_t = (
-            get_var(network, "Generator", "p")
-            .sel({"Generator": generator_i})
-            .groupby_sum(bus)
-        )
-        supply_t_list.append(generator_t)
-
-    # Stores
-    components = network.stores
-    store_i = components[
-        (components["technology_bundle"] == technology_bundle)
-        & components["bus"].str.endswith(sector)
-    ].index
-    if not store_i.empty:
-        bus = (
-            components.loc[store_i, "bus"]
-            .rename("Bus")
-            .rename_axis("Store")
-            .to_xarray()
-        )
-        store_t = (
-            get_var(network, "Store", "p").sel({"Store": store_i}).groupby_sum(bus)
-        )
-        supply_t_list.append(store_t)
-
-    # Links
-    components = network.links
-    # Supply injection at bus0
-    reverse_link_i = components[
-        (components["p0_sign"] < 0)
-        & (components["technology_bundle"] == technology_bundle)
-        & components["bus0"].str.endswith(sector)
-    ].index
-    if not reverse_link_i.empty:
-        bus = (
-            components.loc[reverse_link_i, "bus0"]
-            .rename("Bus")
-            .rename_axis("Link")
-            .to_xarray()
-        )
-        reverse_link_t = (-1) * get_var(network, "Link", "p").sel(
-            {"Link": reverse_link_i}
-        ).groupby_sum(bus)
-        supply_t_list.append(reverse_link_t)
-    # Supply injection at bus1
-    link_i = components[
-        (components["p0_sign"] > 0)
-        & (components["technology_bundle"] == technology_bundle)
-        & components["bus1"].str.endswith(sector)
-    ].index
-    if not link_i.empty:
-        bus = (
-            components.loc[link_i, "bus1"].rename("Bus").rename_axis("Link").to_xarray()
-        )
-        efficiency = get_switchable_as_dense(network, "Link", "efficiency")[link_i]
-        efficiency = xr.DataArray(
-            efficiency.values,
-            coords={"snapshot": efficiency.index, "Link": efficiency.columns},
-        )
-        link_t = (
-            get_var(network, "Link", "p").sel({"Link": link_i}) * efficiency
-        ).groupby_sum(bus)
-        supply_t_list.append(link_t)
-
-    supply_t = sum(supply_t_list)
-    # "_term" should be dimension without coordinates
-    # TODO: verify if this fix can be dropped in future PyPSA versions
-    supply_t = linopy.LinearExpression(
-        supply_t.data.drop("_term", dim=None), network.model
-    )
-
-    return supply_t
-
-
-def technology_bundle_constraints(
-    network,
-    snapshots,
-    technology_bundles_dict,
-    district_heating_range=(0, 1),
-    biomass_boiler_range=(0, 1),
-):
-    """For selected sectors we assume that each technology bundle has to deliver a fixed share of the demand at each snapshot, i.e. merit order assumption does not hold."""
-    for sector, technology_bundles in technology_bundles_dict.items():
-        sector_string = sector.replace(" ", "_")
-        demand_t = get_fixed_demand_per_sector(network, snapshots, sector).rename(
-            {"Bus": f"Bus-{sector_string}"}
-        )
-        buses_i = network.buses.index
-        buses_i = buses_i[buses_i.str.endswith(f" {sector}")].rename(
-            f"Bus-{sector_string}"
-        )
-
-        for technology_bundle in technology_bundles:
-            var_name = f"share_{technology_bundle.replace(' ', '_')}_in_{sector_string}"
-
-            network.buses[var_name + "_opt"] = np.nan
-
-            share_min, share_max = 0, 1
-            if technology_bundle == "District heating":
-                share_min, share_max = district_heating_range
-            if technology_bundle == "Biomass boiler":
-                share_min, share_max = biomass_boiler_range
-
-            define_variables(
-                network,
-                share_min,
-                share_max,
-                "Bus",
-                var_name,
-                axes=[buses_i],
-            )
-
-            supply_t = get_variable_supply_per_technology_bundle(
-                network, snapshots, technology_bundle, sector
-            ).rename({"Bus": f"Bus-{sector_string}"})
-            bundle_share = get_var(network, "Bus", var_name)
-            demand_part_t = linexpr((demand_t, bundle_share))
-            define_constraints(
-                network,
-                supply_t - demand_part_t,
-                "==",
-                0,
-                f"Bus-{sector_string}",
-                f"{var_name}_constraint",
-            )
-
-
-def maximum_annual_capacity_factor_ext(network, snapshots):
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        if "p_max_pu_annual" not in components.columns:
-            continue
-        ext_i = network.get_extendable_i(component)
-        constraint_i = ext_i.intersection(
-            components[components["p_max_pu_annual"] < components["p_max_pu"]].index
-        )
-        if constraint_i.empty:
-            continue
-        p_t = (
-            get_var(network, component, "p")
-            .rename({component: f"{component}-ext-max_annual"})
-            .sel({f"{component}-ext-max_annual": constraint_i})
-        )
-        p_max_pu_annual = (
-            components.loc[constraint_i, "p_max_pu_annual"]
-            .rename_axis(f"{component}-ext-max_annual")
-            .to_xarray()
-        )
-        p_nom = (
-            get_var(network, component, "p_nom")
-            .rename({f"{component}-ext": f"{component}-ext-max_annual"})
-            .sel({f"{component}-ext-max_annual": constraint_i})
-        )
-        N = len(snapshots)
-        p_annual = linexpr((1, p_t)).sum("snapshot")
-        minus_p_max_annual = linexpr((-N * p_max_pu_annual, p_nom))
-        define_constraints(
-            network,
-            p_annual + minus_p_max_annual,
-            "<=",
-            0,
-            f"{component}-ext-max_annual",
-            "maximum_annual_capacity_factor_ext",
-        )
-
-
-def maximum_annual_capacity_factor_non_ext(network, snapshots):
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        if "p_max_pu_annual" not in components.columns:
-            continue
-        non_ext_i = network.get_non_extendable_i(component)
-        constraint_i = non_ext_i.intersection(
-            components[components["p_max_pu_annual"] < components["p_max_pu"]].index
-        )
-        if constraint_i.empty:
-            continue
-        p_t = (
-            get_var(network, component, "p")
-            .rename({component: f"{component}-max_annual"})
-            .sel({f"{component}-max_annual": constraint_i})
-        )
-        p_max_pu_annual = components.loc[constraint_i, "p_max_pu_annual"]
-        p_nom = components.loc[constraint_i, "p_nom"]
-        N = len(snapshots)
-        p_annual = linexpr((1, p_t)).sum("snapshot")
-        p_annual_max = (
-            (N * p_max_pu_annual * p_nom)
-            .rename_axis(f"{component}-max_annual")
-            .to_xarray()
-        )
-        define_constraints(
-            network,
-            p_annual,
-            "<=",
-            p_annual_max,
-            f"{component}-max_annual",
-            "maximum_annual_capacity_factor_non_ext",
-        )
-
-
-def maximum_annual_capacity_factor(network, snapshots):
-    maximum_annual_capacity_factor_ext(network, snapshots)
-    maximum_annual_capacity_factor_non_ext(network, snapshots)
-
-
-def minimum_annual_capacity_factor_ext(network, snapshots):
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        if "p_min_pu_annual" not in components.columns:
-            continue
-        ext_i = network.get_extendable_i(component)
-        constraint_i = ext_i.intersection(
-            components[components["p_min_pu_annual"] > components["p_min_pu"]].index
-        )
-        if constraint_i.empty:
-            continue
-        p_t = (
-            get_var(network, component, "p")
-            .rename({component: f"{component}-ext-min_annual"})
-            .sel({f"{component}-ext-min_annual": constraint_i})
-        )
-        p_min_pu_annual = (
-            components.loc[constraint_i, "p_min_pu_annual"]
-            .rename_axis(f"{component}-ext")
-            .to_xarray()
-        )
-        p_nom = (
-            get_var(network, component, "p_nom")
-            .rename({f"{component}-ext": f"{component}-ext-min_annual"})
-            .sel({f"{component}-ext-min_annual": constraint_i})
-        )
-        N = len(snapshots)
-        p_annual = linexpr((1, p_t)).sum("snapshot")
-        minus_p_min_annual = linexpr((-N * p_min_pu_annual, p_nom))
-        define_constraints(
-            network,
-            p_annual + minus_p_min_annual,
-            ">=",
-            0,
-            f"{component}-ext-min_annual",
-            "minimum_annual_capacity_factor_ext",
-        )
-
-
-def minimum_annual_capacity_factor_non_ext(network, snapshots):
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        if "p_min_pu_annual" not in components.columns:
-            continue
-        non_ext_i = network.get_non_extendable_i(component)
-        constraint_i = non_ext_i.intersection(
-            components[components["p_min_pu_annual"] > components["p_min_pu"]].index
-        )
-        if constraint_i.empty:
-            continue
-        p_t = (
-            get_var(network, component, "p")
-            .rename({component: f"{component}-min_annual"})
-            .sel({f"{component}-min_annual": constraint_i})
-        )
-        p_min_pu_annual = components.loc[constraint_i, "p_min_pu_annual"]
-        p_nom = components.loc[constraint_i, "p_nom"]
-        N = len(snapshots)
-        p_annual = linexpr((1, p_t)).sum("snapshot")
-        p_annual_min = (
-            (N * p_min_pu_annual * p_nom)
-            .rename_axis(f"{component}-min_annual")
-            .to_xarray()
-        )
-        define_constraints(
-            network,
-            p_annual,
-            ">=",
-            p_annual_min,
-            f"{component}-min_annual",
-            "minimum_annual_capacity_factor_non_ext",
-        )
-
-
-def minimum_annual_capacity_factor(network, snapshots):
-    minimum_annual_capacity_factor_ext(network, snapshots)
-    minimum_annual_capacity_factor_non_ext(network, snapshots)
-
-
-# TODO: allow for different warm reserves at the same time
-def make_warm_reserve_non_ext_constraints(reserve_name="warm", direction="up"):
-    def warm_reserve_non_ext(
-        network,
-        snapshots,
-        component,
-        reserve_units,
-        max_r_over_p,
-        hours_per_timestep,
-    ):
-        components = (
-            network.generators if component == "Generator" else network.storage_units
-        )
-        non_ext_i = network.get_non_extendable_i(component)
-        constraint_i = non_ext_i.intersection(reserve_units)
-        if constraint_i.empty:
-            return
-        r_t = get_var(network, component, f"r_{reserve_name}_{direction}")
-        r = linexpr((1, r_t)).sel({component: constraint_i})
-
-        if component == "Generator":
-            p_t = get_var(network, component, "p")
-            p = linexpr((1, p_t)).sel({component: constraint_i})
-        if component == "StorageUnit":
-            p_t_dispatch = get_var(network, component, "p_dispatch")
-            p_t_store = get_var(network, component, "p_store")
-            p = (p_t_dispatch - p_t_store).sel({component: constraint_i})
-        p_nom = components.loc[constraint_i, "p_nom"]
-        if direction == "up":
-            p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[
-                constraint_i
-            ]
-            p_max = p_max_pu * p_nom
-            p_max = xr.DataArray(
-                p_max.values, coords={"snapshot": p_max.index, component: p_max.columns}
-            )
-            define_constraints(
-                network,
-                r + p,
-                "<=",
-                p_max,
-                component,
-                f"{reserve_name}_up_reserve_headroom_non_ext",
-            )
-        if direction == "down":
-            p_min_pu = get_switchable_as_dense(network, component, "p_min_pu")[
-                constraint_i
-            ]
-            p_min = p_min_pu * p_nom
-            p_min = xr.DataArray(
-                p_min.values, coords={"snapshot": p_min.index, component: p_min.columns}
-            )
-            committable_i = network.get_committable_i(component).intersection(
-                constraint_i
-            )
-            non_commmitable_i = constraint_i.difference(committable_i)
-            if not committable_i.empty:
-                status_t = (
-                    get_var(network, component, "status")
-                    .rename({f"{component}-com": component})
-                    .sel({component: committable_i})
-                )
-                p_min_comm = p_min.sel({component: committable_i}) * status_t
-                lhs = (p - r).sel({component: committable_i}) - p_min_comm
-                define_constraints(
-                    network,
-                    lhs,
-                    ">=",
-                    0,
-                    component,
-                    f"{reserve_name}_down_reserve_headroom_non_ext_comm",
-                )
-            if not non_commmitable_i.empty:
-                lhs = (p - r).sel({component: non_commmitable_i})
-                rhs = p_min.sel({component: non_commmitable_i})
-                define_constraints(
-                    network,
-                    lhs,
-                    ">=",
-                    rhs,
-                    component,
-                    f"{reserve_name}_down_reserve_headroom_non_ext_non_comm",
-                )
-
-        if component == "Generator":
-            # TODO: omit for committable units after status incorporated into ramping constraint
-            # Linear approximation of the status = 1 constraint
-            # r_max_pu = min(ramp_limit, p_max_pu - p_min_pu)
-            r_max_pu = components.loc[
-                constraint_i, f"{reserve_name}_reserve_ramp_limit_{direction}"
-            ]
-            p_max_pu = components.loc[constraint_i, "p_max_pu"]
-            p_min_pu_stable = components.loc[constraint_i, "p_min_pu_stable"]
-            operational_band = p_max_pu - p_min_pu_stable
-            r_max_pu.loc[operational_band < r_max_pu] = operational_band.loc[
-                operational_band < r_max_pu
-            ]
-
-            spinning_i = p_min_pu_stable[p_min_pu_stable > 0].index
-
-            if direction == "up":
-                max_r_over_p = r_max_pu[spinning_i] / p_min_pu_stable[spinning_i]
-            elif direction == "down":
-                max_r_over_p = 1 / (
-                    p_min_pu_stable[spinning_i] / r_max_pu[spinning_i] + 1
-                )
-            max_r_over_p = max_r_over_p.rename_axis(component).to_xarray()
-
-            minus_max_r = linexpr((-max_r_over_p, p_t.sel({component: spinning_i})))
-            define_constraints(
-                network,
-                r + minus_max_r,
-                "<=",
-                0,
-                component,
-                f"{reserve_name}_{direction}_reserve_spinning_non_ext",
-            )
-        if component == "StorageUnit":
-            soc_end_t = get_var(network, component, "state_of_charge").sel(
-                {component: constraint_i}
-            )
-            # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
-            ps = network.investment_periods.rename("period")
-            sl = slice(None, None)
-            soc_name = soc_end_t.name
-            soc_begin_t = [
-                soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
-            ]
-            soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
-            soc_begin_t = linopy.variables.Variable(
-                soc_begin_t, network.model
-            )  # , soc_name)
-
-            if direction == "up":
-                # (dispatch power + reserve up power) * hours per timestep / dispatch efficiency <= stored energy
-                eff = components.loc[constraint_i, "efficiency_dispatch"]
-                eff = eff.rename_axis(component).to_xarray()
-                minus_soc_times_eff_over_hours = linexpr(
-                    (-eff / hours_per_timestep, soc_begin_t)
-                )
-                define_constraints(
-                    network,
-                    r + p + minus_soc_times_eff_over_hours,
-                    "<=",
-                    0,
-                    component,
-                    f"{reserve_name}_up_reserve_charge_constraint_non_ext",
-                )
-            if direction == "down":
-                # (store power + reserve down power) * hours per timestep * store efficiency <= storage capacity - stored energy
-                eff = components.loc[constraint_i, "efficiency_store"]
-                eff = eff.rename_axis(component).to_xarray()
-                soc_over_eff_over_hours = linexpr(
-                    (1 / (eff * hours_per_timestep), soc_begin_t)
-                )
-                soc_max = (
-                    components.loc[constraint_i, "p_nom"]
-                    * components.loc[constraint_i, "max_hours"]
-                )
-                soc_max = soc_max.rename_axis(component).to_xarray()
-                define_constraints(
-                    network,
-                    r - p + soc_over_eff_over_hours,
-                    "<=",
-                    soc_max / (eff * hours_per_timestep),
-                    component,
-                    f"{reserve_name}_down_reserve_charge_constraint_non_ext",
-                )
-        # TODO: incorporate status variable in this constraint for committable units
-        ramp_limit = components.loc[
-            constraint_i, f"{reserve_name}_reserve_ramp_limit_{direction}"
-        ]
-        ramp_limit_i = ramp_limit[ramp_limit < 1].index
-        r_max = (p_nom * ramp_limit).rename_axis(component).to_xarray()
-        define_constraints(
-            network,
-            r.sel({component: ramp_limit_i}),
-            "<=",
-            r_max.sel({component: ramp_limit_i}),
-            component,
-            f"{reserve_name}_{direction}_ramp_limit_non_ext",
-        )
-
-    return warm_reserve_non_ext
-
-
-# WARNING: currently not functional
-# TODO: adapt to the new warm reserve constraint formulation
-def make_warm_reserve_ext_constraints(reserve_name="warm", direction="up"):
-    def warm_reserve_ext(
-        network, snapshots, component, reserve_units, max_r_over_p, hours_per_timestep
-    ):
-        components = (
-            network.generators if component == "Generator" else network.storage_units
-        )
-        ext_i = network.get_extendable_i(component)
-        constraint_i = ext_i.intersection(reserve_units)
-        if constraint_i.empty:
-            return
-        r_t = get_var(network, component, f"r_{reserve_name}_{direction}").sel(
-            {component: constraint_i}
-        )
-        p_t = get_var(
-            network, component, "p" if component == "Generator" else "p_dispatch"
-        ).sel({component: constraint_i})
-        p_nom = get_var(network, component, "p_nom").sel({component: constraint_i})
-        p_max_pu = get_switchable_as_dense(network, component, "p_max_pu")[constraint_i]
-        p_max_pu = xr.DataArray(
-            p_max_pu.values,
-            coords={"snapshot": p_max_pu.index, component: p_max_pu.columns},
-        )
-        r = linexpr((1, r_t))
-        p = linexpr((1, p_t))
-        minus_p_max = linexpr((-p_max_pu, p_nom))
-        define_constraints(
-            network,
-            r + p + minus_p_max,
-            "<=",
-            0,
-            component,
-            f"reserve_{reserve_name}_{direction}_headroom_ext",
-        )
-        if component == "Generator":
-            minus_max_r = linexpr((-max_r_over_p, p_t))
-            define_constraints(
-                network,
-                r + minus_max_r,
-                "<=",
-                0,
-                component,
-                f"symmetric_{reserve_name}_{direction}_reserves_ext",
-            )
-        if component == "StorageUnit":
-            # https://github.com/PyPSA/PyPSA/blob/master/pypsa/linopf.py#L529
-            # (dispatch power + reserve power) * hours per timestep / efficiency <= stored energy
-            eff = components.loc[constraint_i, "efficiency_dispatch"]
-            eff = eff.rename_axis(component).to_xarray()
-            soc_end_t = get_var(network, component, "state_of_charge").sel(
-                {component: constraint_i}
-            )
-            # following based on https://github.com/PyPSA/PyPSA/blob/0555a5b4cc8c26995f2814927cf250e928825cba/pypsa/optimization/constraints.py#L731
-            ps = network.investment_periods.rename("period")
-            sl = slice(None, None)
-            soc_name = soc_end_t.name
-            soc_begin_t = [
-                soc_end_t.data.sel(snapshot=(p, sl)).roll(snapshot=1) for p in ps
-            ]
-            soc_begin_t = xr.concat(soc_begin_t, dim="snapshot")
-            soc_begin_t = linopy.variables.Variable(
-                soc_begin_t, network.model
-            )  # , soc_name)
-            minus_soc_times_eff_over_hours = linexpr(
-                (-eff / hours_per_timestep, soc_begin_t)
-            )
-            define_constraints(
-                network,
-                r + p + minus_soc_times_eff_over_hours,
-                "<=",
-                0,
-                component,
-                f"{reserve_name}_{direction}_reserve_charge_constraint_ext",
-            )
-
-    return warm_reserve_ext
-
-
-# WARNING: currently functional for non extendable capacities and for one type of warm reserve only
-# TODO: allow for different warm reserves at the same time
-# TODO: implement the new warm reserve constraint for extendable capacities
-def make_warm_reserve_constraints(
-    reserve_name="warm",
-    reserve_factor=1,
-    directions=["up"],
-):
-    def warm_reserve(
-        network,
-        snapshots,
-        warm_reserve_need_per_demand,
-        warm_reserve_need_per_pv,
-        warm_reserve_need_per_wind,
-        max_r_over_p,
-        hours_per_timestep,
-    ):
-        # https://github.com/PyPSA/pypsa-eur/blob/378d1ef82bf874d23e900b5933c16d5081fcfec9/scripts/solve_network.py#L319
-        fixed_r_target = (
-            get_fixed_demand(network, snapshots)
-            * warm_reserve_need_per_demand
-            * reserve_factor
-        )
-        minus_variable_r_target_list = []
-        if warm_reserve_need_per_demand > 0:
-            minus_variable_r_target_list.append(
-                get_variable_demand(
-                    network,
-                    snapshots,
-                    scale_factor=-warm_reserve_need_per_demand * reserve_factor,
-                )
-            )
-        if warm_reserve_need_per_pv > 0:
-            minus_variable_r_target_list.append(
-                get_variable_supply(
-                    network,
-                    snapshots,
-                    scale_factor=-warm_reserve_need_per_pv * reserve_factor,
-                    carriers=["PV ground", "PV roof"],
-                )
-            )
-        if warm_reserve_need_per_wind > 0:
-            minus_variable_r_target_list.append(
-                get_variable_supply(
-                    network,
-                    snapshots,
-                    scale_factor=-warm_reserve_need_per_wind * reserve_factor,
-                    carriers=["Wind onshore", "Wind offshore"],
-                )
-            )
-        minus_variable_r_target = sum(minus_variable_r_target_list)
-
-        for direction in directions:
-            r_t_list = []
-            for component in ["Generator", "StorageUnit"]:
-                components = (
-                    network.generators
-                    if component == "Generator"
-                    else network.storage_units
-                )
-                reserve_i = components[
-                    components["bus"].str.startswith("PL")
-                    & (components[f"is_{reserve_name}_reserve"] == True)
-                ].index
-                if reserve_i.empty:
-                    continue
-
-                define_variables(
-                    network,
-                    0,
-                    np.inf,
-                    component,
-                    f"r_{reserve_name}_{direction}",
-                    axes=[snapshots, reserve_i],
-                )
-                make_warm_reserve_ext_constraints(reserve_name, direction)(
-                    network,
-                    snapshots,
-                    component,
-                    reserve_units=reserve_i,
-                    max_r_over_p=max_r_over_p,
-                    hours_per_timestep=hours_per_timestep,
-                )
-                make_warm_reserve_non_ext_constraints(reserve_name, direction)(
-                    network,
-                    snapshots,
-                    component,
-                    reserve_units=reserve_i,
-                    max_r_over_p=max_r_over_p,
-                    hours_per_timestep=hours_per_timestep,
-                )
-                r_t = (
-                    get_var(network, component, f"r_{reserve_name}_{direction}")
-                    .sel({component: reserve_i})
-                    .sum(component)
-                )
-                r_t_list.append(r_t)
-            total_r = sum(r_t_list)
-            define_constraints(
-                network,
-                total_r + minus_variable_r_target,
-                ">=",
-                fixed_r_target,
-                "Generator+StorageUnit",
-                f"total_{reserve_name}_{direction}_reserve",
-            )
-
-    return warm_reserve
-
-
-def cold_reserve(
-    network,
-    snapshots,
-    cold_reserve_need_per_demand,
-    cold_reserve_need_per_import,
-    warm_reserve_names=["warm"],
-):
-    fixed_r_target = get_fixed_demand(network, snapshots) * cold_reserve_need_per_demand
-    minus_variable_r_target_list = []
-    if cold_reserve_need_per_demand > 0:
-        minus_variable_r_target_list.append(
-            get_variable_demand(
-                network, snapshots, scale_factor=-cold_reserve_need_per_demand
-            )
-        )
-    if cold_reserve_need_per_import > 0:
-        minus_variable_r_target_list.append(
-            get_variable_supply(
-                network,
-                snapshots,
-                scale_factor=-cold_reserve_need_per_import,
-                carriers=["AC", "DC"],
-            )
-        )
-    minus_variable_r_target = sum(minus_variable_r_target_list)
-
-    variable_r_list = []
-    fixed_r_list = []
-
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        # Links of JWCD category delivering power have negative p0
-
-        reserve_i = components[
-            components["area"].str.startswith("PL")
-            & (components["is_cold_reserve"] == True)
+import pandas as pd
+from xarray import DataArray
+import numpy as np
+from linopy.expressions import merge
+from pypsa.descriptors import nominal_attrs
+from pypsa.descriptors import get_switchable_as_dense as get_as_dense
+
+
+def remove_annual_carrier_demand_constraints(n, carriers):
+    for carrier in carriers:
+        constraints = n.global_constraints[
+            n.global_constraints["carrier_attribute"] == f"{carrier} final use"
         ].index
+        constraints = ("GlobalConstraint-" + constraints).tolist()
+        for constraint in constraints:
+            if constraint in n.model.constraints:
+                n.model.remove_constraints(constraint)
 
-        # Non-extendable capacities
-        non_ext_i = network.get_non_extendable_i(component)
-        non_ext_reserve_i = non_ext_i.intersection(reserve_i)
-        if not non_ext_reserve_i.empty:
-            p_t = get_var(network, component, "p").sel({component: non_ext_reserve_i})
-            p_nom = components.loc[non_ext_reserve_i, "p_nom"]
-            p_max_pu = get_switchable_as_dense(
-                network,
-                component,
-                "p_max_pu" if component == "Generator" else "p_min_pu",
-            )[non_ext_reserve_i]
-            minus_p = linexpr((-1, p_t)).sum(component)
-            p_max = (p_max_pu * p_nom).sum(axis=1)
-            p_max = xr.DataArray(p_max, dims="snapshot")
-            if component == "Link":
-                p_max = (-1) * p_max
-                minus_p = (-1) * minus_p
-            variable_r_list.append(minus_p)
-            fixed_r_list.append(p_max)
 
-        # Extendable capacities
-        ext_i = network.get_extendable_i(component)
-        ext_reserve_i = ext_i.intersection(reserve_i)
-        if not ext_reserve_i.empty:
-            p_t = get_var(network, component, "p").sel({component: ext_reserve_i})
-            p_nom = (
-                get_var(network, component, "p_nom")
-                .sel({f"{component}-ext": ext_reserve_i})
-                .rename({f"{component}-ext": component})
+def define_operational_limit_link(n, sns):
+    """
+    Based on https://github.com/PyPSA/PyPSA/blob/v0.27.0/pypsa/optimization/global_constraints.py#L312.
+
+    Defines operational limit constraints. It limits the net production at bus0 of a link.
+
+    Parameters
+    ----------
+    n : pypsa.Network
+    sns : list-like
+        Set of snapshots to which the constraint should be applied.
+
+    Returns
+    -------
+    None.
+    """
+    m = n.model
+    weightings = n.snapshot_weightings.loc[sns]
+    glcs = n.global_constraints.query('type == "operational_limit"')
+
+    if n._multi_invest:
+        period_weighting = n.investment_period_weightings.years[sns.unique("period")]
+        weightings = weightings.mul(period_weighting, level=0, axis=0)
+
+    for name, glc in glcs.iterrows():
+        snapshots = (
+            sns
+            if np.isnan(glc.investment_period)
+            else sns[sns.get_loc(glc.investment_period)]
+        )
+        lhs = []
+        rhs = glc.constant
+
+        # links
+        links = n.links.query("carrier == @glc.carrier_attribute")
+        if not links.empty:
+            # Negative p0 is positve production at bus0
+            p = -m["Link-p"].loc[snapshots, links.index]
+            w = DataArray(weightings.generators[snapshots])
+            if "dim_0" in w.dims:
+                w = w.rename({"dim_0": "snapshot"})
+            expr = (p * w).sum()
+            lhs.append(expr)
+
+        if not lhs:
+            continue
+
+        lhs = merge(lhs)
+        sign = "=" if glc.sense == "==" else glc.sense
+        m.add_constraints(lhs, sign, rhs, f"GlobalConstraint-{name}")
+
+
+def define_custom_primary_energy_limit(n, sns):
+    """
+    Based on https://github.com/PyPSA/PyPSA/blob/v0.27.0/pypsa/optimization/global_constraints.py#L234.
+    The original version does not include links. This one includes generators and links.
+
+    Defines primary energy constraints. It limits the byproducts of primary
+    energy sources (defined by carriers) such as CO2.
+
+    Parameters
+    ----------
+    n : pypsa.Network
+    sns : list-like
+        Set of snapshots to which the constraint should be applied.
+
+    Returns
+    -------
+    None.
+    """
+    assert n.meta["reverse_links"]
+
+    m = n.model
+    weightings = n.snapshot_weightings.loc[sns]
+    glcs = n.global_constraints.query('type == "custom_primary_energy_limit"')
+
+    if n._multi_invest:
+        period_weighting = n.investment_period_weightings.years[sns.unique("period")]
+        weightings = weightings.mul(period_weighting, level=0, axis=0)
+
+    for name, glc in glcs.iterrows():
+        if np.isnan(glc.investment_period):
+            sns_sel = slice(None)
+        elif glc.investment_period in sns.unique("period"):
+            sns_sel = sns.get_loc(glc.investment_period)
+        else:
+            continue
+
+        lhs = []
+        rhs = glc.constant
+        emissions = n.carriers[glc.carrier_attribute][lambda ds: ds != 0]
+
+        if emissions.empty:
+            continue
+
+        # generators
+        gens = n.generators.query("carrier in @emissions.index")
+        if not gens.empty:
+            efficiency = get_as_dense(
+                n, "Generator", "efficiency", snapshots=sns[sns_sel], inds=gens.index
             )
-            p_max_pu = get_switchable_as_dense(
-                network,
-                component,
-                "p_max_pu" if component == "Generator" else "p_min_pu",
-            )[ext_reserve_i]
-            p_max_pu = xr.DataArray(
-                p_max_pu.values,
-                coords={"snapshot": p_max_pu.index, component: p_max_pu.columns},
+            em_pu = gens.carrier.map(emissions) / efficiency
+            em_pu = em_pu.multiply(weightings.generators[sns_sel], axis=0)
+            p = m["Generator-p"].loc[sns[sns_sel], gens.index]
+            expr = (p * em_pu).sum()
+            lhs.append(expr)
+
+        # links
+        links = n.links.query("carrier in @emissions.index")
+        if not links.empty:
+            efficiency = get_as_dense(
+                n, "Link", "efficiency", snapshots=sns[sns_sel], inds=links.index
             )
-            minus_p = linexpr((-1, p_t)).sum(component)
-            p_max = linexpr((p_max_pu, p_nom)).sum(component)
-            if component == "Link":
-                p_max = (-1) * p_max
-                minus_p = (-1) * minus_p
-            variable_r_list.append(p_max + minus_p)
+            # Need to invert the efficiency timeseries, to get consumption at bus1
+            efficiency = 1 / efficiency
+            em_pu = links.carrier.map(emissions) / efficiency
+            em_pu = em_pu.multiply(weightings.generators[sns_sel], axis=0)
+            # Negative p0 is positive production at bus0
+            p = -m["Link-p"].loc[sns[sns_sel], links.index]
+            expr = (p * em_pu).sum()
+            lhs.append(expr)
 
-    # Cold + warm reserve
-    variable_r = sum(variable_r_list)
-    fixed_r = sum(fixed_r_list)
+        if not lhs:
+            continue
 
-    # Warm reserve
-    if warm_reserve_names:
-        r_t_list = []
-        for reserve_name in warm_reserve_names:
-            r_t_list.append(
-                get_var(network, "Generator", f"r_{reserve_name}_up").sel(
-                    {"Generator": reserve_i}
-                )
-            )
-        minus_warm_r = -sum(r_t_list).sum("Generator")
-        lhs = variable_r + minus_warm_r + minus_variable_r_target
-    else:
-        lhs = variable_r + minus_variable_r_target
-
-    define_constraints(
-        network,
-        lhs,
-        ">=",
-        -fixed_r + fixed_r_target,
-        "Generator+Link",
-        "total_cold_reserve",
-    )
+        lhs = merge(lhs)
+        sign = "=" if glc.sense == "==" else glc.sense
+        m.add_constraints(lhs, sign, rhs, f"GlobalConstraint-{name}")
 
 
-def maximum_capacity_per_area(network, snapshots):
-    # Custom reimplementation of the maximum capacity constraint using area attribute
-    # Compared to PyPSA's default capacity constraint it
-    # (1) works for links
-    # (2) includes fixed capacities
-    # https://github.com/PyPSA/PyPSA/blob/438532d956fce10382d1fac4c7fc9c2fa975496d/pypsa/optimization/global_constraints.py#L86
+def define_nominal_constraints_per_area_carrier(n, sns):
+    """
+    Based on https://github.com/PyPSA/PyPSA/blob/b1e15c7a8244fc00625e0d8c91ba2ebf7de2c8c2/pypsa/optimization/global_constraints.py#L89
+    Compared to PyPSA's default capacity constraint per bus and carrier it
+    (1) works for p_nom at bus0 of links
+    (2) includes fixed capacities
 
-    model = network.model
-    cols = network.areas.columns[network.areas.columns.str.startswith("nom_")]
-    areas = network.areas.index[network.areas[cols].notnull().any(axis=1)].rename(
+    Set a capacity limit for assets of the same carrier at the same area.
+    The function searches for columns in the `area` dataframe matching
+    the pattern "nom_{min/max}_{carrier}". In case the constraint should only
+    be defined for one investment period, the column name can be constructed
+    according to "nom_{min/max}_{carrier}_{period}" where period must be in
+    `n.investment_periods`.
+
+    Parameters
+    ----------
+    n : pypsa.Network
+    sns : list-like
+        Set of snapshots to which the constraint should be applied.
+
+    Returns
+    -------
+    None.
+    """
+    m = n.model
+    cols = n.areas.columns[n.areas.columns.str.startswith("nom_")]
+    areas = n.areas.index[n.areas[cols].notnull().any(axis=1)].rename(
         "Area-nom_min_max"
     )
 
     for col in cols:
         msg = (
-            f"Bus column '{col}' has invalid specification and cannot be "
+            f"Area column '{col}' has invalid specification and cannot be "
             "interpreted as constraint, must match the pattern "
-            "`nom_{min/max}_{carrier}_{period}`"
+            "`nom_{min/max}_{carrier}` or `nom_{min/max}_{carrier}_{period}`"
         )
         if col.startswith("nom_min_"):
             sign = ">="
@@ -1040,419 +193,772 @@ def maximum_capacity_per_area(network, snapshots):
             logging.warning(msg)
             continue
         remainder = col[len("nom_max_") :]
-        carrier, period = remainder.rsplit("_", 1)
-        period = int(period)
-        if carrier not in network.carriers.index or period not in snapshots.unique(
-            "period"
-        ):
+        if remainder in n.carriers.index:
+            carrier = remainder
+            period = None
+        elif isinstance(n.snapshots, pd.MultiIndex):
+            carrier, period = remainder.rsplit("_", 1)
+            period = int(period)
+            if carrier not in n.carriers.index or period not in sns.unique("period"):
+                logging.warning(msg)
+                continue
+        else:
             logging.warning(msg)
             continue
 
         lhs = []
-        rhs = network.areas.loc[areas, col]
+        rhs = n.areas.loc[areas, col]
 
         for c, attr in [
             ("Generator", "p_nom"),
             ("Link", "p_nom"),
-            ("StorageUnit", "p_nom"),
             ("Store", "e_nom"),
         ]:
             var = f"{c}-{attr}"
             dim = f"{c}-ext"
-            components = network.df(c)
+            df = n.df(c)
+
+            # TODO: remove when PyPSA upgraded to 0.28.0
+            # https://github.com/PyPSA/PyPSA/pull/880/commits
+            # ***
+            carrier_col = "carrier_original" if c == "Store" else "carrier"
+            # ***
+
+            if carrier_col not in df:
+                continue
 
             # Fixed capacities
-            non_ext_i = network.get_non_extendable_i(c).intersection(
-                components.index[components["carrier"] == carrier]
+            non_ext_i = n.get_non_extendable_i(c).intersection(
+                df.index[df[carrier_col] == carrier]
             )
-            non_ext_i = non_ext_i[network.get_active_assets(c, period)[non_ext_i]]
+            if period is not None:
+                non_ext_i = non_ext_i[n.get_active_assets(c, period)[non_ext_i]]
             # Group p_nom of components by area and sum
-            nom_fixed = components.loc[non_ext_i].groupby("area")[attr].sum()
+            nom_fixed = df.loc[non_ext_i].groupby("area")[attr].sum()
             rhs -= nom_fixed.reindex(rhs.index, fill_value=0)
 
             # Extendable capacities
             ext_i = (
-                network.get_extendable_i(c)
-                .intersection(components.index[components["carrier"] == carrier])
+                n.get_extendable_i(c)
+                .intersection(df.index[df[carrier_col] == carrier])
                 .rename(dim)
             )
-            ext_i = ext_i[network.get_active_assets(c, period)[ext_i]]
+            if period is not None:
+                ext_i = ext_i[n.get_active_assets(c, period)[ext_i]]
 
             if ext_i.empty:
                 continue
 
-            areamap = components.loc[ext_i, "area"].rename(areas.name).to_xarray()
-            expr = (
-                model[var]
-                .loc[ext_i]
-                .groupby(areamap)
-                .sum()
-                .reindex({areas.name: areas})
-            )
+            areamap = df.loc[ext_i, "area"].rename(areas.name).to_xarray()
+            expr = m[var].loc[ext_i].groupby(areamap).sum().reindex({areas.name: areas})
             lhs.append(expr)
 
         if not lhs:
             continue
 
-        lhs = linopy.expressions.merge(lhs)
+        lhs = merge(lhs)
         mask = rhs.notnull()
-        network.model.add_constraints(lhs, sign, rhs, f"Area-{col}", mask=mask)
+        n.model.add_constraints(lhs, sign, rhs, name=f"Area-{col}", mask=mask)
 
 
-def maximum_snsp(network, snapshots, max_snsp, ns_carriers):
-    fixed_max_ns_supply = get_fixed_demand(network, snapshots) * max_snsp
-    minus_variable_max_ns_supply = get_variable_demand(
-        network, snapshots, scale_factor=-max_snsp
+def define_annual_capacity_utilisation_constraints(n, sns):
+
+    # Those constraints at annual level are only effective if no constraint at snapshot level is defined
+    # E.g. if time-dependent p_min_pu == p_max_pu are defined, the p_set_pu_annual is not effective
+
+    m = n.model
+
+    for suffix, sign in [("set", "=="), ("max", "<="), ("min", ">=")]:
+        attr = f"p_{suffix}_pu"
+        attr_annual = f"{attr}_annual"
+        for c in ["Generator", "Link"]:
+            components = n.df(c)
+            components_t = n.pnl(c)
+
+            if attr_annual not in components.columns:
+                continue
+
+            if suffix == "set":
+                components = components[components[attr_annual].notna()]
+                # Exclude components with time-dependent p_min_pu == p_max_pu
+                if "p_min_pu" in components_t and "p_max_pu" in components_t:
+                    intersect = components_t["p_min_pu"].columns.intersection(
+                        components_t["p_max_pu"].columns
+                    )
+                    equal = (
+                        components_t["p_min_pu"][intersect]
+                        == components_t["p_max_pu"][intersect]
+                    ).all(axis=0)
+                    exclude = equal[equal].index
+                    components = components[~components.index.isin(exclude)]
+            else:
+                components = components.query(
+                    f"{attr_annual} {sign.replace('=', '')} {attr}"
+                )
+                # Exclude components with time-dependent p_(min/max)_pu
+                if attr in components_t:
+                    exclude = components_t[attr].columns
+                    components = components[~components.index.isin(exclude)]
+            # In any case exclude components with time-dependent p_set
+            if "p_set" in components_t:
+                exclude = components_t["p_set"].columns
+                components = components[~components.index.isin(exclude)]
+            if components.empty:
+                continue
+
+            for extendable, df in components.groupby("p_nom_extendable"):
+                if df.empty:
+                    continue
+                dim_name = f"{c}-{'ext' if extendable else 'fix'}-{attr_annual}"
+                p_annual = (
+                    m.variables[f"{c}-p"]
+                    .loc[:, df.index]
+                    .sum("snapshot")
+                    .rename({c: dim_name})
+                )
+                utilisation = df[attr_annual].rename_axis(dim_name).to_xarray()
+                N = len(n.snapshots)
+                lhs = p_annual
+                rhs = 0
+                if extendable:
+                    p_nom = (
+                        m.variables[f"{c}-p_nom"]
+                        .loc[df.index]
+                        .rename({f"{c}-ext": dim_name})
+                    )
+                    lhs -= p_nom * utilisation * N
+                else:
+                    p_nom = df["p_nom"].rename_axis(dim_name).to_xarray()
+                    rhs += p_nom * utilisation * N
+                m.add_constraints(
+                    lhs,
+                    sign,
+                    rhs,
+                    f"{dim_name}-capacity_utilisation_constraint",
+                )
+
+
+def define_parent_children_capacity_constraints(n, sns):
+
+    reverse_links = n.meta["reverse_links"]
+
+    # Fix ratio of parent and children capacities
+    # This constraint is effective only if both parent and child capacities are extendable
+
+    m = n.model
+
+    nom_attrs = {
+        "Generator": "p_nom",
+        "Link": "p_nom",
+        "Store": "e_nom",
+    }
+    dim_name = "Component-ext-child"
+
+    # Gather all nominal capacities of potential parent and children components
+    nom = []
+    for c, nom_attr in nom_attrs.items():
+        if f"{c}-{nom_attr}" not in m.variables:
+            continue
+        expr = m.variables[f"{c}-{nom_attr}"].rename({f"{c}-ext": dim_name})
+        if (c == "Link") and not reverse_links:
+            eff = (
+                n.links.loc[expr.coords[dim_name].values, "efficiency"]
+                .rename_axis(dim_name)
+                .to_xarray()
+            )
+            expr *= eff
+        expr *= 1.0
+        nom.append(expr)
+    if len(nom) == 0:
+        return
+    nom = merge(nom, dim=dim_name)
+
+    # Identtify children and formulate constraints
+    lhs = []
+    for c, nom_attr in nom_attrs.items():
+        components = n.df(c)
+        children = components[
+            components[f"{nom_attr}_extendable"]
+            & (components[f"{nom_attr}_max"] > components[f"{nom_attr}_min"])
+            & components["parent"].isin(nom.coords[dim_name].values)
+        ].index
+
+        if children.empty:
+            continue
+
+        nom_child = nom.loc[children]
+        nom_parent = nom.loc[components.loc[children, "parent"].values].assign_coords(
+            {dim_name: children.rename(dim_name)}
+        )
+        parent_ratio = (
+            components.loc[children, "parent_ratio"].rename_axis(dim_name).to_xarray()
+        )
+        expr = nom_child - parent_ratio * nom_parent
+        lhs.append(expr)
+
+    if len(lhs) == 0:
+        return
+
+    lhs = merge(lhs, dim=dim_name)
+
+    m.add_constraints(
+        lhs, "==", 0, name=f"{dim_name}-parent_children_capacity_constraint"
     )
-    ns_supply = get_variable_supply(network, snapshots, carriers=ns_carriers)
-    ac_supply = get_variable_supply(
-        network, snapshots, scale_factor=max_snsp, carriers=["AC"]
-    )
-
-    define_constraints(
-        network,
-        ns_supply + ac_supply + minus_variable_max_ns_supply,
-        "<=",
-        fixed_max_ns_supply,
-        "Generator+StorageUnit+Link",
-        "maximum_snsp",
-    )
 
 
-def bev_ext_constraint(network, snapshots):
-    bevs_ext = network.links[
-        (network.links["carrier"] == "BEV") & network.links["p_nom_extendable"]
+def define_fixed_ratios_to_space_heating(n, sns):
+
+    assert n.meta["reverse_links"]
+
+    # DO NOT CONSTRAIN OTHER HEATING LINKS
+    # The model needs the flexibility to allocate the constant production of industrial CHPs
+    # TODO: think of long-term solution
+    carriers = [
+        "water heating",
+        # "other heating",
     ]
-    bevs_ext_i = bevs_ext.index
-    if bevs_ext.empty:
+
+    # (1) Calculate ratios of water/other heating to space heating annual flows
+
+    ratios = {}
+
+    annual_flows = {
+        carrier: n.global_constraints.loc[
+            n.global_constraints["carrier_attribute"] == f"{carrier} final use",
+            "constant",
+        ].sum()
+        for carrier in ["space heating", "water heating", "other heating"]
+    }
+    annual_flows["total heating"] = sum(annual_flows.values())
+    if annual_flows["total heating"] == 0:
         return
 
-    # Reference p_nom / e_nom values are needed to calculate capacity ratios
-    # TODO: get ratios directly from technology data
-    assert (bevs_ext["p_nom"] > 0).all()
-
-    p_nom_bev = get_var(network, "Link", "p_nom").sel({"Link-ext": bevs_ext_i})
-
-    # Battery capacity constraint
-    bev_batteries_ext_i = bevs_ext_i.str.replace("BEV", "BEV battery")
-    bev_batteries_ext = network.stores.loc[bev_batteries_ext_i].copy()
-    bev_batteries_ext.index = bevs_ext_i
-
-    assert (bev_batteries_ext["e_nom"] > 0).all()
-    battery_ratio = (
-        (bev_batteries_ext["e_nom"] / bevs_ext["p_nom"])
-        .rename_axis("Link-ext")
-        .to_xarray()
+    # space heating demand reduction due to building retrofitting
+    # building retrofits need to be exogenously specified
+    retrofits = n.generators[n.generators["carrier"] == "building retrofits"]
+    assert (retrofits["p_nom_extendable"] == False).all()
+    avoided_space_heating_demand = (
+        n.generators.loc[n.generators["carrier"] == "building retrofits", "p_nom"].sum()
+        * n.meta["heat_capacity_utilisation"]
+        * 8760
     )
 
-    e_nom_battery = (
-        get_var(network, "Store", "e_nom")
-        .sel({"Store-ext": bev_batteries_ext_i})
-        .rename({"Store-ext": "Link-ext"})
-    )
-    e_nom_battery = e_nom_battery.assign_coords(
-        {"Link-ext": e_nom_battery.coords["Link-ext"].str.replace("BEV battery", "BEV")}
-    )
-    define_constraints(
-        network,
-        e_nom_battery - battery_ratio * p_nom_bev,
-        "==",
-        0,
-        "Link-ext",
-        "bev_battery_capacity",
+    # (1a) Water heating - applies to both centralised and decentralised heating
+
+    ratios["water heating"] = annual_flows["water heating"] / (
+        annual_flows["space heating"] - avoided_space_heating_demand
     )
 
-    # Charger capacity constraint
-    bev_chargers_ext_i = bevs_ext_i.str.replace("BEV", "BEV charger")
-    bev_chargers_ext = network.links.loc[bev_chargers_ext_i].copy()
-    bev_chargers_ext.index = bevs_ext_i
+    # (1b) Other heating - applies to centralised heating only
 
-    assert (bev_chargers_ext["p_nom"] > 0).all()
-    charger_ratio = (
-        (bev_chargers_ext["p_nom"] / bevs_ext["p_nom"])
-        .rename_axis("Link-ext")
-        .to_xarray()
-    )
+    # If centralised heating share is exogenously specified, use it
+    # Otherwise, calculate it from district heating capacity and utilisation
+    centralised_heating_share = n.meta.get("centralised_heating_share", None)
+    if centralised_heating_share is None:
+        centralised_heating = (
+            n.links.loc[n.links["carrier"] == "district heating", "p_nom"].sum()
+            * n.meta["heat_capacity_utilisation"]
+            * 8760
+        )
+        centralised_heating_share = centralised_heating / annual_flows["total heating"]
 
-    p_nom_charger = get_var(network, "Link", "p_nom").sel(
-        {"Link-ext": bev_chargers_ext_i}
+    centralised_space_and_water_heating = (
+        centralised_heating_share * annual_flows["total heating"]
+        - annual_flows["other heating"]
     )
-    p_nom_charger = p_nom_charger.assign_coords(
-        {"Link-ext": p_nom_charger.coords["Link-ext"].str.replace("BEV charger", "BEV")}
+    centralised_space_heating = centralised_space_and_water_heating / (
+        1 + ratios["water heating"]
     )
-    define_constraints(
-        network,
-        p_nom_charger - charger_ratio * p_nom_bev,
-        "==",
-        0,
-        "Link-ext",
-        "bev_charger_capacity",
-    )
+    ratios["other heating"] = annual_flows["other heating"] / centralised_space_heating
 
-    # V2G capacity constraint
-    if "BEV V2G" not in network.links["carrier"].unique():
+    # (2) Apply fixed ratios to heating links
+
+    m = n.model
+
+    if "Link-p_nom" not in m.variables:
+        return
+    
+    p_nom = m.variables["Link-p_nom"]
+
+    parent_techs = {
+        "water heating": ["centralised space heating", "decentralised space heating"],
+        "other heating": ["centralised space heating"],
+    }
+
+    for carrier in carriers:
+
+        parents = n.links[
+            n.links["technology"].isin(parent_techs[carrier])
+            & n.links["p_nom_extendable"]
+        ].index
+
+        if parents.empty:
+            continue
+
+        def rename_parents_to_children(parents):
+            return parents.str.replace("space heating", carrier)
+
+        children = rename_parents_to_children(parents)
+        assert children.isin(n.links.index).all()
+
+        p_nom_children = p_nom.loc[children]
+        p_nom_parents = p_nom.loc[parents]
+
+        p_nom_parents = p_nom_parents.assign_coords(
+            {"Link-ext": rename_parents_to_children(p_nom_parents.coords["Link-ext"])}
+        )
+
+        p_set_pu_annual_parents = n.meta["space_heating_utilisation"]
+        p_set_pu_annual_children = n.meta[f"{carrier.replace(' ', '_')}_utilisation"]
+
+        lhs = (
+            p_set_pu_annual_children * p_nom_children
+            - ratios[carrier] * p_set_pu_annual_parents * p_nom_parents
+        )
+
+        coord_name = f"Link-ext-{carrier.replace(' ', '_')}"
+        lhs = lhs.rename({"Link-ext": coord_name})
+
+        m.add_constraints(
+            lhs, "==", 0, name=f"{coord_name}-fixed_ratio_to_space_heating"
+        )
+
+        logging.info(
+            f"Fixed ratio of {carrier} to space heating: {ratios[carrier]:.2f}"
+        )
+        logging.info(f"Removing annual flow constraint for {carrier}")
+        remove_annual_carrier_demand_constraints(n, carriers=[carrier])
+
+
+def define_heating_capacity_utilisation_constraints(n, sns):
+
+    assert n.meta["reverse_links"]
+
+    # TODO: including heat decentralised bus for other RES makes the solution infeasible for linopy>=0.3.9
+    buses = n.buses[
+        n.buses["carrier"].isin(
+            [
+                "heat decentralised",
+                "heat centralised out",
+            ]
+        )
+    ].index
+
+    if buses.empty:
         return
 
-    bev_v2g_ext_i = bevs_ext_i.str.replace("BEV", "BEV V2G")
-    bev_v2g_ext = network.links.loc[bev_v2g_ext_i].copy()
-    bev_v2g_ext.index = bevs_ext_i
+    n_all = len(buses)
 
-    assert (bev_v2g_ext["p_nom"] > 0).all()
-    v2g_ratio = (
-        (bev_v2g_ext["p_nom"] / bevs_ext["p_nom"]).rename_axis("Link-ext").to_xarray()
+    # (1) Find heating demand links connected to heat buses
+    demand = (
+        n.links[
+            n.links["bus1"].isin(buses)
+            & n.links["carrier"].str.endswith(
+                ("space heating", "water heating", "other heating")
+            )
+        ].rename(columns={"bus1": "bus"})
+    )[["bus", "carrier", "p_nom_extendable"]]
+
+    # If heating demand links are non-extendable, this constraint cannot be applied
+    if not demand["p_nom_extendable"].all():
+        return
+
+    demand = demand.drop(columns="p_nom_extendable").reset_index(names="name")
+    demand["carrier"] = (
+        demand["carrier"]
+        .str.replace("decentralised ", "")
+        .str.replace("centralised ", "")
+    )
+    demand = demand.pivot(index="bus", columns="carrier", values="name")
+
+    # (2) Find supplying generators and links connected to heat buses
+    generators = n.generators[n.generators["bus"].isin(buses)].assign(
+        component="Generator"
+    )
+    links = (
+        n.links[n.links["bus0"].isin(buses)]
+        .rename(columns={"bus0": "bus"})
+        .assign(component="Link")
+    )
+    supply = pd.concat([generators, links])[
+        [
+            "bus",
+            "p_nom",
+            "technology",
+            "carrier",
+            "qualifier",
+            "component",
+            "p_nom_extendable",
+        ]
+    ].reset_index(names="name")
+
+    # Exception for heat pump bus - drop resistive heater and heat storage small acting as secondary sources from supply technologies
+    # TODO: find a non-hard coded solution
+    supply = supply[
+        ~(
+            supply["qualifier"].str.contains("heat pump bus")
+            & (
+                supply["technology"].isin(
+                    ["resistive heater small", "heat storage small discharge"]
+                )
+            )
+        )
+    ]
+
+    n_extendable = (
+        supply[["bus", "p_nom_extendable"]].drop_duplicates()["p_nom_extendable"].sum()
     )
 
-    p_nom_v2g = get_var(network, "Link", "p_nom").sel({"Link-ext": bev_v2g_ext_i})
-    p_nom_v2g = p_nom_v2g.assign_coords(
-        {"Link-ext": p_nom_v2g.coords["Link-ext"].str.replace("BEV V2G", "BEV")}
-    )
-    define_constraints(
-        network,
-        p_nom_v2g - v2g_ratio * p_nom_bev,
-        "==",
-        0,
-        "Link-ext",
-        "bev_v2g_capacity",
-    )
+    # (3) Enforce utilisation of heat supplying component only if it has a single technology
+    # This excludes e.g. heat pump combined with heat storage
+    # In case of centralised heating, supply is provided by a single district heating link
+
+    n_supply_techs = supply.groupby("bus")["technology"].nunique()
+    buses = n_supply_techs[n_supply_techs == 1].index
+
+    supply = supply.set_index("bus").loc[buses]
+    demand = demand.loc[buses]
+
+    # (4) Calculate LHS and RHS for each bus
+
+    m = n.model
+
+    lhs = []
+    rhs = []
+
+    # (4a) LHS: sum of demand link capacities multiplied by relevant utilisation factors
+    p_nom = m.variables["Link-p_nom"]
+    for carrier in ["space heating", "water heating", "other heating"]:
+        if carrier not in demand.columns:
+            continue
+        is_not_na = demand[carrier].notna()
+        expr = (
+            p_nom.loc[demand.loc[is_not_na, carrier].values]
+            * n.meta[f"{carrier.replace(' ', '_')}_utilisation"]
+        )
+        expr = expr.rename({"Link-ext": "Bus-heat"}).assign_coords(
+            {"Bus-heat": demand[is_not_na].index.rename("Bus-heat")}
+        )
+        lhs.append(expr)
+
+    # (4b) LHS or RHS: sum of heat supply capacities multiplied by heating capacity utilisation factor
+    for c, components in supply.groupby("component"):
+        for is_extendable, supply in components.groupby("p_nom_extendable"):
+            if is_extendable:
+                p_nom = m.variables[f"{c}-p_nom"]
+                expr = (
+                    -p_nom.loc[supply["name"].values]
+                    * n.meta["heat_capacity_utilisation"]
+                )
+                expr = expr.rename({f"{c}-ext": "Bus-heat"}).assign_coords(
+                    {"Bus-heat": supply.index.rename("Bus-heat")}
+                )
+                if len(supply.index) != supply.index.nunique():
+                    expr = expr.groupby("Bus-heat").sum()
+                lhs.append(expr)
+            else:
+                value = supply["p_nom"] * n.meta["heat_capacity_utilisation"]
+                value = value.rename_axis("Bus-heat")
+                value = value.groupby(value.index).sum()
+                rhs.append(value)
+
+    lhs = merge(lhs)
+    if len(rhs) == 0:
+        rhs = 0
+    else:
+        rhs = pd.concat(rhs, axis=1).sum(axis=1)
+        # Make sure that RHS has the same index as LHS
+        # If necessary, fill missing values with 0
+        rhs = rhs.reindex(lhs.coords["Bus-heat"].values).fillna(0).to_xarray()
+
+    m.add_constraints(lhs, "==", rhs, name="Bus-heat-heating_capacity_utilisation")
+
+    logging.info(f"Fixed heat flows at {len(buses)} out of {n_all} heat buses")
+    if (len(buses) == n_all) and (n_extendable == 0):
+        logging.info(
+            "Removing annual flow constraint for space heating because no heating capacity is extendable"
+        )
+        remove_annual_carrier_demand_constraints(n, carriers=["space heating"])
 
 
-def bev_charge_constraint(network, snapshots, hour=6, charge_level=0.75):
-    bev_batteries = network.stores[network.stores["carrier"] == "BEV battery"]
+def define_centralised_heating_share_constraint(n, sns):
+
+    year = n.meta["year"]
+
+    assert n.meta["reverse_links"]
+
+    centralised_heating_share = n.meta.get("centralised_heating_share", None)
+    if centralised_heating_share is None:
+        return
+
+    buses = n.buses[n.buses["carrier"] == "heat centralised out"].index
+    if buses.empty:
+        return
+
+    # Find heating demand links connected to centralised heat buses
+    demand = (n.links[n.links["bus1"].isin(buses)].rename(columns={"bus1": "bus"}))[
+        ["bus", "carrier", "p_nom_extendable"]
+    ]
+
+    # If heating demand links are non-extendable, this constraint cannot be applied
+    if not demand["p_nom_extendable"].all():
+        return
+
+    # (1) Calculate LHS as the total centralised heating output
+    lhs = 0
+
+    demand = demand.drop(columns="p_nom_extendable").reset_index(names="name")
+    demand["carrier"] = demand["carrier"].str.replace("centralised ", "")
+    demand = demand.pivot(index="bus", columns="carrier", values="name")
+
+    m = n.model
+    p_nom = m.variables["Link-p_nom"]
+    for carrier in ["space heating", "water heating", "other heating"]:
+        expr = (
+            p_nom.loc[demand[carrier].values].sum()
+            * n.meta[f"{carrier.replace(' ', '_')}_utilisation"]
+        )
+        lhs += expr
+
+    # (1a) Subtract avoided space heating demand due to building retrofitting from RHS
+    rhs = 0
+    retrofits = n.generators[
+        (n.generators["carrier"] == "building retrofits")
+        & (n.generators["qualifier"] == "heat centralised")
+        & (n.generators["build_year"] <= year)
+        & (n.generators["build_year"] + n.generators["lifetime"] > year)
+    ]
+    # building retrofits need to be exogenously specified
+    assert (retrofits["p_nom_extendable"] == False).all()
+    if not retrofits.empty:
+        rhs -= retrofits["p_nom"].sum() * n.meta["heat_capacity_utilisation"]
+
+    # (2) Calculate RHS as the total heating demand times the centralised heating share
+    # Divide by 8760 to have the same units as the LHS
+    annual_flows = {
+        carrier: n.global_constraints.loc[
+            n.global_constraints["carrier_attribute"] == f"{carrier} final use",
+            "constant",
+        ].sum()
+        for carrier in ["space heating", "water heating", "other heating"]
+    }
+    annual_flows["total heating"] = sum(annual_flows.values())
+
+    # Centralised heating needs to cover at least the other heating demand
+    min_centralised_heating_share = (
+        annual_flows["other heating"] / annual_flows["total heating"]
+    )
+    assert centralised_heating_share >= min_centralised_heating_share
+
+    rhs += centralised_heating_share * annual_flows["total heating"] / 8760
+
+    # (3) Add constraint
+    m.add_constraints(lhs, "==", rhs, name="centralised_heating_share")
+
+
+def define_non_heating_capacity_utilisation_constraints(n, sns):
+
+    assert n.meta["reverse_links"]
+
+    for carrier in ["light vehicle mobility"]:
+
+        dim_name = "Bus-" + carrier.replace(" ", "_")
+
+        # Identify intermediate (i.e. having a qualifier) buses of a given carrier
+        buses = n.buses[
+            (n.buses["carrier"] == carrier) & (n.buses["qualifier"].fillna("") != "")
+        ].index
+
+        if buses.empty:
+            return
+
+        n_all = len(buses)
+
+        # (1) Find demand links connected to intermediate buses
+        demand = (
+            n.links[
+                n.links["bus1"].isin(buses) & (n.links["carrier"] == carrier)
+            ].rename(columns={"bus1": "bus"})
+        )[["bus", "carrier", "p_nom_extendable"]]
+
+        # If demand links are non-extendable, this constraint cannot be applied
+        if not demand["p_nom_extendable"].all():
+            return
+
+        demand = demand.drop(columns="p_nom_extendable").reset_index(names="name")
+
+        # (2) Find supplying generators and links connected to intermediate buses
+        generators = n.generators[n.generators["bus"].isin(buses)].assign(
+            component="Generator"
+        )
+        links = (
+            n.links[n.links["bus0"].isin(buses)]
+            .rename(columns={"bus0": "bus"})
+            .assign(component="Link")
+        )
+        supply = pd.concat([generators, links])[
+            ["bus", "p_nom", "technology", "carrier", "component", "p_nom_extendable"]
+        ].reset_index(names="name")
+
+        n_extendable = (
+            supply[["bus", "p_nom_extendable"]]
+            .drop_duplicates()["p_nom_extendable"]
+            .sum()
+        )
+
+        # (3) Enforce utilisation of carrier supplying component only if it contains a single technology
+        n_supply_techs = supply.groupby("bus")["technology"].nunique()
+        buses = n_supply_techs[n_supply_techs == 1].index
+
+        supply = supply.set_index("bus").loc[buses]
+        demand = demand.set_index("bus").loc[buses]
+
+        # (4) Calculate LHS and RHS for each bus
+
+        m = n.model
+
+        lhs = []
+        rhs = []
+
+        # (4a) LHS: sum of demand link capacities multiplied by relevant utilisation factors
+        p_nom = m.variables["Link-p_nom"]
+        expr = (
+            p_nom.loc[demand["name"].values]
+            * n.meta[f"{carrier.replace(' ', '_')}_utilisation"]
+        )
+        expr = expr.rename({"Link-ext": dim_name}).assign_coords(
+            {dim_name: demand.index.rename(dim_name)}
+        )
+        lhs.append(expr)
+
+        # (4b) LHS or RHS: sum of supply capacities multiplied by relevant capacity utilisation factor
+        for c, components in supply.groupby("component"):
+            for is_extendable, supply in components.groupby("p_nom_extendable"):
+                if is_extendable:
+                    p_nom = m.variables[f"{c}-p_nom"]
+                    expr = (
+                        -p_nom.loc[supply["name"].values]
+                        * n.meta[f"{carrier.replace(' ', '_')}_utilisation"]
+                    )
+                    expr = expr.rename({f"{c}-ext": dim_name}).assign_coords(
+                        {dim_name: supply.index.rename(dim_name)}
+                    )
+                    if len(supply.index) != supply.index.nunique():
+                        expr = expr.groupby(dim_name).sum()
+                    lhs.append(expr)
+                else:
+                    value = (
+                        supply["p_nom"]
+                        * n.meta[f"{carrier.replace(' ', '_')}_utilisation"]
+                    )
+                    value = value.rename_axis(dim_name)
+                    value = value.groupby(value.index).sum()
+                    rhs.append(value)
+
+        lhs = merge(lhs)
+        if len(rhs) == 0:
+            rhs = 0
+        else:
+            rhs = pd.concat(rhs, axis=1).sum(axis=1)
+            # Make sure that RHS has the same index as LHS
+            # If necessary, fill missing values with 0
+            rhs = rhs.reindex(lhs.coords[dim_name].values).fillna(0).to_xarray()
+
+        m.add_constraints(lhs, "==", rhs, name=f"{dim_name}-capacity_utilisation")
+
+        logging.info(
+            f"Fixed {carrier} flows at {len(buses)} out of {n_all} {carrier} buses"
+        )
+        if (len(buses) == n_all) and (n_extendable == 0):
+            logging.info(
+                f"Removing annual flow constraint for {carrier} because no {carrier} capacity is extendable"
+            )
+            remove_annual_carrier_demand_constraints(n, carriers=[carrier])
+
+
+def define_minimum_bev_charge_level_constraint(n, sns):
+    # not used at the moment
+    bev_batteries = n.stores[n.stores["technology"] == "BEV battery"]
     bev_batteries_i = bev_batteries.index
+
     if bev_batteries_i.empty:
         return
 
-    constraint_snapshots_i = network.snapshots[
-        network.snapshots.get_level_values(1).hour == hour
-    ]
-    assert len(constraint_snapshots_i) == 365
+    hour = n.meta.get("minimum_bev_charge_hour", 6)
+    e_min_pu = n.meta.get("minimum_bev_charge_level", 0.75)
 
+    n_levels = n.snapshots.nlevels  # 1 for index, 2 for multiindex
+    constraint_snapshots_i = n.snapshots[
+        pd.to_datetime(n.snapshots.get_level_values(n_levels - 1)).hour == hour
+    ]
+
+    m = n.model
+
+    lhs = 0
+    rhs = []
+
+    # (1) LHS: charge level of BEV batteries at the specified hour
     e_t = (
-        get_var(network, "Store", "e")
-        .sel({"Store": bev_batteries_i})
+        m["Store-e"]
+        .loc[constraint_snapshots_i, bev_batteries_i]
         .rename({"Store": "Store-BEV_battery"})
     )
-    e_t = e_t.sel({"snapshot": constraint_snapshots_i})
+    lhs += e_t
 
-    e_nom = network.stores.loc[bev_batteries_i, "e_nom"]
-    assert (e_nom > 0).all()
-    e_nom = e_nom.rename_axis("Store-BEV_battery").to_xarray()
+    # (2) LHS or RHS: minimum charge level of BEV batteries
+    for e_nom_extendable, df in bev_batteries.groupby("e_nom_extendable"):
+        if e_nom_extendable:
+            e_nom = (
+                m.variables["Store-e_nom"]
+                .loc[df.index]
+                .rename({"Store-ext": "Store-BEV_battery"})
+            )
+            lhs -= e_min_pu * e_nom
+        else:
+            e_nom = df["e_nom"].rename_axis("Store-BEV_battery")
+            rhs.append(e_min_pu * e_nom)
 
-    define_constraints(
-        network,
-        e_t / e_nom,
-        ">=",
-        charge_level,
-        "Store-BEV_battery",
-        "bev_battery_min_level_cyclic",
+    if len(rhs) == 0:
+        rhs = 0
+    else:
+        rhs = pd.concat(rhs, axis=1).sum(axis=1)
+        # Make sure that RHS has the same index as LHS
+        # If necessary, fill missing values with 0
+        rhs = rhs.reindex(lhs.coords["Store-BEV_battery"].values).fillna(0).to_xarray()
+
+    m.add_constraints(
+        lhs, ">=", rhs, name=f"Store-BEV_battery-min_bev_charge_level_at_{hour}h"
     )
 
 
-def chp_ext_constraint(network, snapshots):
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        chp_elec_ext = components[
-            components["technology"].fillna("").str.contains("CHP")
-            & ~components["technology"].fillna("").str.contains("heat output")
-            & components["p_nom_extendable"]
-        ]
-        if component == "Link":
-            # Assume actual heat output is defined at link's input
-            assert (chp_elec_ext["p0_sign"] < 0).all()
+def define_minimum_synchronous_generation(n, sns):
 
-        chp_elec_ext_i = chp_elec_ext.index
-        if chp_elec_ext.empty:
-            return
-
-        chp_heat_ext_i = chp_elec_ext_i.str.replace("CHP", "CHP heat output")
-        chp_heat_ext = network.generators.loc[chp_heat_ext_i].copy()
-        chp_heat_ext.index = chp_elec_ext_i
-
-        p_nom_elec = get_var(network, component, "p_nom").sel(
-            {f"{component}-ext": chp_elec_ext_i}
-        )
-
-        p_nom_heat = get_var(network, "Generator", "p_nom").sel(
-            {"Generator-ext": chp_heat_ext_i}
-        )
-        if component != "Generator":
-            p_nom_heat = p_nom_heat.rename({"Generator-ext": f"{component}-ext"})
-
-        p_nom_heat = p_nom_heat.assign_coords(
-            {
-                f"{component}-ext": p_nom_heat.coords[f"{component}-ext"].str.replace(
-                    "CHP heat output", "CHP"
-                )
-            }
-        )
-
-        # Net thermal efficiency is always equal to heat output generator's efficiency
-        # If the primary CHP component is a link, net electrical efficiency is an inverse of the link's efficiency
-        elec_efficiency = chp_elec_ext["efficiency"]
-        if component == "Link":
-            elec_efficiency = 1 / elec_efficiency
-        heat_to_elec_ratio = (
-            (chp_heat_ext["efficiency"] / elec_efficiency)
-            .rename_axis(f"{component}-ext")
-            .to_xarray()
-        )
-
-        define_constraints(
-            network,
-            p_nom_heat - heat_to_elec_ratio * p_nom_elec,
-            "==",
-            0,
-            f"{component}-ext",
-            f"chp_heat_output_capacity",
-        )
-
-
-def chp_dispatch_constraint(network, snapshots):
-    for component, components in [
-        ("Generator", network.generators),
-        ("Link", network.links),
-    ]:
-        chp_elec_ext = components[
-            components["technology"].fillna("").str.contains("CHP")
-            & ~components["technology"].fillna("").str.contains("heat output")
-        ]
-        if component == "Link":
-            # Assume actual heat output is defined at link's input
-            assert (chp_elec_ext["p0_sign"] < 0).all()
-
-        chp_elec_ext_i = chp_elec_ext.index
-        if chp_elec_ext.empty:
-            return
-
-        chp_heat_ext_i = chp_elec_ext_i.str.replace("CHP", "CHP heat output")
-        chp_heat_ext = network.generators.loc[chp_heat_ext_i].copy()
-        chp_heat_ext.index = chp_elec_ext_i
-
-        p_elec = get_var(network, component, "p").sel({component: chp_elec_ext_i})
-
-        p_heat = get_var(network, "Generator", "p").sel({"Generator": chp_heat_ext_i})
-        if component != "Generator":
-            p_heat = p_heat.rename({"Generator": component})
-
-        p_heat = p_heat.assign_coords(
-            {component: p_heat.coords[component].str.replace("CHP heat output", "CHP")}
-        )
-
-        # Net thermal efficiency is always equal to heat output generator's efficiency
-        # If the primary CHP component is a link, net electrical efficiency is an inverse of the link's efficiency
-        # Additionally p0_sign is negative for links so multiply by -1
-        elec_efficiency = chp_elec_ext["efficiency"]
-        if component == "Link":
-            elec_efficiency = -1 / elec_efficiency
-        heat_to_elec_ratio = (
-            (chp_heat_ext["efficiency"] / elec_efficiency)
-            .rename_axis(component)
-            .to_xarray()
-        )
-        lhs = p_heat - heat_to_elec_ratio * p_elec
-        lhs = lhs.rename({component: f"{component}-chp"})
-
-        define_constraints(
-            network,
-            lhs,
-            "==",
-            0,
-            f"{component}-chp",
-            f"chp_heat_output_dispatch",
-        )
-
-
-def maximum_resistive_heater_small_production(
-    network, snapshots, resistive_to_heat_pump_max_ratio
-):
-    resistive_heater_i = network.links[
-        network.links["technology"] == "Resistive heater small"
-    ].index
-    heat_pump_i = network.links[network.links["technology"] == "Heat pump small"].index
-
-    assert (network.links.loc[resistive_heater_i, "p0_sign"] < 0).all()
-    assert (network.links.loc[heat_pump_i, "p0_sign"] < 0).all()
-
-    p_t_resistive_heater = get_var(network, "Link", "p").sel(
-        {"Link": resistive_heater_i}
-    )
-
-    p_t_heat_pump = get_var(network, "Link", "p").sel({"Link": heat_pump_i})
-
-    p_annual_resistive_heater = linexpr((-1, p_t_resistive_heater)).sum("snapshot")
-    p_annual_heat_pump = linexpr((-1, p_t_heat_pump)).sum("snapshot")
-
-    define_constraints(
-        network,
-        p_annual_resistive_heater
-        - resistive_to_heat_pump_max_ratio * p_annual_heat_pump,
-        "<=",
-        0,
-        "Link",
-        "maximum_resistive_heater_small_production",
-    )
-
-
-def store_dispatch_constraint_ext(network, snapshots):
-    ext_i = network.get_extendable_i("StorageUnit")
-    if ext_i.empty:
+    p_min_synchronous = n.meta.get("p_min_synchronous", 0)
+    synchronous_carriers = n.meta.get("synchronous_carriers", [])
+    if (p_min_synchronous == 0) or (len(synchronous_carriers) == 0):
         return
-    var_name = "StorageUnit-ext-store_dispatch"
-    dispatch_t = (
-        get_var(network, "StorageUnit", "p_dispatch")
-        .rename({"StorageUnit": var_name})
-        .sel({var_name: ext_i})
-    )
-    store_t = (
-        get_var(network, "StorageUnit", "p_store")
-        .rename({"StorageUnit": var_name})
-        .sel({var_name: ext_i})
-    )
-    p_nom = (
-        get_var(network, "StorageUnit", "p_nom")
-        .rename({"StorageUnit-ext": var_name})
-        .sel({var_name: ext_i})
-    )
-    define_constraints(
-        network,
-        dispatch_t + store_t - p_nom,
-        "<=",
-        0,
-        var_name,
-        "store_dispatch_constraint_ext",
-    )
 
+    assert n.meta["reverse_links"]
 
-def store_dispatch_constraint_non_ext(network, snapshots):
-    non_ext_i = network.get_non_extendable_i("StorageUnit")
-    if non_ext_i.empty:
+    buses = n.buses[n.buses["carrier"] == "electricity in"].index
+    if buses.empty:
         return
-    var_name = "StorageUnit-non_ext-store_dispatch"
-    dispatch_t = (
-        get_var(network, "StorageUnit", "p_dispatch")
-        .rename({"StorageUnit": var_name})
-        .sel({var_name: non_ext_i})
-    )
-    store_t = (
-        get_var(network, "StorageUnit", "p_store")
-        .rename({"StorageUnit": var_name})
-        .sel({var_name: non_ext_i})
-    )
-    p_nom = (
-        network.storage_units["p_nom"].loc[non_ext_i].rename_axis(var_name).to_xarray()
-    )
-    define_constraints(
-        network,
-        dispatch_t + store_t,
-        "<=",
-        p_nom,
-        var_name,
-        "store_dispatch_constraint_non_ext",
-    )
 
+    lhs = 0
+    m = n.model
+    # Find components supplying to electricity buses (Stores not included)
+    for component, bus in [("Generator", "bus"), ("Link", "bus0")]:
+        df = n.df(component)
+        df = df[df[bus].isin(buses) & df["carrier"].isin(synchronous_carriers)]
+        if component == "Generator":
+            sign = 1
+            df = df[df["sign"] > 0]
+        elif component == "Link":
+            # because reverse_links is True
+            sign = -1
+        p = sign * m[f"{component}-p"].loc[sns, df.index].sum(component)
+        lhs += p
 
-def store_dispatch_constraint(network, snapshots):
-    store_dispatch_constraint_ext(network, snapshots)
-    store_dispatch_constraint_non_ext(network, snapshots)
+    m.add_constraints(
+        lhs, ">=", p_min_synchronous, name="synchronous_generation_constraint"
+    )

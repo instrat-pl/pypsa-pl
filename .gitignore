@@ -2,9 +2,10 @@
 _scratch
 data/runs/*
 !data/runs/.placeholder
+data/raw/*
+!data/raw/.placeholder
 HiGHS.log
 highs_options.txt
-.solvers
 sync.sh
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,latex,visualstudiocode,vim

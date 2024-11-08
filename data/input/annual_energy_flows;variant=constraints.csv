@@ -1,0 +1,26 @@
+name,area,carrier,type,parameter,year,value
+PL biogas CHP flow 2020,PL,biogas CHP,outflow,flow,2020,1.1
+PL biogas substrate supply max_flow 2030,PL,biogas substrate supply,outflow,max_flow,2030,39.3
+PL biogas substrate supply max_flow 2035,PL,biogas substrate supply,outflow,max_flow,2035,39.3
+PL biogas substrate supply max_flow 2040,PL,biogas substrate supply,outflow,max_flow,2040,39.3
+PL biogas substrate supply max_flow 2045,PL,biogas substrate supply,outflow,max_flow,2045,39.3
+PL biogas substrate supply max_flow 2050,PL,biogas substrate supply,outflow,max_flow,2050,39.3
+PL biogas upgrading min_flow 2030,PL,biogas upgrading,outflow,min_flow,2030,2.5
+PL biomass agriculture supply max_flow 2030,PL,biomass agriculture supply,outflow,max_flow,2030,70.3
+PL biomass agriculture supply max_flow 2035,PL,biomass agriculture supply,outflow,max_flow,2035,70.3
+PL biomass agriculture supply max_flow 2040,PL,biomass agriculture supply,outflow,max_flow,2040,70.3
+PL biomass agriculture supply max_flow 2045,PL,biomass agriculture supply,outflow,max_flow,2045,70.3
+PL biomass agriculture supply max_flow 2050,PL,biomass agriculture supply,outflow,max_flow,2050,70.3
+PL biomass wood CHP flow 2020,PL,biomass wood CHP,outflow,flow,2020,4.4
+PL biomass wood power flow 2020,PL,biomass wood power,outflow,flow,2020,1.6
+PL electricity export flow 2020,PL,electricity export,outflow,flow,2020,9.6
+PL electricity import flow 2020,PL,electricity import,outflow,flow,2020,17.9
+PL hard coal CHP flow 2020,PL,hard coal CHP,outflow,flow,2020,17.8
+PL hard coal power flow 2020,PL,hard coal power,outflow,flow,2020,52.1
+PL hydrogen electrolysis min_flow 2030,PL,hydrogen electrolysis,outflow,min_flow,2030,1.7
+PL lignite power flow 2020,PL,lignite power,outflow,flow,2020,36.6
+PL natural gas CHP flow 2020,PL,natural gas CHP,outflow,flow,2020,14.8
+PL natural gas supply max_flow 2030,PL,natural gas supply,outflow,max_flow,2030,233.8
+PL solar PV ground flow 2020,PL,solar PV ground,outflow,flow,2020,0.9
+PL solar PV roof flow 2020,PL,solar PV roof,outflow,flow,2020,1.4
+PL wind onshore flow 2020,PL,wind onshore,outflow,flow,2020,15.6

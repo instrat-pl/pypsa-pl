@@ -1,0 +1,546 @@
+name,area,area2,technology,qualifier,build_year,retire_year,cumulative,nom
+CZ PL electricity import AC 2020,CZ,PL,electricity import AC,,2020,2020,TRUE,1280.0
+CZ PL electricity import AC 2021,CZ,PL,electricity import AC,,2021,2021,TRUE,1280.0
+CZ PL electricity import AC 2022,CZ,PL,electricity import AC,,2022,2022,TRUE,1280.0
+CZ PL electricity import AC 2023,CZ,PL,electricity import AC,,2023,2023,TRUE,1280.0
+CZ PL electricity import AC 2025,CZ,PL,electricity import AC,,2025,2025,TRUE,1280.0
+CZ PL electricity import AC 2030,CZ,PL,electricity import AC,,2030,2030,TRUE,1280.0
+CZ PL electricity import AC 2035,CZ,PL,electricity import AC,,2035,2035,TRUE,1280.0
+CZ PL electricity import AC 2040,CZ,PL,electricity import AC,,2040,2040,TRUE,1280.0
+CZ PL electricity import AC 2045,CZ,PL,electricity import AC,,2045,2045,TRUE,1280.0
+CZ PL electricity import AC 2050,CZ,PL,electricity import AC,,2050,2050,TRUE,1280.0
+DE PL electricity import AC 2020,DE,PL,electricity import AC,,2020,2020,TRUE,2340.0
+DE PL electricity import AC 2021,DE,PL,electricity import AC,,2021,2021,TRUE,2340.0
+DE PL electricity import AC 2022,DE,PL,electricity import AC,,2022,2022,TRUE,2340.0
+DE PL electricity import AC 2023,DE,PL,electricity import AC,,2023,2023,TRUE,2340.0
+DE PL electricity import AC 2025,DE,PL,electricity import AC,,2025,2025,TRUE,2340.0
+DE PL electricity import AC 2030,DE,PL,electricity import AC,,2030,2030,TRUE,3120.0
+DE PL electricity import AC 2035,DE,PL,electricity import AC,,2035,2035,TRUE,3120.0
+DE PL electricity import AC 2040,DE,PL,electricity import AC,,2040,2040,TRUE,3120.0
+DE PL electricity import AC 2045,DE,PL,electricity import AC,,2045,2045,TRUE,3120.0
+DE PL electricity import AC 2050,DE,PL,electricity import AC,,2050,2050,TRUE,3120.0
+LT PL electricity import AC 2025,LT,PL,electricity import AC,,2025,2025,TRUE,1000.0
+LT PL electricity import AC 2030,LT,PL,electricity import AC,,2030,2030,TRUE,1000.0
+LT PL electricity import AC 2035,LT,PL,electricity import AC,,2035,2035,TRUE,1000.0
+LT PL electricity import AC 2040,LT,PL,electricity import AC,,2040,2040,TRUE,1000.0
+LT PL electricity import AC 2045,LT,PL,electricity import AC,,2045,2045,TRUE,1000.0
+LT PL electricity import AC 2050,LT,PL,electricity import AC,,2050,2050,TRUE,1000.0
+LT PL electricity import DC 2020,LT,PL,electricity import DC,,2020,2020,TRUE,500.0
+LT PL electricity import DC 2021,LT,PL,electricity import DC,,2021,2021,TRUE,500.0
+LT PL electricity import DC 2022,LT,PL,electricity import DC,,2022,2022,TRUE,500.0
+LT PL electricity import DC 2023,LT,PL,electricity import DC,,2023,2023,TRUE,500.0
+LT PL electricity import DC 2030,LT,PL,electricity import DC,,2030,2030,TRUE,700.0
+LT PL electricity import DC 2035,LT,PL,electricity import DC,,2035,2035,TRUE,700.0
+LT PL electricity import DC 2040,LT,PL,electricity import DC,,2040,2040,TRUE,700.0
+LT PL electricity import DC 2045,LT,PL,electricity import DC,,2045,2045,TRUE,700.0
+LT PL electricity import DC 2050,LT,PL,electricity import DC,,2050,2050,TRUE,700.0
+PL battery large charger 2021,PL,,battery large charger,,2021,2021,TRUE,50.0
+PL battery large charger 2022,PL,,battery large charger,,2022,2022,TRUE,90.0
+PL battery large charger 2023,PL,,battery large charger,,2023,2023,TRUE,140.0
+PL battery large power 2021,PL,,battery large power,,2021,2021,TRUE,50.0
+PL battery large power 2022,PL,,battery large power,,2022,2022,TRUE,100.0
+PL battery large power 2023,PL,,battery large power,,2023,2023,TRUE,150.0
+PL battery large storage 2021,PL,,battery large storage,,2021,2021,TRUE,200.0
+PL battery large storage 2022,PL,,battery large storage,,2022,2022,TRUE,400.0
+PL battery large storage 2023,PL,,battery large storage,,2023,2023,TRUE,600.0
+PL BEV battery 2020,PL,,BEV battery,,2020,2020,TRUE,620.0
+PL BEV battery 2021,PL,,BEV battery,,2021,2021,TRUE,1060.0
+PL BEV battery 2022,PL,,BEV battery,,2022,2022,TRUE,1760.0
+PL BEV battery 2023,PL,,BEV battery,,2023,2023,TRUE,1760.0
+PL BEV charger 2020,PL,,BEV charger,,2020,2020,TRUE,130.0
+PL BEV charger 2021,PL,,BEV charger,,2021,2021,TRUE,220.0
+PL BEV charger 2022,PL,,BEV charger,,2022,2022,TRUE,360.0
+PL BEV charger 2023,PL,,BEV charger,,2023,2023,TRUE,360.0
+PL BEV to BEV bus 2020,PL,,BEV,to BEV bus,2020,2020,TRUE,130.0
+PL BEV to BEV bus 2021,PL,,BEV,to BEV bus,2021,2021,TRUE,220.0
+PL BEV to BEV bus 2022,PL,,BEV,to BEV bus,2022,2022,TRUE,360.0
+PL BEV to BEV bus 2023,PL,,BEV,to BEV bus,2023,2023,TRUE,360.0
+PL BEV V2G 2020,PL,,BEV V2G,,2020,2020,TRUE,140.0
+PL BEV V2G 2021,PL,,BEV V2G,,2021,2021,TRUE,240.0
+PL BEV V2G 2022,PL,,BEV V2G,,2022,2022,TRUE,400.0
+PL BEV V2G 2023,PL,,BEV V2G,,2023,2023,TRUE,400.0
+PL biogas CHP industrial 2020,PL,,biogas CHP,industrial,2020,2020,TRUE,60.0
+PL biogas CHP industrial 2021,PL,,biogas CHP,industrial,2021,2021,TRUE,60.0
+PL biogas CHP industrial 2022,PL,,biogas CHP,industrial,2022,2022,TRUE,70.0
+PL biogas CHP industrial 2023,PL,,biogas CHP,industrial,2023,2023,TRUE,70.0
+PL biogas CHP public 2020,PL,,biogas CHP,public,2020,2020,TRUE,180.0
+PL biogas CHP public 2021,PL,,biogas CHP,public,2021,2021,TRUE,190.0
+PL biogas CHP public 2022,PL,,biogas CHP,public,2022,2022,TRUE,200.0
+PL biogas CHP public 2023,PL,,biogas CHP,public,2023,2023,TRUE,210.0
+PL biogas production industrial 2020,PL,,biogas production,industrial,2020,2020,TRUE,150.0
+PL biogas production industrial 2021,PL,,biogas production,industrial,2021,2021,TRUE,150.0
+PL biogas production industrial 2022,PL,,biogas production,industrial,2022,2022,TRUE,180.0
+PL biogas production industrial 2023,PL,,biogas production,industrial,2023,2023,TRUE,180.0
+PL biogas production public 2020,PL,,biogas production,public,2020,2020,TRUE,440.0
+PL biogas production public 2021,PL,,biogas production,public,2021,2021,TRUE,470.0
+PL biogas production public 2022,PL,,biogas production,public,2022,2022,TRUE,490.0
+PL biogas production public 2023,PL,,biogas production,public,2023,2023,TRUE,520.0
+PL biogas substrate supply 2020,PL,,biogas substrate supply,,2020,2020,TRUE,inf
+PL biogas substrate supply 2021,PL,,biogas substrate supply,,2021,2021,TRUE,inf
+PL biogas substrate supply 2022,PL,,biogas substrate supply,,2022,2022,TRUE,inf
+PL biogas substrate supply 2023,PL,,biogas substrate supply,,2023,2023,TRUE,inf
+PL biomass wood boiler to biomass bus 2020,PL,,biomass wood boiler,to biomass bus,2020,2020,TRUE,24570.0
+PL biomass wood boiler to biomass bus 2021,PL,,biomass wood boiler,to biomass bus,2021,2021,TRUE,25190.0
+PL biomass wood boiler to biomass bus 2022,PL,,biomass wood boiler,to biomass bus,2022,2022,TRUE,24700.0
+PL biomass wood boiler to biomass bus 2023,PL,,biomass wood boiler,to biomass bus,2023,2023,TRUE,24700.0
+PL biomass wood CHP industrial 2020,PL,,biomass wood CHP,industrial,2020,2020,TRUE,190.0
+PL biomass wood CHP industrial 2021,PL,,biomass wood CHP,industrial,2021,2021,TRUE,190.0
+PL biomass wood CHP industrial 2022,PL,,biomass wood CHP,industrial,2022,2022,TRUE,200.0
+PL biomass wood CHP industrial 2023,PL,,biomass wood CHP,industrial,2023,2023,TRUE,200.0
+PL biomass wood CHP public 2020,PL,,biomass wood CHP,public,2020,2020,TRUE,260.0
+PL biomass wood CHP public 2021,PL,,biomass wood CHP,public,2021,2021,TRUE,270.0
+PL biomass wood CHP public 2022,PL,,biomass wood CHP,public,2022,2022,TRUE,260.0
+PL biomass wood CHP public 2023,PL,,biomass wood CHP,public,2023,2023,TRUE,260.0
+PL biomass wood heat to biomass and biogas bus 2020,PL,,biomass wood heat,to biomass and biogas bus,2020,2020,TRUE,1820.0
+PL biomass wood heat to biomass and biogas bus 2021,PL,,biomass wood heat,to biomass and biogas bus,2021,2021,TRUE,2380.0
+PL biomass wood heat to biomass and biogas bus 2022,PL,,biomass wood heat,to biomass and biogas bus,2022,2022,TRUE,2470.0
+PL biomass wood heat to biomass and biogas bus 2023,PL,,biomass wood heat,to biomass and biogas bus,2023,2023,TRUE,2470.0
+PL biomass wood power public 2020,PL,,biomass wood power,public,2020,2020,TRUE,430.0
+PL biomass wood power public 2021,PL,,biomass wood power,public,2021,2021,TRUE,430.0
+PL biomass wood power public 2022,PL,,biomass wood power,public,2022,2022,TRUE,430.0
+PL biomass wood power public 2023,PL,,biomass wood power,public,2023,2023,TRUE,400.0
+PL biomass wood supply 2020,PL,,biomass wood supply,,2020,2020,TRUE,inf
+PL biomass wood supply 2021,PL,,biomass wood supply,,2021,2021,TRUE,inf
+PL biomass wood supply 2022,PL,,biomass wood supply,,2022,2022,TRUE,inf
+PL biomass wood supply 2023,PL,,biomass wood supply,,2023,2023,TRUE,inf
+PL centralised other heating from biomass and biogas bus 2020,PL,,centralised other heating,from biomass and biogas bus,2020,2020,TRUE,inf
+PL centralised other heating from biomass and biogas bus 2021,PL,,centralised other heating,from biomass and biogas bus,2021,2021,TRUE,inf
+PL centralised other heating from biomass and biogas bus 2022,PL,,centralised other heating,from biomass and biogas bus,2022,2022,TRUE,inf
+PL centralised other heating from biomass and biogas bus 2023,PL,,centralised other heating,from biomass and biogas bus,2023,2023,TRUE,inf
+PL centralised other heating from hard coal bus 2020,PL,,centralised other heating,from hard coal bus,2020,2020,TRUE,inf
+PL centralised other heating from hard coal bus 2021,PL,,centralised other heating,from hard coal bus,2021,2021,TRUE,inf
+PL centralised other heating from hard coal bus 2022,PL,,centralised other heating,from hard coal bus,2022,2022,TRUE,inf
+PL centralised other heating from hard coal bus 2023,PL,,centralised other heating,from hard coal bus,2023,2023,TRUE,inf
+PL centralised other heating from natural gas bus 2020,PL,,centralised other heating,from natural gas bus,2020,2020,TRUE,inf
+PL centralised other heating from natural gas bus 2021,PL,,centralised other heating,from natural gas bus,2021,2021,TRUE,inf
+PL centralised other heating from natural gas bus 2022,PL,,centralised other heating,from natural gas bus,2022,2022,TRUE,inf
+PL centralised other heating from natural gas bus 2023,PL,,centralised other heating,from natural gas bus,2023,2023,TRUE,inf
+PL centralised other heating from other bus 2020,PL,,centralised other heating,from other bus,2020,2020,TRUE,inf
+PL centralised other heating from other bus 2021,PL,,centralised other heating,from other bus,2021,2021,TRUE,inf
+PL centralised other heating from other bus 2022,PL,,centralised other heating,from other bus,2022,2022,TRUE,inf
+PL centralised other heating from other bus 2023,PL,,centralised other heating,from other bus,2023,2023,TRUE,inf
+PL centralised space heating from biomass and biogas bus 2020,PL,,centralised space heating,from biomass and biogas bus,2020,2020,TRUE,inf
+PL centralised space heating from biomass and biogas bus 2021,PL,,centralised space heating,from biomass and biogas bus,2021,2021,TRUE,inf
+PL centralised space heating from biomass and biogas bus 2022,PL,,centralised space heating,from biomass and biogas bus,2022,2022,TRUE,inf
+PL centralised space heating from biomass and biogas bus 2023,PL,,centralised space heating,from biomass and biogas bus,2023,2023,TRUE,inf
+PL centralised space heating from hard coal bus 2020,PL,,centralised space heating,from hard coal bus,2020,2020,TRUE,inf
+PL centralised space heating from hard coal bus 2021,PL,,centralised space heating,from hard coal bus,2021,2021,TRUE,inf
+PL centralised space heating from hard coal bus 2022,PL,,centralised space heating,from hard coal bus,2022,2022,TRUE,inf
+PL centralised space heating from hard coal bus 2023,PL,,centralised space heating,from hard coal bus,2023,2023,TRUE,inf
+PL centralised space heating from natural gas bus 2020,PL,,centralised space heating,from natural gas bus,2020,2020,TRUE,inf
+PL centralised space heating from natural gas bus 2021,PL,,centralised space heating,from natural gas bus,2021,2021,TRUE,inf
+PL centralised space heating from natural gas bus 2022,PL,,centralised space heating,from natural gas bus,2022,2022,TRUE,inf
+PL centralised space heating from natural gas bus 2023,PL,,centralised space heating,from natural gas bus,2023,2023,TRUE,inf
+PL centralised space heating from other bus 2020,PL,,centralised space heating,from other bus,2020,2020,TRUE,inf
+PL centralised space heating from other bus 2021,PL,,centralised space heating,from other bus,2021,2021,TRUE,inf
+PL centralised space heating from other bus 2022,PL,,centralised space heating,from other bus,2022,2022,TRUE,inf
+PL centralised space heating from other bus 2023,PL,,centralised space heating,from other bus,2023,2023,TRUE,inf
+PL centralised water heating from biomass and biogas bus 2020,PL,,centralised water heating,from biomass and biogas bus,2020,2020,TRUE,inf
+PL centralised water heating from biomass and biogas bus 2021,PL,,centralised water heating,from biomass and biogas bus,2021,2021,TRUE,inf
+PL centralised water heating from biomass and biogas bus 2022,PL,,centralised water heating,from biomass and biogas bus,2022,2022,TRUE,inf
+PL centralised water heating from biomass and biogas bus 2023,PL,,centralised water heating,from biomass and biogas bus,2023,2023,TRUE,inf
+PL centralised water heating from hard coal bus 2020,PL,,centralised water heating,from hard coal bus,2020,2020,TRUE,inf
+PL centralised water heating from hard coal bus 2021,PL,,centralised water heating,from hard coal bus,2021,2021,TRUE,inf
+PL centralised water heating from hard coal bus 2022,PL,,centralised water heating,from hard coal bus,2022,2022,TRUE,inf
+PL centralised water heating from hard coal bus 2023,PL,,centralised water heating,from hard coal bus,2023,2023,TRUE,inf
+PL centralised water heating from natural gas bus 2020,PL,,centralised water heating,from natural gas bus,2020,2020,TRUE,inf
+PL centralised water heating from natural gas bus 2021,PL,,centralised water heating,from natural gas bus,2021,2021,TRUE,inf
+PL centralised water heating from natural gas bus 2022,PL,,centralised water heating,from natural gas bus,2022,2022,TRUE,inf
+PL centralised water heating from natural gas bus 2023,PL,,centralised water heating,from natural gas bus,2023,2023,TRUE,inf
+PL centralised water heating from other bus 2020,PL,,centralised water heating,from other bus,2020,2020,TRUE,inf
+PL centralised water heating from other bus 2021,PL,,centralised water heating,from other bus,2021,2021,TRUE,inf
+PL centralised water heating from other bus 2022,PL,,centralised water heating,from other bus,2022,2022,TRUE,inf
+PL centralised water heating from other bus 2023,PL,,centralised water heating,from other bus,2023,2023,TRUE,inf
+PL CZ electricity export AC 2020,PL,CZ,electricity export AC,,2020,2020,TRUE,2330.0
+PL CZ electricity export AC 2021,PL,CZ,electricity export AC,,2021,2021,TRUE,2330.0
+PL CZ electricity export AC 2022,PL,CZ,electricity export AC,,2022,2022,TRUE,2330.0
+PL CZ electricity export AC 2023,PL,CZ,electricity export AC,,2023,2023,TRUE,2330.0
+PL CZ electricity export AC 2025,PL,CZ,electricity export AC,,2025,2025,TRUE,2330.0
+PL CZ electricity export AC 2030,PL,CZ,electricity export AC,,2030,2030,TRUE,2330.0
+PL CZ electricity export AC 2035,PL,CZ,electricity export AC,,2035,2035,TRUE,2330.0
+PL CZ electricity export AC 2040,PL,CZ,electricity export AC,,2040,2040,TRUE,2330.0
+PL CZ electricity export AC 2045,PL,CZ,electricity export AC,,2045,2045,TRUE,2330.0
+PL CZ electricity export AC 2050,PL,CZ,electricity export AC,,2050,2050,TRUE,2330.0
+PL DE electricity export AC 2020,PL,DE,electricity export AC,,2020,2020,TRUE,1900.0
+PL DE electricity export AC 2021,PL,DE,electricity export AC,,2021,2021,TRUE,1900.0
+PL DE electricity export AC 2022,PL,DE,electricity export AC,,2022,2022,TRUE,1900.0
+PL DE electricity export AC 2023,PL,DE,electricity export AC,,2023,2023,TRUE,1900.0
+PL DE electricity export AC 2025,PL,DE,electricity export AC,,2025,2025,TRUE,1900.0
+PL DE electricity export AC 2030,PL,DE,electricity export AC,,2030,2030,TRUE,2540.0
+PL DE electricity export AC 2035,PL,DE,electricity export AC,,2035,2035,TRUE,2540.0
+PL DE electricity export AC 2040,PL,DE,electricity export AC,,2040,2040,TRUE,2540.0
+PL DE electricity export AC 2045,PL,DE,electricity export AC,,2045,2045,TRUE,2540.0
+PL DE electricity export AC 2050,PL,DE,electricity export AC,,2050,2050,TRUE,2540.0
+PL decentralised space heating from biomass bus 2020,PL,,decentralised space heating,from biomass bus,2020,2020,TRUE,inf
+PL decentralised space heating from biomass bus 2021,PL,,decentralised space heating,from biomass bus,2021,2021,TRUE,inf
+PL decentralised space heating from biomass bus 2022,PL,,decentralised space heating,from biomass bus,2022,2022,TRUE,inf
+PL decentralised space heating from biomass bus 2023,PL,,decentralised space heating,from biomass bus,2023,2023,TRUE,inf
+PL decentralised space heating from hard coal bus 2020,PL,,decentralised space heating,from hard coal bus,2020,2020,TRUE,inf
+PL decentralised space heating from hard coal bus 2021,PL,,decentralised space heating,from hard coal bus,2021,2021,TRUE,inf
+PL decentralised space heating from hard coal bus 2022,PL,,decentralised space heating,from hard coal bus,2022,2022,TRUE,inf
+PL decentralised space heating from hard coal bus 2023,PL,,decentralised space heating,from hard coal bus,2023,2023,TRUE,inf
+PL decentralised space heating from heat pump bus 2020,PL,,decentralised space heating,from heat pump bus,2020,2020,TRUE,inf
+PL decentralised space heating from heat pump bus 2021,PL,,decentralised space heating,from heat pump bus,2021,2021,TRUE,inf
+PL decentralised space heating from heat pump bus 2022,PL,,decentralised space heating,from heat pump bus,2022,2022,TRUE,inf
+PL decentralised space heating from heat pump bus 2023,PL,,decentralised space heating,from heat pump bus,2023,2023,TRUE,inf
+PL decentralised space heating from natural gas bus 2020,PL,,decentralised space heating,from natural gas bus,2020,2020,TRUE,inf
+PL decentralised space heating from natural gas bus 2021,PL,,decentralised space heating,from natural gas bus,2021,2021,TRUE,inf
+PL decentralised space heating from natural gas bus 2022,PL,,decentralised space heating,from natural gas bus,2022,2022,TRUE,inf
+PL decentralised space heating from natural gas bus 2023,PL,,decentralised space heating,from natural gas bus,2023,2023,TRUE,inf
+PL decentralised space heating from other bus 2020,PL,,decentralised space heating,from other bus,2020,2020,TRUE,inf
+PL decentralised space heating from other bus 2021,PL,,decentralised space heating,from other bus,2021,2021,TRUE,inf
+PL decentralised space heating from other bus 2022,PL,,decentralised space heating,from other bus,2022,2022,TRUE,inf
+PL decentralised space heating from other bus 2023,PL,,decentralised space heating,from other bus,2023,2023,TRUE,inf
+PL decentralised space heating from other RES bus 2020,PL,,decentralised space heating,from other RES bus,2020,2020,TRUE,inf
+PL decentralised space heating from other RES bus 2021,PL,,decentralised space heating,from other RES bus,2021,2021,TRUE,inf
+PL decentralised space heating from other RES bus 2022,PL,,decentralised space heating,from other RES bus,2022,2022,TRUE,inf
+PL decentralised space heating from other RES bus 2023,PL,,decentralised space heating,from other RES bus,2023,2023,TRUE,inf
+PL decentralised space heating from resistive heater bus 2020,PL,,decentralised space heating,from resistive heater bus,2020,2020,TRUE,inf
+PL decentralised space heating from resistive heater bus 2021,PL,,decentralised space heating,from resistive heater bus,2021,2021,TRUE,inf
+PL decentralised space heating from resistive heater bus 2022,PL,,decentralised space heating,from resistive heater bus,2022,2022,TRUE,inf
+PL decentralised space heating from resistive heater bus 2023,PL,,decentralised space heating,from resistive heater bus,2023,2023,TRUE,inf
+PL decentralised water heating from biomass bus 2020,PL,,decentralised water heating,from biomass bus,2020,2020,TRUE,inf
+PL decentralised water heating from biomass bus 2021,PL,,decentralised water heating,from biomass bus,2021,2021,TRUE,inf
+PL decentralised water heating from biomass bus 2022,PL,,decentralised water heating,from biomass bus,2022,2022,TRUE,inf
+PL decentralised water heating from biomass bus 2023,PL,,decentralised water heating,from biomass bus,2023,2023,TRUE,inf
+PL decentralised water heating from hard coal bus 2020,PL,,decentralised water heating,from hard coal bus,2020,2020,TRUE,inf
+PL decentralised water heating from hard coal bus 2021,PL,,decentralised water heating,from hard coal bus,2021,2021,TRUE,inf
+PL decentralised water heating from hard coal bus 2022,PL,,decentralised water heating,from hard coal bus,2022,2022,TRUE,inf
+PL decentralised water heating from hard coal bus 2023,PL,,decentralised water heating,from hard coal bus,2023,2023,TRUE,inf
+PL decentralised water heating from heat pump bus 2020,PL,,decentralised water heating,from heat pump bus,2020,2020,TRUE,inf
+PL decentralised water heating from heat pump bus 2021,PL,,decentralised water heating,from heat pump bus,2021,2021,TRUE,inf
+PL decentralised water heating from heat pump bus 2022,PL,,decentralised water heating,from heat pump bus,2022,2022,TRUE,inf
+PL decentralised water heating from heat pump bus 2023,PL,,decentralised water heating,from heat pump bus,2023,2023,TRUE,inf
+PL decentralised water heating from natural gas bus 2020,PL,,decentralised water heating,from natural gas bus,2020,2020,TRUE,inf
+PL decentralised water heating from natural gas bus 2021,PL,,decentralised water heating,from natural gas bus,2021,2021,TRUE,inf
+PL decentralised water heating from natural gas bus 2022,PL,,decentralised water heating,from natural gas bus,2022,2022,TRUE,inf
+PL decentralised water heating from natural gas bus 2023,PL,,decentralised water heating,from natural gas bus,2023,2023,TRUE,inf
+PL decentralised water heating from other bus 2020,PL,,decentralised water heating,from other bus,2020,2020,TRUE,inf
+PL decentralised water heating from other bus 2021,PL,,decentralised water heating,from other bus,2021,2021,TRUE,inf
+PL decentralised water heating from other bus 2022,PL,,decentralised water heating,from other bus,2022,2022,TRUE,inf
+PL decentralised water heating from other bus 2023,PL,,decentralised water heating,from other bus,2023,2023,TRUE,inf
+PL decentralised water heating from other RES bus 2020,PL,,decentralised water heating,from other RES bus,2020,2020,TRUE,inf
+PL decentralised water heating from other RES bus 2021,PL,,decentralised water heating,from other RES bus,2021,2021,TRUE,inf
+PL decentralised water heating from other RES bus 2022,PL,,decentralised water heating,from other RES bus,2022,2022,TRUE,inf
+PL decentralised water heating from other RES bus 2023,PL,,decentralised water heating,from other RES bus,2023,2023,TRUE,inf
+PL decentralised water heating from resistive heater bus 2020,PL,,decentralised water heating,from resistive heater bus,2020,2020,TRUE,inf
+PL decentralised water heating from resistive heater bus 2021,PL,,decentralised water heating,from resistive heater bus,2021,2021,TRUE,inf
+PL decentralised water heating from resistive heater bus 2022,PL,,decentralised water heating,from resistive heater bus,2022,2022,TRUE,inf
+PL decentralised water heating from resistive heater bus 2023,PL,,decentralised water heating,from resistive heater bus,2023,2023,TRUE,inf
+PL district heating to and from biomass and biogas bus 2020,PL,,district heating,to and from biomass and biogas bus,2020,2020,TRUE,2980.0
+PL district heating to and from biomass and biogas bus 2021,PL,,district heating,to and from biomass and biogas bus,2021,2021,TRUE,3270.0
+PL district heating to and from biomass and biogas bus 2022,PL,,district heating,to and from biomass and biogas bus,2022,2022,TRUE,3270.0
+PL district heating to and from biomass and biogas bus 2023,PL,,district heating,to and from biomass and biogas bus,2023,2023,TRUE,3270.0
+PL district heating to and from hard coal bus 2020,PL,,district heating,to and from hard coal bus,2020,2020,TRUE,31230.0
+PL district heating to and from hard coal bus 2021,PL,,district heating,to and from hard coal bus,2021,2021,TRUE,33000.0
+PL district heating to and from hard coal bus 2022,PL,,district heating,to and from hard coal bus,2022,2022,TRUE,30190.0
+PL district heating to and from hard coal bus 2023,PL,,district heating,to and from hard coal bus,2023,2023,TRUE,30190.0
+PL district heating to and from natural gas bus 2020,PL,,district heating,to and from natural gas bus,2020,2020,TRUE,4190.0
+PL district heating to and from natural gas bus 2021,PL,,district heating,to and from natural gas bus,2021,2021,TRUE,4670.0
+PL district heating to and from natural gas bus 2022,PL,,district heating,to and from natural gas bus,2022,2022,TRUE,4650.0
+PL district heating to and from natural gas bus 2023,PL,,district heating,to and from natural gas bus,2023,2023,TRUE,4650.0
+PL district heating to and from other bus 2020,PL,,district heating,to and from other bus,2020,2020,TRUE,1730.0
+PL district heating to and from other bus 2021,PL,,district heating,to and from other bus,2021,2021,TRUE,1950.0
+PL district heating to and from other bus 2022,PL,,district heating,to and from other bus,2022,2022,TRUE,1990.0
+PL district heating to and from other bus 2023,PL,,district heating,to and from other bus,2023,2023,TRUE,1990.0
+PL electricity final use 2020,PL,,electricity final use,,2020,2020,TRUE,inf
+PL electricity final use 2021,PL,,electricity final use,,2021,2021,TRUE,inf
+PL electricity final use 2022,PL,,electricity final use,,2022,2022,TRUE,inf
+PL electricity final use 2023,PL,,electricity final use,,2023,2023,TRUE,inf
+PL electricity grid 2020,PL,,electricity grid,,2020,2020,TRUE,inf
+PL electricity grid 2021,PL,,electricity grid,,2021,2021,TRUE,inf
+PL electricity grid 2022,PL,,electricity grid,,2022,2022,TRUE,inf
+PL electricity grid 2023,PL,,electricity grid,,2023,2023,TRUE,inf
+PL hard coal boiler to hard coal bus 2020,PL,,hard coal boiler,to hard coal bus,2020,2020,TRUE,28120.0
+PL hard coal boiler to hard coal bus 2021,PL,,hard coal boiler,to hard coal bus,2021,2021,TRUE,27010.0
+PL hard coal boiler to hard coal bus 2022,PL,,hard coal boiler,to hard coal bus,2022,2022,TRUE,21670.0
+PL hard coal boiler to hard coal bus 2023,PL,,hard coal boiler,to hard coal bus,2023,2023,TRUE,21670.0
+PL hard coal CHP industrial 2020,PL,,hard coal CHP,industrial,2020,2020,TRUE,950.0
+PL hard coal CHP industrial 2021,PL,,hard coal CHP,industrial,2021,2021,TRUE,960.0
+PL hard coal CHP industrial 2022,PL,,hard coal CHP,industrial,2022,2022,TRUE,1010.0
+PL hard coal CHP industrial 2023,PL,,hard coal CHP,industrial,2023,2023,TRUE,1030.0
+PL hard coal CHP public 2020,PL,,hard coal CHP,public,2020,2020,TRUE,4450.0
+PL hard coal CHP public 2021,PL,,hard coal CHP,public,2021,2021,TRUE,4680.0
+PL hard coal CHP public 2022,PL,,hard coal CHP,public,2022,2022,TRUE,4120.0
+PL hard coal CHP public 2023,PL,,hard coal CHP,public,2023,2023,TRUE,4120.0
+PL hard coal heat to hard coal bus 2020,PL,,hard coal heat,to hard coal bus,2020,2020,TRUE,36910.0
+PL hard coal heat to hard coal bus 2021,PL,,hard coal heat,to hard coal bus,2021,2021,TRUE,35630.0
+PL hard coal heat to hard coal bus 2022,PL,,hard coal heat,to hard coal bus,2022,2022,TRUE,34210.0
+PL hard coal heat to hard coal bus 2023,PL,,hard coal heat,to hard coal bus,2023,2023,TRUE,34210.0
+PL hard coal power old public 2020,PL,,hard coal power old,public,2020,2020,TRUE,12600.0
+PL hard coal power old public 2021,PL,,hard coal power old,public,2021,2021,TRUE,11520.0
+PL hard coal power old public 2022,PL,,hard coal power old,public,2022,2022,TRUE,11090.0
+PL hard coal power old public 2023,PL,,hard coal power old,public,2023,2023,TRUE,11090.0
+PL hard coal power SC public 2020,PL,,hard coal power SC,public,2020,2020,TRUE,4050.0
+PL hard coal power SC public 2021,PL,,hard coal power SC,public,2021,2021,TRUE,4050.0
+PL hard coal power SC public 2022,PL,,hard coal power SC,public,2022,2022,TRUE,4050.0
+PL hard coal power SC public 2023,PL,,hard coal power SC,public,2023,2023,TRUE,4050.0
+PL hard coal supply 2020,PL,,hard coal supply,,2020,2020,TRUE,inf
+PL hard coal supply 2021,PL,,hard coal supply,,2021,2021,TRUE,inf
+PL hard coal supply 2022,PL,,hard coal supply,,2022,2022,TRUE,inf
+PL hard coal supply 2023,PL,,hard coal supply,,2023,2023,TRUE,inf
+PL heat pump small AW to heat pump bus 2020,PL,,heat pump small AW,to heat pump bus,2020,2020,TRUE,2970.0
+PL heat pump small AW to heat pump bus 2021,PL,,heat pump small AW,to heat pump bus,2021,2021,TRUE,3690.0
+PL heat pump small AW to heat pump bus 2022,PL,,heat pump small AW,to heat pump bus,2022,2022,TRUE,5170.0
+PL heat pump small AW to heat pump bus 2023,PL,,heat pump small AW,to heat pump bus,2023,2023,TRUE,5170.0
+PL heat storage large tank charge to and from biomass and biogas bus 2020,PL,,heat storage large tank charge,to and from biomass and biogas bus,2020,2020,TRUE,0.0
+PL heat storage large tank charge to and from biomass and biogas bus 2021,PL,,heat storage large tank charge,to and from biomass and biogas bus,2021,2021,TRUE,150.0
+PL heat storage large tank charge to and from biomass and biogas bus 2022,PL,,heat storage large tank charge,to and from biomass and biogas bus,2022,2022,TRUE,160.0
+PL heat storage large tank charge to and from biomass and biogas bus 2023,PL,,heat storage large tank charge,to and from biomass and biogas bus,2023,2023,TRUE,160.0
+PL heat storage large tank charge to and from hard coal bus 2020,PL,,heat storage large tank charge,to and from hard coal bus,2020,2020,TRUE,0.0
+PL heat storage large tank charge to and from hard coal bus 2021,PL,,heat storage large tank charge,to and from hard coal bus,2021,2021,TRUE,1540.0
+PL heat storage large tank charge to and from hard coal bus 2022,PL,,heat storage large tank charge,to and from hard coal bus,2022,2022,TRUE,1510.0
+PL heat storage large tank charge to and from hard coal bus 2023,PL,,heat storage large tank charge,to and from hard coal bus,2023,2023,TRUE,1510.0
+PL heat storage large tank charge to and from natural gas bus 2020,PL,,heat storage large tank charge,to and from natural gas bus,2020,2020,TRUE,0.0
+PL heat storage large tank charge to and from natural gas bus 2021,PL,,heat storage large tank charge,to and from natural gas bus,2021,2021,TRUE,220.0
+PL heat storage large tank charge to and from natural gas bus 2022,PL,,heat storage large tank charge,to and from natural gas bus,2022,2022,TRUE,230.0
+PL heat storage large tank charge to and from natural gas bus 2023,PL,,heat storage large tank charge,to and from natural gas bus,2023,2023,TRUE,230.0
+PL heat storage large tank charge to and from other bus 2020,PL,,heat storage large tank charge,to and from other bus,2020,2020,TRUE,0.0
+PL heat storage large tank charge to and from other bus 2021,PL,,heat storage large tank charge,to and from other bus,2021,2021,TRUE,90.0
+PL heat storage large tank charge to and from other bus 2022,PL,,heat storage large tank charge,to and from other bus,2022,2022,TRUE,100.0
+PL heat storage large tank charge to and from other bus 2023,PL,,heat storage large tank charge,to and from other bus,2023,2023,TRUE,100.0
+PL heat storage large tank discharge to and from biomass and biogas bus 2020,PL,,heat storage large tank discharge,to and from biomass and biogas bus,2020,2020,TRUE,0.0
+PL heat storage large tank discharge to and from biomass and biogas bus 2021,PL,,heat storage large tank discharge,to and from biomass and biogas bus,2021,2021,TRUE,150.0
+PL heat storage large tank discharge to and from biomass and biogas bus 2022,PL,,heat storage large tank discharge,to and from biomass and biogas bus,2022,2022,TRUE,160.0
+PL heat storage large tank discharge to and from biomass and biogas bus 2023,PL,,heat storage large tank discharge,to and from biomass and biogas bus,2023,2023,TRUE,160.0
+PL heat storage large tank discharge to and from hard coal bus 2020,PL,,heat storage large tank discharge,to and from hard coal bus,2020,2020,TRUE,0.0
+PL heat storage large tank discharge to and from hard coal bus 2021,PL,,heat storage large tank discharge,to and from hard coal bus,2021,2021,TRUE,1540.0
+PL heat storage large tank discharge to and from hard coal bus 2022,PL,,heat storage large tank discharge,to and from hard coal bus,2022,2022,TRUE,1510.0
+PL heat storage large tank discharge to and from hard coal bus 2023,PL,,heat storage large tank discharge,to and from hard coal bus,2023,2023,TRUE,1510.0
+PL heat storage large tank discharge to and from natural gas bus 2020,PL,,heat storage large tank discharge,to and from natural gas bus,2020,2020,TRUE,0.0
+PL heat storage large tank discharge to and from natural gas bus 2021,PL,,heat storage large tank discharge,to and from natural gas bus,2021,2021,TRUE,220.0
+PL heat storage large tank discharge to and from natural gas bus 2022,PL,,heat storage large tank discharge,to and from natural gas bus,2022,2022,TRUE,230.0
+PL heat storage large tank discharge to and from natural gas bus 2023,PL,,heat storage large tank discharge,to and from natural gas bus,2023,2023,TRUE,230.0
+PL heat storage large tank discharge to and from other bus 2020,PL,,heat storage large tank discharge,to and from other bus,2020,2020,TRUE,0.0
+PL heat storage large tank discharge to and from other bus 2021,PL,,heat storage large tank discharge,to and from other bus,2021,2021,TRUE,90.0
+PL heat storage large tank discharge to and from other bus 2022,PL,,heat storage large tank discharge,to and from other bus,2022,2022,TRUE,100.0
+PL heat storage large tank discharge to and from other bus 2023,PL,,heat storage large tank discharge,to and from other bus,2023,2023,TRUE,100.0
+PL heat storage large tank to and from biomass and biogas bus 2020,PL,,heat storage large tank,to and from biomass and biogas bus,2020,2020,TRUE,0.0
+PL heat storage large tank to and from biomass and biogas bus 2021,PL,,heat storage large tank,to and from biomass and biogas bus,2021,2021,TRUE,910.0
+PL heat storage large tank to and from biomass and biogas bus 2022,PL,,heat storage large tank,to and from biomass and biogas bus,2022,2022,TRUE,980.0
+PL heat storage large tank to and from biomass and biogas bus 2023,PL,,heat storage large tank,to and from biomass and biogas bus,2023,2023,TRUE,980.0
+PL heat storage large tank to and from hard coal bus 2020,PL,,heat storage large tank,to and from hard coal bus,2020,2020,TRUE,0.0
+PL heat storage large tank to and from hard coal bus 2021,PL,,heat storage large tank,to and from hard coal bus,2021,2021,TRUE,9230.0
+PL heat storage large tank to and from hard coal bus 2022,PL,,heat storage large tank,to and from hard coal bus,2022,2022,TRUE,9040.0
+PL heat storage large tank to and from hard coal bus 2023,PL,,heat storage large tank,to and from hard coal bus,2023,2023,TRUE,9040.0
+PL heat storage large tank to and from natural gas bus 2020,PL,,heat storage large tank,to and from natural gas bus,2020,2020,TRUE,0.0
+PL heat storage large tank to and from natural gas bus 2021,PL,,heat storage large tank,to and from natural gas bus,2021,2021,TRUE,1310.0
+PL heat storage large tank to and from natural gas bus 2022,PL,,heat storage large tank,to and from natural gas bus,2022,2022,TRUE,1390.0
+PL heat storage large tank to and from natural gas bus 2023,PL,,heat storage large tank,to and from natural gas bus,2023,2023,TRUE,1390.0
+PL heat storage large tank to and from other bus 2020,PL,,heat storage large tank,to and from other bus,2020,2020,TRUE,0.0
+PL heat storage large tank to and from other bus 2021,PL,,heat storage large tank,to and from other bus,2021,2021,TRUE,550.0
+PL heat storage large tank to and from other bus 2022,PL,,heat storage large tank,to and from other bus,2022,2022,TRUE,590.0
+PL heat storage large tank to and from other bus 2023,PL,,heat storage large tank,to and from other bus,2023,2023,TRUE,590.0
+PL hydro PSH power 2020,PL,,hydro PSH power,,2020,2020,TRUE,1790.0
+PL hydro PSH power 2021,PL,,hydro PSH power,,2021,2021,TRUE,1790.0
+PL hydro PSH power 2022,PL,,hydro PSH power,,2022,2022,TRUE,1790.0
+PL hydro PSH power 2023,PL,,hydro PSH power,,2023,2023,TRUE,1790.0
+PL hydro PSH pump 2020,PL,,hydro PSH pump,,2020,2020,TRUE,1130.0
+PL hydro PSH pump 2021,PL,,hydro PSH pump,,2021,2021,TRUE,1130.0
+PL hydro PSH pump 2022,PL,,hydro PSH pump,,2022,2022,TRUE,1130.0
+PL hydro PSH pump 2023,PL,,hydro PSH pump,,2023,2023,TRUE,1130.0
+PL hydro PSH storage 2020,PL,,hydro PSH storage,,2020,2020,TRUE,8470.0
+PL hydro PSH storage 2021,PL,,hydro PSH storage,,2021,2021,TRUE,8470.0
+PL hydro PSH storage 2022,PL,,hydro PSH storage,,2022,2022,TRUE,8470.0
+PL hydro PSH storage 2023,PL,,hydro PSH storage,,2023,2023,TRUE,8470.0
+PL hydro ROR 2020,PL,,hydro ROR,,2020,2020,TRUE,590.0
+PL hydro ROR 2021,PL,,hydro ROR,,2021,2021,TRUE,600.0
+PL hydro ROR 2022,PL,,hydro ROR,,2022,2022,TRUE,600.0
+PL hydro ROR 2023,PL,,hydro ROR,,2023,2023,TRUE,600.0
+PL hydrogen final use 2020,PL,,hydrogen final use,,2020,2020,TRUE,inf
+PL hydrogen final use 2021,PL,,hydrogen final use,,2021,2021,TRUE,inf
+PL hydrogen final use 2022,PL,,hydrogen final use,,2022,2022,TRUE,inf
+PL hydrogen final use 2023,PL,,hydrogen final use,,2023,2023,TRUE,inf
+PL hydrogen from natural gas reforming bus 2020,PL,,hydrogen,from natural gas reforming bus,2020,2020,TRUE,inf
+PL hydrogen from natural gas reforming bus 2021,PL,,hydrogen,from natural gas reforming bus,2021,2021,TRUE,inf
+PL hydrogen from natural gas reforming bus 2022,PL,,hydrogen,from natural gas reforming bus,2022,2022,TRUE,inf
+PL hydrogen from natural gas reforming bus 2023,PL,,hydrogen,from natural gas reforming bus,2023,2023,TRUE,inf
+PL ICE vehicle fuel supply 2020,PL,,ICE vehicle fuel supply,,2020,2020,TRUE,inf
+PL ICE vehicle fuel supply 2021,PL,,ICE vehicle fuel supply,,2021,2021,TRUE,inf
+PL ICE vehicle fuel supply 2022,PL,,ICE vehicle fuel supply,,2022,2022,TRUE,inf
+PL ICE vehicle fuel supply 2023,PL,,ICE vehicle fuel supply,,2023,2023,TRUE,inf
+PL ICE vehicle to ICE vehicle bus 2020,PL,,ICE vehicle,to ICE vehicle bus,2020,2020,TRUE,237870.0
+PL ICE vehicle to ICE vehicle bus 2021,PL,,ICE vehicle,to ICE vehicle bus,2021,2021,TRUE,242400.0
+PL ICE vehicle to ICE vehicle bus 2022,PL,,ICE vehicle,to ICE vehicle bus,2022,2022,TRUE,243960.0
+PL ICE vehicle to ICE vehicle bus 2023,PL,,ICE vehicle,to ICE vehicle bus,2023,2023,TRUE,243960.0
+PL ICE vehicle to ICE vehicle bus new 2020 ICE vehicle,PL,,ICE vehicle,to ICE vehicle bus,2020,,TRUE,0.0
+PL ICE vehicle to ICE vehicle bus new 2021 ICE vehicle,PL,,ICE vehicle,to ICE vehicle bus,2021,,TRUE,0.0
+PL ICE vehicle to ICE vehicle bus new 2022 ICE vehicle,PL,,ICE vehicle,to ICE vehicle bus,2022,,TRUE,0.0
+PL ICE vehicle to ICE vehicle bus new 2023 ICE vehicle,PL,,ICE vehicle,to ICE vehicle bus,2023,,TRUE,0.0
+PL light vehicle mobility final use 2020,PL,,light vehicle mobility final use,,2020,2020,TRUE,inf
+PL light vehicle mobility final use 2021,PL,,light vehicle mobility final use,,2021,2021,TRUE,inf
+PL light vehicle mobility final use 2022,PL,,light vehicle mobility final use,,2022,2022,TRUE,inf
+PL light vehicle mobility final use 2023,PL,,light vehicle mobility final use,,2023,2023,TRUE,inf
+PL light vehicle mobility from BEV bus 2020,PL,,light vehicle mobility,from BEV bus,2020,2020,TRUE,inf
+PL light vehicle mobility from BEV bus 2021,PL,,light vehicle mobility,from BEV bus,2021,2021,TRUE,inf
+PL light vehicle mobility from BEV bus 2022,PL,,light vehicle mobility,from BEV bus,2022,2022,TRUE,inf
+PL light vehicle mobility from BEV bus 2023,PL,,light vehicle mobility,from BEV bus,2023,2023,TRUE,inf
+PL light vehicle mobility from ICE vehicle bus 2020,PL,,light vehicle mobility,from ICE vehicle bus,2020,2020,TRUE,inf
+PL light vehicle mobility from ICE vehicle bus 2021,PL,,light vehicle mobility,from ICE vehicle bus,2021,2021,TRUE,inf
+PL light vehicle mobility from ICE vehicle bus 2022,PL,,light vehicle mobility,from ICE vehicle bus,2022,2022,TRUE,inf
+PL light vehicle mobility from ICE vehicle bus 2023,PL,,light vehicle mobility,from ICE vehicle bus,2023,2023,TRUE,inf
+PL lignite power old public 2020,PL,,lignite power old,public,2020,2020,TRUE,6480.0
+PL lignite power old public 2021,PL,,lignite power old,public,2021,2021,TRUE,6110.0
+PL lignite power old public 2022,PL,,lignite power old,public,2022,2022,TRUE,5930.0
+PL lignite power old public 2023,PL,,lignite power old,public,2023,2023,TRUE,5930.0
+PL lignite power SC public 2020,PL,,lignite power SC,public,2020,2020,TRUE,1240.0
+PL lignite power SC public 2021,PL,,lignite power SC,public,2021,2021,TRUE,1710.0
+PL lignite power SC public 2022,PL,,lignite power SC,public,2022,2022,TRUE,1710.0
+PL lignite power SC public 2023,PL,,lignite power SC,public,2023,2023,TRUE,1710.0
+PL lignite supply 2020,PL,,lignite supply,,2020,2020,TRUE,inf
+PL lignite supply 2021,PL,,lignite supply,,2021,2021,TRUE,inf
+PL lignite supply 2022,PL,,lignite supply,,2022,2022,TRUE,inf
+PL lignite supply 2023,PL,,lignite supply,,2023,2023,TRUE,inf
+PL LT electricity export AC 2025,PL,LT,electricity export AC,,2025,2025,TRUE,1000.0
+PL LT electricity export AC 2030,PL,LT,electricity export AC,,2030,2030,TRUE,1000.0
+PL LT electricity export AC 2035,PL,LT,electricity export AC,,2035,2035,TRUE,1000.0
+PL LT electricity export AC 2040,PL,LT,electricity export AC,,2040,2040,TRUE,1000.0
+PL LT electricity export AC 2045,PL,LT,electricity export AC,,2045,2045,TRUE,1000.0
+PL LT electricity export AC 2050,PL,LT,electricity export AC,,2050,2050,TRUE,1000.0
+PL LT electricity export DC 2020,PL,LT,electricity export DC,,2020,2020,TRUE,500.0
+PL LT electricity export DC 2021,PL,LT,electricity export DC,,2021,2021,TRUE,500.0
+PL LT electricity export DC 2022,PL,LT,electricity export DC,,2022,2022,TRUE,500.0
+PL LT electricity export DC 2023,PL,LT,electricity export DC,,2023,2023,TRUE,500.0
+PL LT electricity export DC 2030,PL,LT,electricity export DC,,2030,2030,TRUE,700.0
+PL LT electricity export DC 2035,PL,LT,electricity export DC,,2035,2035,TRUE,700.0
+PL LT electricity export DC 2040,PL,LT,electricity export DC,,2040,2040,TRUE,700.0
+PL LT electricity export DC 2045,PL,LT,electricity export DC,,2045,2045,TRUE,700.0
+PL LT electricity export DC 2050,PL,LT,electricity export DC,,2050,2050,TRUE,700.0
+PL natural gas boiler to natural gas bus 2020,PL,,natural gas boiler,to natural gas bus,2020,2020,TRUE,22510.0
+PL natural gas boiler to natural gas bus 2021,PL,,natural gas boiler,to natural gas bus,2021,2021,TRUE,27870.0
+PL natural gas boiler to natural gas bus 2022,PL,,natural gas boiler,to natural gas bus,2022,2022,TRUE,26540.0
+PL natural gas boiler to natural gas bus 2023,PL,,natural gas boiler,to natural gas bus,2023,2023,TRUE,26540.0
+PL natural gas boiler to natural gas bus new 2020 natural gas boiler,PL,,natural gas boiler,to natural gas bus,2020,,TRUE,0.0
+PL natural gas boiler to natural gas bus new 2021 natural gas boiler,PL,,natural gas boiler,to natural gas bus,2021,,TRUE,0.0
+PL natural gas boiler to natural gas bus new 2022 natural gas boiler,PL,,natural gas boiler,to natural gas bus,2022,,TRUE,0.0
+PL natural gas boiler to natural gas bus new 2023 natural gas boiler,PL,,natural gas boiler,to natural gas bus,2023,,TRUE,0.0
+PL natural gas CHP CCGT old industrial 2020,PL,,natural gas CHP CCGT old,industrial,2020,2020,TRUE,1060.0
+PL natural gas CHP CCGT old industrial 2021,PL,,natural gas CHP CCGT old,industrial,2021,2021,TRUE,1060.0
+PL natural gas CHP CCGT old industrial 2022,PL,,natural gas CHP CCGT old,industrial,2022,2022,TRUE,1060.0
+PL natural gas CHP CCGT old industrial 2023,PL,,natural gas CHP CCGT old,industrial,2023,2023,TRUE,1060.0
+PL natural gas CHP CCGT old public 2020,PL,,natural gas CHP CCGT old,public,2020,2020,TRUE,680.0
+PL natural gas CHP CCGT old public 2021,PL,,natural gas CHP CCGT old,public,2021,2021,TRUE,680.0
+PL natural gas CHP CCGT old public 2022,PL,,natural gas CHP CCGT old,public,2022,2022,TRUE,680.0
+PL natural gas CHP CCGT old public 2023,PL,,natural gas CHP CCGT old,public,2023,2023,TRUE,680.0
+PL natural gas CHP CCGT public 2021,PL,,natural gas CHP CCGT,public,2021,2021,TRUE,520.0
+PL natural gas CHP CCGT public 2022,PL,,natural gas CHP CCGT,public,2022,2022,TRUE,520.0
+PL natural gas CHP CCGT public 2023,PL,,natural gas CHP CCGT,public,2023,2023,TRUE,520.0
+PL natural gas CHP old industrial 2020,PL,,natural gas CHP old,industrial,2020,2020,TRUE,370.0
+PL natural gas CHP old industrial 2021,PL,,natural gas CHP old,industrial,2021,2021,TRUE,380.0
+PL natural gas CHP old industrial 2022,PL,,natural gas CHP old,industrial,2022,2022,TRUE,400.0
+PL natural gas CHP old industrial 2023,PL,,natural gas CHP old,industrial,2023,2023,TRUE,450.0
+PL natural gas CHP old public 2020,PL,,natural gas CHP old,public,2020,2020,TRUE,1040.0
+PL natural gas CHP old public 2021,PL,,natural gas CHP old,public,2021,2021,TRUE,680.0
+PL natural gas CHP old public 2022,PL,,natural gas CHP old,public,2022,2022,TRUE,1230.0
+PL natural gas CHP old public 2023,PL,,natural gas CHP old,public,2023,2023,TRUE,1240.0
+PL natural gas heat to natural gas bus 2020,PL,,natural gas heat,to natural gas bus,2020,2020,TRUE,3420.0
+PL natural gas heat to natural gas bus 2021,PL,,natural gas heat,to natural gas bus,2021,2021,TRUE,3600.0
+PL natural gas heat to natural gas bus 2022,PL,,natural gas heat,to natural gas bus,2022,2022,TRUE,4980.0
+PL natural gas heat to natural gas bus 2023,PL,,natural gas heat,to natural gas bus,2023,2023,TRUE,4980.0
+PL natural gas reforming to natural gas reforming bus 2020,PL,,natural gas reforming,to natural gas reforming bus,2020,2020,TRUE,4200.0
+PL natural gas reforming to natural gas reforming bus 2021,PL,,natural gas reforming,to natural gas reforming bus,2021,2021,TRUE,4200.0
+PL natural gas reforming to natural gas reforming bus 2022,PL,,natural gas reforming,to natural gas reforming bus,2022,2022,TRUE,4200.0
+PL natural gas reforming to natural gas reforming bus 2023,PL,,natural gas reforming,to natural gas reforming bus,2023,2023,TRUE,4200.0
+PL natural gas storage 2020,PL,,natural gas storage,,2020,2020,TRUE,33900000.0
+PL natural gas storage 2021,PL,,natural gas storage,,2021,2021,TRUE,33900000.0
+PL natural gas storage 2022,PL,,natural gas storage,,2022,2022,TRUE,33900000.0
+PL natural gas storage 2023,PL,,natural gas storage,,2023,2023,TRUE,33900000.0
+PL natural gas supply 2020,PL,,natural gas supply,,2020,2020,TRUE,inf
+PL natural gas supply 2021,PL,,natural gas supply,,2021,2021,TRUE,inf
+PL natural gas supply 2022,PL,,natural gas supply,,2022,2022,TRUE,inf
+PL natural gas supply 2023,PL,,natural gas supply,,2023,2023,TRUE,inf
+PL other boiler to other bus 2020,PL,,other boiler,to other bus,2020,2020,TRUE,1360.0
+PL other boiler to other bus 2021,PL,,other boiler,to other bus,2021,2021,TRUE,1420.0
+PL other boiler to other bus 2022,PL,,other boiler,to other bus,2022,2022,TRUE,1310.0
+PL other boiler to other bus 2023,PL,,other boiler,to other bus,2023,2023,TRUE,1310.0
+PL other CHP industrial 2020,PL,,other CHP,industrial,2020,2020,TRUE,520.0
+PL other CHP industrial 2021,PL,,other CHP,industrial,2021,2021,TRUE,520.0
+PL other CHP industrial 2022,PL,,other CHP,industrial,2022,2022,TRUE,600.0
+PL other CHP industrial 2023,PL,,other CHP,industrial,2023,2023,TRUE,550.0
+PL other fuel supply 2020,PL,,other fuel supply,,2020,2020,TRUE,inf
+PL other fuel supply 2021,PL,,other fuel supply,,2021,2021,TRUE,inf
+PL other fuel supply 2022,PL,,other fuel supply,,2022,2022,TRUE,inf
+PL other fuel supply 2023,PL,,other fuel supply,,2023,2023,TRUE,inf
+PL other heat to other bus 2020,PL,,other heat,to other bus,2020,2020,TRUE,540.0
+PL other heat to other bus 2021,PL,,other heat,to other bus,2021,2021,TRUE,930.0
+PL other heat to other bus 2022,PL,,other heat,to other bus,2022,2022,TRUE,880.0
+PL other heat to other bus 2023,PL,,other heat,to other bus,2023,2023,TRUE,880.0
+PL other heating final use 2020,PL,,other heating final use,,2020,2020,TRUE,inf
+PL other heating final use 2021,PL,,other heating final use,,2021,2021,TRUE,inf
+PL other heating final use 2022,PL,,other heating final use,,2022,2022,TRUE,inf
+PL other heating final use 2023,PL,,other heating final use,,2023,2023,TRUE,inf
+PL other RES heat to other RES bus 2020,PL,,other RES heat,to other RES bus,2020,2020,TRUE,1060.0
+PL other RES heat to other RES bus 2021,PL,,other RES heat,to other RES bus,2021,2021,TRUE,1100.0
+PL other RES heat to other RES bus 2022,PL,,other RES heat,to other RES bus,2022,2022,TRUE,1200.0
+PL other RES heat to other RES bus 2023,PL,,other RES heat,to other RES bus,2023,2023,TRUE,1200.0
+PL resistive heater small to heat pump bus 2020,PL,,resistive heater small,to heat pump bus,2020,2020,TRUE,2970.0
+PL resistive heater small to heat pump bus 2021,PL,,resistive heater small,to heat pump bus,2021,2021,TRUE,3690.0
+PL resistive heater small to heat pump bus 2022,PL,,resistive heater small,to heat pump bus,2022,2022,TRUE,5170.0
+PL resistive heater small to heat pump bus 2023,PL,,resistive heater small,to heat pump bus,2023,2023,TRUE,5170.0
+PL resistive heater small to resistive heater bus 2020,PL,,resistive heater small,to resistive heater bus,2020,2020,TRUE,3910.0
+PL resistive heater small to resistive heater bus 2021,PL,,resistive heater small,to resistive heater bus,2021,2021,TRUE,3920.0
+PL resistive heater small to resistive heater bus 2022,PL,,resistive heater small,to resistive heater bus,2022,2022,TRUE,3480.0
+PL resistive heater small to resistive heater bus 2023,PL,,resistive heater small,to resistive heater bus,2023,2023,TRUE,3480.0
+PL SE electricity export DC 2020,PL,SE,electricity export DC,,2020,2020,TRUE,600.0
+PL SE electricity export DC 2021,PL,SE,electricity export DC,,2021,2021,TRUE,600.0
+PL SE electricity export DC 2022,PL,SE,electricity export DC,,2022,2022,TRUE,600.0
+PL SE electricity export DC 2023,PL,SE,electricity export DC,,2023,2023,TRUE,600.0
+PL SE electricity export DC 2025,PL,SE,electricity export DC,,2025,2025,TRUE,600.0
+PL SE electricity export DC 2030,PL,SE,electricity export DC,,2030,2030,TRUE,600.0
+PL SE electricity export DC 2035,PL,SE,electricity export DC,,2035,2035,TRUE,600.0
+PL SE electricity export DC 2040,PL,SE,electricity export DC,,2040,2040,TRUE,600.0
+PL SE electricity export DC 2045,PL,SE,electricity export DC,,2045,2045,TRUE,600.0
+PL SE electricity export DC 2050,PL,SE,electricity export DC,,2050,2050,TRUE,600.0
+PL SK electricity export AC 2020,PL,SK,electricity export AC,,2020,2020,TRUE,1610.0
+PL SK electricity export AC 2021,PL,SK,electricity export AC,,2021,2021,TRUE,1610.0
+PL SK electricity export AC 2022,PL,SK,electricity export AC,,2022,2022,TRUE,1610.0
+PL SK electricity export AC 2023,PL,SK,electricity export AC,,2023,2023,TRUE,1610.0
+PL SK electricity export AC 2025,PL,SK,electricity export AC,,2025,2025,TRUE,1610.0
+PL SK electricity export AC 2030,PL,SK,electricity export AC,,2030,2030,TRUE,1610.0
+PL SK electricity export AC 2035,PL,SK,electricity export AC,,2035,2035,TRUE,1610.0
+PL SK electricity export AC 2040,PL,SK,electricity export AC,,2040,2040,TRUE,1610.0
+PL SK electricity export AC 2045,PL,SK,electricity export AC,,2045,2045,TRUE,1610.0
+PL SK electricity export AC 2050,PL,SK,electricity export AC,,2050,2050,TRUE,1610.0
+PL solar PV ground 2020,PL,,solar PV ground,,2020,2020,TRUE,1230.0
+PL solar PV ground 2021,PL,,solar PV ground,,2021,2021,TRUE,1810.0
+PL solar PV ground 2022,PL,,solar PV ground,,2022,2022,TRUE,3390.0
+PL solar PV ground 2023,PL,,solar PV ground,,2023,2023,TRUE,6380.0
+PL solar PV roof 2020,PL,,solar PV roof,,2020,2020,TRUE,2730.0
+PL solar PV roof 2021,PL,,solar PV roof,,2021,2021,TRUE,5870.0
+PL solar PV roof 2022,PL,,solar PV roof,,2022,2022,TRUE,8790.0
+PL solar PV roof 2023,PL,,solar PV roof,,2023,2023,TRUE,10670.0
+PL space heating final use 2020,PL,,space heating final use,,2020,2020,TRUE,inf
+PL space heating final use 2021,PL,,space heating final use,,2021,2021,TRUE,inf
+PL space heating final use 2022,PL,,space heating final use,,2022,2022,TRUE,inf
+PL space heating final use 2023,PL,,space heating final use,,2023,2023,TRUE,inf
+PL water heating final use 2020,PL,,water heating final use,,2020,2020,TRUE,inf
+PL water heating final use 2021,PL,,water heating final use,,2021,2021,TRUE,inf
+PL water heating final use 2022,PL,,water heating final use,,2022,2022,TRUE,inf
+PL water heating final use 2023,PL,,water heating final use,,2023,2023,TRUE,inf
+PL wind onshore 2021,PL,,wind onshore,,2021,2021,TRUE,810.0
+PL wind onshore 2022,PL,,wind onshore,,2022,2022,TRUE,1870.0
+PL wind onshore 2023,PL,,wind onshore,,2023,2023,TRUE,3050.0
+PL wind onshore old 2020,PL,,wind onshore old,,2020,2020,TRUE,6380.0
+PL wind onshore old 2021,PL,,wind onshore old,,2021,2021,TRUE,6380.0
+PL wind onshore old 2022,PL,,wind onshore old,,2022,2022,TRUE,6380.0
+PL wind onshore old 2023,PL,,wind onshore old,,2023,2023,TRUE,6380.0
+SE PL electricity import DC 2020,SE,PL,electricity import DC,,2020,2020,TRUE,600.0
+SE PL electricity import DC 2021,SE,PL,electricity import DC,,2021,2021,TRUE,600.0
+SE PL electricity import DC 2022,SE,PL,electricity import DC,,2022,2022,TRUE,600.0
+SE PL electricity import DC 2023,SE,PL,electricity import DC,,2023,2023,TRUE,600.0
+SE PL electricity import DC 2025,SE,PL,electricity import DC,,2025,2025,TRUE,600.0
+SE PL electricity import DC 2030,SE,PL,electricity import DC,,2030,2030,TRUE,600.0
+SE PL electricity import DC 2035,SE,PL,electricity import DC,,2035,2035,TRUE,600.0
+SE PL electricity import DC 2040,SE,PL,electricity import DC,,2040,2040,TRUE,600.0
+SE PL electricity import DC 2045,SE,PL,electricity import DC,,2045,2045,TRUE,600.0
+SE PL electricity import DC 2050,SE,PL,electricity import DC,,2050,2050,TRUE,600.0
+SK PL electricity import AC 2020,SK,PL,electricity import AC,,2020,2020,TRUE,890.0
+SK PL electricity import AC 2021,SK,PL,electricity import AC,,2021,2021,TRUE,890.0
+SK PL electricity import AC 2022,SK,PL,electricity import AC,,2022,2022,TRUE,890.0
+SK PL electricity import AC 2023,SK,PL,electricity import AC,,2023,2023,TRUE,890.0
+SK PL electricity import AC 2025,SK,PL,electricity import AC,,2025,2025,TRUE,890.0
+SK PL electricity import AC 2030,SK,PL,electricity import AC,,2030,2030,TRUE,890.0
+SK PL electricity import AC 2035,SK,PL,electricity import AC,,2035,2035,TRUE,890.0
+SK PL electricity import AC 2040,SK,PL,electricity import AC,,2040,2040,TRUE,890.0
+SK PL electricity import AC 2045,SK,PL,electricity import AC,,2045,2045,TRUE,890.0
+SK PL electricity import AC 2050,SK,PL,electricity import AC,,2050,2050,TRUE,890.0

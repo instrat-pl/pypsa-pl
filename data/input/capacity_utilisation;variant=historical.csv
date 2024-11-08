@@ -1,0 +1,85 @@
+area,technology,qualifier,year,parameter,value
+PL,biogas CHP,industrial,2020,p_set_pu,0.57
+PL,biogas CHP,industrial,2021,p_set_pu,0.57
+PL,biogas CHP,industrial,2022,p_set_pu,0.49
+PL,biogas CHP,industrial,2023,p_set_pu,0.49
+PL,biogas CHP,public,2020,p_set_pu_annual,0.51
+PL,biogas CHP,public,2021,p_set_pu_annual,0.54
+PL,biogas CHP,public,2022,p_set_pu_annual,0.51
+PL,biogas CHP,public,2023,p_set_pu_annual,0.54
+PL,biogas production,industrial,2020,p_set_pu,0.57
+PL,biogas production,industrial,2021,p_set_pu,0.57
+PL,biogas production,industrial,2022,p_set_pu,0.49
+PL,biogas production,industrial,2023,p_set_pu,0.49
+PL,biomass wood CHP,industrial,2020,p_set_pu,1.0
+PL,biomass wood CHP,industrial,2021,p_set_pu,1.0
+PL,biomass wood CHP,industrial,2022,p_set_pu,0.97
+PL,biomass wood CHP,industrial,2023,p_set_pu,0.91
+PL,biomass wood CHP,public,2020,p_set_pu_annual,1.0
+PL,biomass wood CHP,public,2021,p_set_pu_annual,0.8
+PL,biomass wood CHP,public,2022,p_set_pu_annual,0.83
+PL,biomass wood CHP,public,2023,p_set_pu_annual,0.88
+PL,biomass wood power,public,2020,p_min_pu,0.25
+PL,biomass wood power,public,2021,p_min_pu,0.25
+PL,biomass wood power,public,2022,p_min_pu,0.25
+PL,biomass wood power,public,2023,p_min_pu,0.25
+PL,hard coal CHP,industrial,2020,p_set_pu,0.31
+PL,hard coal CHP,industrial,2021,p_set_pu,0.31
+PL,hard coal CHP,industrial,2022,p_set_pu,0.28
+PL,hard coal CHP,industrial,2023,p_set_pu,0.23
+PL,hard coal CHP,public,2020,p_set_pu_annual,0.37
+PL,hard coal CHP,public,2021,p_set_pu_annual,0.37
+PL,hard coal CHP,public,2022,p_set_pu_annual,0.37
+PL,hard coal CHP,public,2023,p_set_pu_annual,0.34
+PL,hard coal power SC,public,2020,p_min_pu,0.25
+PL,hard coal power SC,public,2021,p_min_pu,0.25
+PL,hard coal power SC,public,2022,p_min_pu,0.25
+PL,hard coal power SC,public,2023,p_min_pu,0.25
+PL,hard coal power old,public,2020,p_min_pu,0.25
+PL,hard coal power old,public,2021,p_min_pu,0.25
+PL,hard coal power old,public,2022,p_min_pu,0.25
+PL,hard coal power old,public,2023,p_min_pu,0.25
+PL,hydro ROR,,2020,p_set_pu,0.41
+PL,hydro ROR,,2021,p_set_pu,0.44
+PL,hydro ROR,,2022,p_set_pu,0.38
+PL,hydro ROR,,2023,p_set_pu,0.46
+PL,lignite power SC,public,2020,p_min_pu,0.25
+PL,lignite power SC,public,2021,p_min_pu,0.25
+PL,lignite power SC,public,2022,p_min_pu,0.25
+PL,lignite power SC,public,2023,p_min_pu,0.25
+PL,lignite power old,public,2020,p_min_pu,0.25
+PL,lignite power old,public,2021,p_min_pu,0.25
+PL,lignite power old,public,2022,p_min_pu,0.25
+PL,lignite power old,public,2023,p_min_pu,0.25
+PL,natural gas CHP CCGT,industrial,2020,p_set_pu,0.65
+PL,natural gas CHP CCGT,industrial,2021,p_set_pu,0.52
+PL,natural gas CHP CCGT,industrial,2022,p_set_pu,0.43
+PL,natural gas CHP CCGT,industrial,2023,p_set_pu,0.52
+PL,natural gas CHP CCGT,public,2020,p_set_pu_annual,0.5
+PL,natural gas CHP CCGT,public,2021,p_set_pu_annual,0.52
+PL,natural gas CHP CCGT,public,2022,p_set_pu_annual,0.27
+PL,natural gas CHP CCGT,public,2023,p_set_pu_annual,0.41
+PL,natural gas CHP CCGT old,industrial,2020,p_set_pu,0.65
+PL,natural gas CHP CCGT old,industrial,2021,p_set_pu,0.52
+PL,natural gas CHP CCGT old,industrial,2022,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2023,p_set_pu,0.52
+PL,natural gas CHP CCGT old,public,2020,p_set_pu_annual,0.5
+PL,natural gas CHP CCGT old,public,2021,p_set_pu_annual,0.52
+PL,natural gas CHP CCGT old,public,2022,p_set_pu_annual,0.27
+PL,natural gas CHP CCGT old,public,2023,p_set_pu_annual,0.41
+PL,natural gas CHP old,industrial,2020,p_set_pu,0.65
+PL,natural gas CHP old,industrial,2021,p_set_pu,0.52
+PL,natural gas CHP old,industrial,2022,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2023,p_set_pu,0.52
+PL,natural gas CHP old,public,2020,p_set_pu_annual,0.5
+PL,natural gas CHP old,public,2021,p_set_pu_annual,0.52
+PL,natural gas CHP old,public,2022,p_set_pu_annual,0.27
+PL,natural gas CHP old,public,2023,p_set_pu_annual,0.41
+PL,natural gas reforming,,2020,p_max_pu,0.9
+PL,natural gas reforming,,2021,p_max_pu,0.9
+PL,natural gas reforming,,2022,p_max_pu,0.9
+PL,natural gas reforming,,2023,p_max_pu,0.9
+PL,other CHP,industrial,2020,p_set_pu,0.59
+PL,other CHP,industrial,2021,p_set_pu,0.57
+PL,other CHP,industrial,2022,p_set_pu,0.5
+PL,other CHP,industrial,2023,p_set_pu,0.5

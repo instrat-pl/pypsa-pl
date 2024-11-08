@@ -1,0 +1,93 @@
+area,carrier,year,attribute,value
+PL,BEV,2030,max_growth,9050
+PL,BEV,2035,max_growth,20000
+PL,biogas CHP,2030,max_growth,500
+PL,biogas CHP,2035,max_growth,1000
+PL,biogas CHP,2040,max_growth,1000
+PL,biogas CHP,2045,max_growth,1000
+PL,biogas CHP,2050,max_growth,1000
+PL,biogas CHP,2030,nom_min,450
+PL,biogas CHP,2030,nom_max,450
+PL,biogas production,2030,nom_min,1010
+PL,biogas upgrading,2030,max_growth,600
+PL,biogas upgrading,2035,max_growth,1000
+PL,biogas upgrading,2040,max_growth,1000
+PL,biogas upgrading,2045,max_growth,1000
+PL,biogas upgrading,2050,max_growth,1000
+PL,biomass agriculture CHP,2030,max_growth,1000
+PL,biomass agriculture CHP,2035,max_growth,1000
+PL,biomass agriculture CHP,2040,max_growth,1000
+PL,biomass agriculture CHP,2045,max_growth,1000
+PL,biomass agriculture CHP,2050,max_growth,1000
+PL,biomass agriculture CHP,2030,nom_min,580
+PL,biomass agriculture CHP,2030,nom_max,580
+PL,biomass agriculture CHP CC,2035,max_growth,1000
+PL,biomass agriculture CHP CC,2040,max_growth,1000
+PL,biomass agriculture CHP CC,2045,max_growth,1000
+PL,biomass agriculture CHP CC,2050,max_growth,1000
+PL,hard coal CHP,2040,nom_max,0
+PL,hard coal CHP,2045,nom_max,0
+PL,hard coal CHP,2050,nom_max,0
+PL,hard coal power,2045,nom_max,0
+PL,hard coal power,2050,nom_max,0
+PL,heat pump large,2030,max_growth,1000
+PL,heat pump large,2035,max_growth,1500
+PL,heat pump small,2030,nom_max,17500
+PL,heat pump small,2030,nom_min,14810
+PL,heat storage large tank discharge,2030,max_growth,2000
+PL,heat storage large tank discharge,2035,max_growth,2000
+PL,heat storage large tank discharge,2040,max_growth,2000
+PL,heat storage large tank discharge,2045,max_growth,2000
+PL,heat storage large tank discharge,2050,max_growth,2000
+PL,hydro PSH power,2030,max_growth,1000
+PL,hydro PSH power,2035,max_growth,2000
+PL,hydro PSH power,2040,max_growth,2000
+PL,hydro PSH power,2045,max_growth,2000
+PL,hydro PSH power,2050,max_growth,2000
+PL,lignite power,2045,nom_max,0
+PL,lignite power,2050,nom_max,0
+PL,natural gas CHP,2030,max_growth,1250
+PL,natural gas power,2030,max_growth,5320
+PL,natural gas power peaker,2030,max_growth,0
+PL,nuclear power,2035,nom_max,1110
+PL,nuclear power,2040,nom_max,4230
+PL,nuclear power,2045,nom_max,8460
+PL,nuclear power,2050,nom_max,13590
+PL,resistive heater large,2030,max_growth,2000
+PL,resistive heater large,2035,max_growth,3000
+PL,solar PV ground,2030,max_growth,7500
+PL,solar PV ground,2035,max_growth,7500
+PL,solar PV ground,2040,max_growth,7500
+PL,solar PV ground,2045,max_growth,7500
+PL,solar PV ground,2030,nom_max,47400
+PL,solar PV ground,2035,nom_max,47400
+PL,solar PV ground,2040,nom_max,47400
+PL,solar PV ground,2045,nom_max,47400
+PL,solar PV ground,2050,nom_max,47400
+PL,solar PV roof,2030,max_growth,7500
+PL,solar PV roof,2035,max_growth,7500
+PL,solar PV roof,2040,max_growth,7500
+PL,solar PV roof,2045,max_growth,7500
+PL,solar PV roof,2030,nom_max,48020
+PL,solar PV roof,2035,nom_max,48020
+PL,solar PV roof,2040,nom_max,48020
+PL,solar PV roof,2045,nom_max,48020
+PL,solar PV roof,2050,nom_max,48020
+PL,wind offshore,2030,max_growth,6030
+PL,wind offshore,2035,max_growth,5160
+PL,wind offshore,2040,max_growth,6750
+PL,wind offshore,2045,max_growth,6750
+PL,wind offshore,2030,nom_max,31200
+PL,wind offshore,2035,nom_max,31200
+PL,wind offshore,2040,nom_max,31200
+PL,wind offshore,2045,nom_max,31200
+PL,wind offshore,2050,nom_max,31200
+PL,wind onshore,2030,max_growth,7500
+PL,wind onshore,2035,max_growth,10000
+PL,wind onshore,2040,max_growth,10000
+PL,wind onshore,2045,max_growth,10000
+PL,wind onshore,2030,nom_max,43340
+PL,wind onshore,2035,nom_max,43340
+PL,wind onshore,2040,nom_max,43340
+PL,wind onshore,2045,nom_max,43340
+PL,wind onshore,2050,nom_max,43340

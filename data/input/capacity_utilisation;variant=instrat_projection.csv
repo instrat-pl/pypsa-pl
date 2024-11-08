@@ -1,0 +1,217 @@
+area,technology,qualifier,year,parameter,value
+PL,biogas CHP,industrial,2020,p_set_pu,0.49
+PL,biogas CHP,industrial,2025,p_set_pu,0.49
+PL,biogas CHP,industrial,2030,p_set_pu,0.49
+PL,biogas CHP,industrial,2035,p_set_pu,0.49
+PL,biogas CHP,industrial,2040,p_set_pu,0.49
+PL,biogas CHP,industrial,2045,p_set_pu,0.49
+PL,biogas CHP,industrial,2050,p_set_pu,0.49
+PL,biogas CHP,public,2020,p_max_pu,0.95
+PL,biogas CHP,public,2025,p_max_pu,0.95
+PL,biogas CHP,public,2030,p_max_pu,0.95
+PL,biogas CHP,public,2035,p_max_pu,0.95
+PL,biogas CHP,public,2040,p_max_pu,0.95
+PL,biogas CHP,public,2045,p_max_pu,0.95
+PL,biogas CHP,public,2050,p_max_pu,0.95
+PL,biogas production,industrial,2020,p_set_pu,0.49
+PL,biogas production,industrial,2025,p_set_pu,0.49
+PL,biogas production,industrial,2030,p_set_pu,0.49
+PL,biogas production,industrial,2035,p_set_pu,0.49
+PL,biogas production,industrial,2040,p_set_pu,0.49
+PL,biogas production,industrial,2045,p_set_pu,0.49
+PL,biogas production,industrial,2050,p_set_pu,0.49
+PL,biogas production,public,2020,p_max_pu,0.95
+PL,biogas production,public,2025,p_max_pu,0.95
+PL,biogas production,public,2030,p_max_pu,0.95
+PL,biogas production,public,2035,p_max_pu,0.95
+PL,biogas production,public,2040,p_max_pu,0.95
+PL,biogas production,public,2045,p_max_pu,0.95
+PL,biogas production,public,2050,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2020,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2025,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2030,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2035,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2040,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2045,p_max_pu,0.95
+PL,biogas production,to upgrading bus,2050,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2020,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2025,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2030,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2035,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2040,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2045,p_max_pu,0.95
+PL,biogas upgrading,from upgrading bus,2050,p_max_pu,0.95
+PL,biomass agriculture CHP,public,2020,p_max_pu,0.9
+PL,biomass agriculture CHP,public,2025,p_max_pu,0.9
+PL,biomass agriculture CHP,public,2030,p_max_pu,0.9
+PL,biomass agriculture CHP,public,2035,p_max_pu,0.9
+PL,biomass agriculture CHP,public,2040,p_max_pu,0.9
+PL,biomass agriculture CHP,public,2045,p_max_pu,0.9
+PL,biomass agriculture CHP,public,2050,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2020,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2025,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2030,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2035,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2040,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2045,p_max_pu,0.9
+PL,biomass agriculture CHP CC,public,2050,p_max_pu,0.9
+PL,biomass wood CHP,industrial,2020,p_set_pu,0.91
+PL,biomass wood CHP,industrial,2025,p_set_pu,0.91
+PL,biomass wood CHP,industrial,2030,p_set_pu,0.91
+PL,biomass wood CHP,industrial,2035,p_set_pu,0.91
+PL,biomass wood CHP,industrial,2040,p_set_pu,0.91
+PL,biomass wood CHP,industrial,2045,p_set_pu,0.91
+PL,biomass wood CHP,industrial,2050,p_set_pu,0.91
+PL,biomass wood CHP,public,2020,p_max_pu,0.9
+PL,biomass wood CHP,public,2025,p_max_pu,0.9
+PL,biomass wood CHP,public,2030,p_max_pu,0.9
+PL,biomass wood CHP,public,2035,p_max_pu,0.9
+PL,biomass wood CHP,public,2040,p_max_pu,0.9
+PL,biomass wood CHP,public,2045,p_max_pu,0.9
+PL,biomass wood CHP,public,2050,p_max_pu,0.9
+PL,biomass wood power,public,2020,p_max_pu,0.9
+PL,biomass wood power,public,2025,p_max_pu,0.9
+PL,biomass wood power,public,2030,p_max_pu,0.9
+PL,biomass wood power,public,2035,p_max_pu,0.9
+PL,biomass wood power,public,2040,p_max_pu,0.9
+PL,biomass wood power,public,2045,p_max_pu,0.9
+PL,biomass wood power,public,2050,p_max_pu,0.9
+PL,biomass wood power,public,2020,p_min_pu,0.25
+PL,biomass wood power,public,2025,p_min_pu,0.22
+PL,hard coal CHP,industrial,2020,p_set_pu,0.23
+PL,hard coal CHP,industrial,2025,p_set_pu,0.23
+PL,hard coal CHP,industrial,2030,p_set_pu,0.23
+PL,hard coal CHP,industrial,2035,p_set_pu,0.23
+PL,hard coal CHP,industrial,2040,p_set_pu,0.23
+PL,hard coal CHP,public,2020,p_max_pu,0.9
+PL,hard coal CHP,public,2025,p_max_pu,0.9
+PL,hard coal CHP,public,2030,p_max_pu,0.9
+PL,hard coal CHP,public,2035,p_max_pu,0.9
+PL,hard coal CHP,public,2040,p_max_pu,0.9
+PL,hard coal power old,public,2020,p_max_pu,0.85
+PL,hard coal power old,public,2025,p_max_pu,0.85
+PL,hard coal power old,public,2030,p_max_pu,0.85
+PL,hard coal power old,public,2035,p_max_pu,0.85
+PL,hard coal power old,public,2040,p_max_pu,0.85
+PL,hard coal power old,public,2020,p_min_pu,0.25
+PL,hard coal power old,public,2025,p_min_pu,0.22
+PL,hard coal power SC,public,2020,p_max_pu,0.9
+PL,hard coal power SC,public,2025,p_max_pu,0.9
+PL,hard coal power SC,public,2030,p_max_pu,0.9
+PL,hard coal power SC,public,2035,p_max_pu,0.9
+PL,hard coal power SC,public,2040,p_max_pu,0.9
+PL,hard coal power SC,public,2020,p_min_pu,0.25
+PL,hard coal power SC,public,2025,p_min_pu,0.22
+PL,hydro ROR,,2020,p_set_pu,0.42
+PL,hydro ROR,,2025,p_set_pu,0.42
+PL,hydro ROR,,2030,p_set_pu,0.42
+PL,hydro ROR,,2035,p_set_pu,0.42
+PL,hydro ROR,,2040,p_set_pu,0.42
+PL,hydro ROR,,2045,p_set_pu,0.42
+PL,hydro ROR,,2050,p_set_pu,0.42
+PL,hydrogen power peaker,public,2035,p_max_pu,0.95
+PL,hydrogen power peaker,public,2040,p_max_pu,0.95
+PL,hydrogen power peaker,public,2045,p_max_pu,0.95
+PL,hydrogen power peaker,public,2050,p_max_pu,0.95
+PL,hydrogen CHP CCGT,public,2035,p_max_pu,0.95
+PL,hydrogen CHP CCGT,public,2040,p_max_pu,0.95
+PL,hydrogen CHP CCGT,public,2045,p_max_pu,0.95
+PL,hydrogen CHP CCGT,public,2050,p_max_pu,0.95
+PL,hydrogen power CCGT,public,2035,p_max_pu,0.95
+PL,hydrogen power CCGT,public,2040,p_max_pu,0.95
+PL,hydrogen power CCGT,public,2045,p_max_pu,0.95
+PL,hydrogen power CCGT,public,2050,p_max_pu,0.95
+PL,lignite power old,public,2020,p_max_pu,0.85
+PL,lignite power old,public,2025,p_max_pu,0.85
+PL,lignite power old,public,2030,p_max_pu,0.85
+PL,lignite power old,public,2035,p_max_pu,0.85
+PL,lignite power old,public,2040,p_max_pu,0.85
+PL,lignite power old,public,2020,p_min_pu,0.25
+PL,lignite power old,public,2025,p_min_pu,0.22
+PL,lignite power SC,public,2020,p_max_pu,0.9
+PL,lignite power SC,public,2025,p_max_pu,0.9
+PL,lignite power SC,public,2030,p_max_pu,0.9
+PL,lignite power SC,public,2035,p_max_pu,0.9
+PL,lignite power SC,public,2040,p_max_pu,0.9
+PL,lignite power SC,public,2020,p_min_pu,0.25
+PL,lignite power SC,public,2025,p_min_pu,0.22
+PL,natural gas CHP CCGT,public,2020,p_max_pu,0.95
+PL,natural gas CHP CCGT,public,2025,p_max_pu,0.95
+PL,natural gas CHP CCGT,public,2030,p_max_pu,0.95
+PL,natural gas CHP CCGT,public,2035,p_max_pu,0.95
+PL,natural gas CHP CCGT,public,2040,p_max_pu,0.95
+PL,natural gas CHP CCGT,public,2045,p_max_pu,0.95
+PL,natural gas CHP CCGT,public,2050,p_max_pu,0.95
+PL,natural gas CHP CCGT old,industrial,2020,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2025,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2030,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2035,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2040,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2045,p_set_pu,0.43
+PL,natural gas CHP CCGT old,industrial,2050,p_set_pu,0.43
+PL,natural gas CHP CCGT old,public,2020,p_max_pu,0.95
+PL,natural gas CHP CCGT old,public,2025,p_max_pu,0.95
+PL,natural gas CHP CCGT old,public,2030,p_max_pu,0.95
+PL,natural gas CHP CCGT old,public,2035,p_max_pu,0.95
+PL,natural gas CHP CCGT old,public,2040,p_max_pu,0.95
+PL,natural gas CHP CCGT old,public,2045,p_max_pu,0.95
+PL,natural gas CHP CCGT old,public,2050,p_max_pu,0.95
+PL,natural gas CHP old,industrial,2020,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2025,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2030,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2035,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2040,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2045,p_set_pu,0.43
+PL,natural gas CHP old,industrial,2050,p_set_pu,0.43
+PL,natural gas CHP old,public,2020,p_max_pu,0.9
+PL,natural gas CHP old,public,2025,p_max_pu,0.9
+PL,natural gas CHP old,public,2030,p_max_pu,0.9
+PL,natural gas CHP old,public,2035,p_max_pu,0.9
+PL,natural gas CHP old,public,2040,p_max_pu,0.9
+PL,natural gas CHP old,public,2045,p_max_pu,0.9
+PL,natural gas CHP old,public,2050,p_max_pu,0.9
+PL,natural gas power CCGT,public,2020,p_max_pu,0.95
+PL,natural gas power CCGT,public,2025,p_max_pu,0.95
+PL,natural gas power CCGT,public,2030,p_max_pu,0.95
+PL,natural gas power CCGT,public,2035,p_max_pu,0.95
+PL,natural gas power CCGT,public,2040,p_max_pu,0.95
+PL,natural gas power CCGT,public,2045,p_max_pu,0.95
+PL,natural gas power CCGT,public,2050,p_max_pu,0.95
+PL,natural gas power CCGT,public,2025,p_min_pu,0.22
+PL,natural gas power peaker,public,2020,p_max_pu,0.95
+PL,natural gas power peaker,public,2025,p_max_pu,0.95
+PL,natural gas power peaker,public,2030,p_max_pu,0.95
+PL,natural gas power peaker,public,2035,p_max_pu,0.95
+PL,natural gas power peaker,public,2040,p_max_pu,0.95
+PL,natural gas power peaker,public,2045,p_max_pu,0.95
+PL,natural gas power peaker,public,2050,p_max_pu,0.95
+PL,natural gas reforming,to natural gas reforming bus,2020,p_max_pu,0.9
+PL,natural gas reforming,to natural gas reforming bus,2025,p_max_pu,0.9
+PL,natural gas reforming,to natural gas reforming bus,2030,p_max_pu,0.9
+PL,natural gas reforming,to natural gas reforming bus,2035,p_max_pu,0.9
+PL,natural gas reforming,to natural gas reforming bus,2040,p_max_pu,0.9
+PL,natural gas reforming,to natural gas reforming bus,2045,p_max_pu,0.9
+PL,natural gas reforming,to natural gas reforming bus,2050,p_max_pu,0.9
+PL,nuclear power large,public,2035,p_max_pu,0.95
+PL,nuclear power large,public,2040,p_max_pu,0.95
+PL,nuclear power large,public,2045,p_max_pu,0.95
+PL,nuclear power large,public,2050,p_max_pu,0.95
+PL,nuclear power large,public,2035,p_min_pu,0.5
+PL,nuclear power large,public,2040,p_min_pu,0.5
+PL,nuclear power large,public,2045,p_min_pu,0.5
+PL,nuclear power large,public,2050,p_min_pu,0.5
+PL,nuclear power small,public,2035,p_max_pu,0.95
+PL,nuclear power small,public,2040,p_max_pu,0.95
+PL,nuclear power small,public,2045,p_max_pu,0.95
+PL,nuclear power small,public,2050,p_max_pu,0.95
+PL,nuclear power small,public,2035,p_min_pu,0.5
+PL,nuclear power small,public,2040,p_min_pu,0.5
+PL,nuclear power small,public,2045,p_min_pu,0.5
+PL,nuclear power small,public,2050,p_min_pu,0.5
+PL,other CHP,industrial,2020,p_set_pu,0.57
+PL,other CHP,industrial,2025,p_set_pu,0.5
+PL,other CHP,industrial,2030,p_set_pu,0.5
+PL,other CHP,industrial,2035,p_set_pu,0.5
+PL,other CHP,industrial,2040,p_set_pu,0.5
+PL,other CHP,industrial,2045,p_set_pu,0.5
+PL,other CHP,industrial,2050,p_set_pu,0.5

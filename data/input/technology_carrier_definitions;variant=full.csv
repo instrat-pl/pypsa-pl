@@ -1,0 +1,101 @@
+technology,carrier,aggregation,parent,bus_carrier,input_carrier,output_carrier,output2_carrier,component,color,order
+electricity final use,electricity final use,electricity final use,,,electricity out,,,Generator,#b6b6b7,1
+space heating final use,space heating final use,heat final use,,,space heating,,,Generator,#b6b6b7,2
+water heating final use,water heating final use,heat final use,,,water heating,,,Generator,#b6b6b7,3
+other heating final use,other heating final use,heat final use,,,other heating,,,Generator,#b6b6b7,4
+light vehicle mobility final use,light vehicle mobility final use,light vehicle mobility final use,,,light vehicle mobility,,,Generator,#b6b6b7,5
+hydrogen final use,hydrogen final use,hydrogen final use,,,hydrogen,,,Generator,#b6b6b7,6
+hard coal final use,hard coal final use,hard coal final use,,,hard coal,,,Generator,#b6b6b7,7
+natural gas final use,natural gas final use,natural gas final use,,,natural gas,,,Generator,#b6b6b7,8
+other fuel final use,other fuel final use,other fuel final use,,,other fuel,,,Generator,#b6b6b7,9
+biomass wood final use,biomass wood final use,biomass wood final use,,,biomass wood,,,Generator,#b6b6b7,10
+process emissions final use,process emissions final use,process emissions final use,,,process emissions,,,Generator,#b6b6b7,11
+lulucf final use,lulucf final use,lulucf final use,,,lulucf,,,Generator,#b6b6b7,12
+hard coal supply,hard coal supply,hard coal supply,,,,hard coal,,Generator,#b5c6cf,110
+hard coal power old,hard coal power,hard coal power,,,hard coal,electricity in,,Link,#b5c6cf,111
+hard coal power SC,hard coal power,hard coal power,,,hard coal,electricity in,,Link,#b5c6cf,112
+hard coal CHP,hard coal CHP,hard coal CHP,,,hard coal,electricity in,heat centralised in,Link,#b5c6cf,113
+hard coal heat,hard coal heat,hard coal heat,,,hard coal,heat centralised in,,Link,#b5c6cf,114
+lignite supply,lignite supply,lignite supply,,,,lignite,,Generator,#72a0b7,120
+lignite power old,lignite power,lignite power,,,lignite,electricity in,,Link,#72a0b7,121
+lignite power SC,lignite power,lignite power,,,lignite,electricity in,,Link,#72a0b7,122
+natural gas supply,natural gas supply,natural gas supply,,,,natural gas,,Generator,#4b7689,130
+natural gas power CCGT,natural gas power,natural gas power,,,natural gas,electricity in,,Link,#4b7689,131
+natural gas power peaker,natural gas power peaker,natural gas power,,,natural gas,electricity in,,Link,#4b7689,132
+natural gas CHP old,natural gas CHP,natural gas CHP,,,natural gas,electricity in,heat centralised in,Link,#4b7689,133
+natural gas CHP CCGT,natural gas CHP,natural gas CHP,,,natural gas,electricity in,heat centralised in,Link,#4b7689,134
+natural gas CHP CCGT old,natural gas CHP,natural gas CHP,,,natural gas,electricity in,heat centralised in,Link,#4b7690,135
+natural gas heat,natural gas heat,natural gas heat,,,natural gas,heat centralised in,,Link,#4b7689,136
+other fuel supply,other fuel supply,other fuel supply,,,,other fuel,,Generator,#263b46,140
+other CHP,other CHP,other CHP,,,other fuel,electricity in,heat centralised in,Link,#263b46,141
+other heat,other heat,other heat,,,other fuel,heat centralised in,,Link,#263b46,142
+nuclear power large,nuclear power,nuclear power,,,,electricity in,,Generator,#d6c0bd,151
+biomass wood supply,biomass wood supply,biomass supply,,,,biomass wood,,Generator,#ab9d99,160
+biomass wood power,biomass wood power,biomass power,,,biomass wood,electricity in,,Link,#ab9d99,161
+biomass wood CHP,biomass wood CHP,biomass CHP,,,biomass wood,electricity in,heat centralised in,Link,#ab9d99,162
+biomass wood heat,biomass wood heat,biomass heat,,,biomass wood,heat centralised in,,Link,#ab9d99,163
+biomass agriculture supply,biomass agriculture supply,biomass supply,,,,biomass agriculture,,Generator,#ab9d99,170
+biomass agriculture CHP,biomass agriculture CHP,biomass CHP,,,biomass agriculture,electricity in,heat centralised in,Link,#ab9d99,171
+biomass agriculture CHP CC,biomass agriculture CHP CC,biomass CHP,,,biomass agriculture,electricity in,heat centralised in,Link,#ab9d99,172
+biomass agriculture heat,biomass agriculture heat,biomass heat,,,biomass agriculture,heat centralised in,,Link,#ab9d99,173
+biogas substrate supply,biogas substrate supply,biogas substrate supply,,,,biogas substrate,,Generator,#816d66,180
+biogas production,biogas production,biogas production,,,biogas substrate,biogas,,Link,#816d66,181
+biogas upgrading,biogas upgrading,biomethane production,,,biogas,natural gas,,Link,#816d66,182
+biogas CHP,biogas CHP,biogas CHP,,,biogas,electricity in,heat centralised in,Link,#816d66,183
+hydrogen power CCGT,hydrogen power,hydrogen power,,,hydrogen,electricity in,,Link,#2ad4ff,191
+hydrogen power peaker,hydrogen power peaker,hydrogen power,,,hydrogen,electricity in,,Link,#2ad4ff,192
+hydrogen CHP CCGT,hydrogen CHP,hydrogen CHP,,,hydrogen,electricity in,heat centralised in,Link,#2ad4ff,193
+hydrogen heat,hydrogen heat,hydrogen heat,,,hydrogen,heat centralised in,,Link,#2ad4ff,194
+hydro ROR,hydro ROR,hydro ROR,,,,electricity in,,Generator,#2979ff,201
+wind onshore old,wind onshore,wind onshore,,,,electricity in,,Generator,#b9f6ca,211
+wind onshore,wind onshore,wind onshore,,,,electricity in,,Generator,#b9f6ca,212
+wind offshore,wind offshore,wind offshore,,,,electricity in,,Generator,#69f0ae,213
+solar PV ground,solar PV ground,solar PV ground,,,,electricity in,,Generator,#f3b3fd,221
+solar PV roof,solar PV roof,solar PV roof,,,,electricity in,,Generator,#e040fb,222
+hydro PSH storage,hydro PSH storage,hydro PSH,hydro PSH power,hydro PSH electricity,,,,Store,#82b1ff,230
+hydro PSH power,hydro PSH power,hydro PSH,,,hydro PSH electricity,electricity in,,Link,#82b1ff,231
+hydro PSH pump,hydro PSH pump,hydro PSH,hydro PSH power,,electricity out,hydro PSH electricity,,Link,#82b1ff,232
+battery large storage,battery large storage,battery large,,battery large electricity,,,,Store,#458aff,240
+battery large power,battery large power,battery large,,,battery large electricity,electricity in,,Link,#458aff,241
+battery large charger,battery large charger,battery large,battery large power,,electricity out,battery large electricity,,Link,#458aff,242
+BEV V2G,BEV V2G,BEV,BEV,,BEV electricity,electricity in,,Link,#153d80,251
+electricity import AC,electricity import,electricity import or export,,,electricity out,electricity in,,Link,#767778,281
+electricity import DC,electricity import,electricity import or export,,,electricity out,electricity in,,Link,#767778,282
+electricity export AC,electricity export,electricity import or export,,,electricity out,electricity in,,Link,#767778,283
+electricity export DC,electricity export,electricity import or export,,,electricity out,electricity in,,Link,#767778,284
+DSR reduction,DSR reduction,DSR,,,,electricity in,,Generator,#1b1c1e,291
+heat pump large AW,heat pump large,heat pump large,,,electricity out,heat centralised in,,Link,#f4a6a5,301
+resistive heater large,resistive heater large,resistive heater large,,,electricity out,heat centralised in,,Link,#e94d4c,311
+heat storage large tank,heat storage large tank,heat storage large,heat storage large tank discharge,heat storage large tank heat,,,,Store,#aa1817,330
+heat storage large tank discharge,heat storage large tank discharge,heat storage large,,,heat storage large tank heat,heat centralised in,,Link,#aa1817,331
+heat storage large tank charge,heat storage large tank charge,heat storage large,heat storage large tank discharge,,heat centralised in,heat storage large tank heat,,Link,#aa1817,332
+centralised space heating,centralised space heating,centralised heating,,,heat centralised out,space heating,,Link,#b6b6b7,391
+centralised water heating,centralised water heating,centralised heating,,,heat centralised out,water heating,,Link,#b6b6b7,392
+centralised other heating,centralised other heating,centralised heating,,,heat centralised out,other heating,,Link,#b6b6b7,393
+hard coal boiler,hard coal boiler,hard coal boiler,,,hard coal,heat decentralised,,Link,#b5c6cf,401
+natural gas boiler,natural gas boiler,natural gas boiler,,,natural gas,heat decentralised,,Link,#4b7689,411
+other boiler,other boiler,other boiler,,,other fuel,heat decentralised,,Link,#263b46,421
+biomass wood boiler,biomass wood boiler,biomass wood boiler,,,biomass wood,heat decentralised,,Link,#ab9d99,431
+other RES heat,other RES heat,other RES heat,,,,heat decentralised,,Generator,#573c33,441
+heat pump small AW,heat pump small,heat pump small,,,electricity out,heat decentralised,,Link,#f4a6a5,451
+resistive heater small,resistive heater small,resistive heater small,heat pump small AW,,electricity out,heat decentralised,,Link,#e94d4c,461
+heat storage small,heat storage small,heat storage small,heat storage small discharge,heat storage small heat,,,,Store,#aa1817,470
+heat storage small discharge,heat storage small discharge,heat storage small,heat pump small AW,,heat storage small heat,heat decentralised,,Link,#aa1817,471
+heat storage small charge,heat storage small charge,heat storage small,heat storage small discharge,,heat decentralised,heat storage small heat,,Link,#aa1817,472
+decentralised space heating,decentralised space heating,decentralised heating,,,heat decentralised,space heating,,Link,#b6b6b7,481
+decentralised water heating,decentralised water heating,decentralised heating,,,heat decentralised,water heating,,Link,#b6b6b7,482
+building retrofits,building retrofits,building retrofits,,,,space heating,,Generator,#1b1c1e,491
+ICE vehicle fuel supply,ICE vehicle fuel supply,ICE vehicle fuel supply,,,,ICE vehicle fuel,,Generator,#263b46,500
+ICE vehicle,ICE vehicle,ICE vehicle,,,ICE vehicle fuel,light vehicle mobility,,Link,#263b46,501
+BEV,BEV,BEV,,,BEV electricity,light vehicle mobility,,Link,#153d80,521
+BEV battery,BEV battery,BEV,BEV,BEV electricity,,,,Store,#153d80,522
+BEV charger,BEV charger,BEV,BEV,,electricity out,BEV electricity,,Link,#153d80,523
+light vehicle mobility,light vehicle mobility,light vehicle mobility,,,light vehicle mobility,light vehicle mobility,,Link,#b6b6b7,591
+natural gas reforming,natural gas reforming,natural gas reforming,,,natural gas,hydrogen,,Link,#4b7689,601
+hydrogen electrolysis,hydrogen electrolysis,hydrogen electrolysis,,,electricity out,hydrogen,,Link,#80e5ff,611
+hydrogen storage,hydrogen storage,hydrogen storage,,hydrogen,,,,Store,#00aad4,612
+hydrogen,hydrogen,hydrogen,,,hydrogen,hydrogen,,Link,#b6b6b7,691
+process emissions supply,process emissions supply,process emissions supply,,,,process emissions,,Generator,#b6b6b7,801
+lulucf supply,lulucf supply,lulucf supply,,,,lulucf,,Generator,#b6b6b7,802
+electricity grid,electricity grid,electricity grid,,,electricity in,electricity out,,Link,#b6b6b7,1201
+district heating,district heating,district heating,,,heat centralised in,heat centralised out,,Link,#b6b6b7,1301

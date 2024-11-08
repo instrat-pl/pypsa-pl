@@ -1,0 +1,876 @@
+name,area,area2,technology,qualifier,build_year,retire_year,cumulative,nom
+CZ DSR reduction 2025,CZ,,DSR reduction,,2025,2025,TRUE,450.0
+CZ DSR reduction 2030,CZ,,DSR reduction,,2030,2030,TRUE,680.0
+CZ DSR reduction 2035,CZ,,DSR reduction,,2035,2035,TRUE,930.0
+CZ DSR reduction 2040,CZ,,DSR reduction,,2040,2040,TRUE,1090.0
+CZ DSR reduction 2045,CZ,,DSR reduction,,2045,2045,TRUE,1230.0
+CZ DSR reduction 2050,CZ,,DSR reduction,,2050,2050,TRUE,1360.0
+CZ battery large charger 2025,CZ,,battery large charger,,2025,2025,TRUE,240.0
+CZ battery large charger 2030,CZ,,battery large charger,,2030,2030,TRUE,410.0
+CZ battery large charger 2035,CZ,,battery large charger,,2035,2035,TRUE,570.0
+CZ battery large charger 2040,CZ,,battery large charger,,2040,2040,TRUE,570.0
+CZ battery large charger 2045,CZ,,battery large charger,,2045,2045,TRUE,330.0
+CZ battery large charger 2050,CZ,,battery large charger,,2050,2050,TRUE,160.0
+CZ battery large power 2025,CZ,,battery large power,,2025,2025,TRUE,270.0
+CZ battery large power 2030,CZ,,battery large power,,2030,2030,TRUE,450.0
+CZ battery large power 2035,CZ,,battery large power,,2035,2035,TRUE,630.0
+CZ battery large power 2040,CZ,,battery large power,,2040,2040,TRUE,630.0
+CZ battery large power 2045,CZ,,battery large power,,2045,2045,TRUE,360.0
+CZ battery large power 2050,CZ,,battery large power,,2050,2050,TRUE,180.0
+CZ battery large storage 2025,CZ,,battery large storage,,2025,2025,TRUE,540.0
+CZ battery large storage 2030,CZ,,battery large storage,,2030,2030,TRUE,910.0
+CZ battery large storage 2035,CZ,,battery large storage,,2035,2035,TRUE,1260.0
+CZ battery large storage 2040,CZ,,battery large storage,,2040,2040,TRUE,1260.0
+CZ battery large storage 2045,CZ,,battery large storage,,2045,2045,TRUE,720.0
+CZ battery large storage 2050,CZ,,battery large storage,,2050,2050,TRUE,360.0
+CZ biomass wood power 2020,CZ,,biomass wood power,,2020,2020,TRUE,840.0
+CZ biomass wood power 2021,CZ,,biomass wood power,,2021,2021,TRUE,840.0
+CZ biomass wood power 2022,CZ,,biomass wood power,,2022,2022,TRUE,840.0
+CZ biomass wood power 2023,CZ,,biomass wood power,,2023,2023,TRUE,840.0
+CZ biomass wood power 2025,CZ,,biomass wood power,,2025,2025,TRUE,1340.0
+CZ biomass wood power 2030,CZ,,biomass wood power,,2030,2030,TRUE,1540.0
+CZ biomass wood power 2035,CZ,,biomass wood power,,2035,2035,TRUE,1820.0
+CZ biomass wood power 2040,CZ,,biomass wood power,,2040,2040,TRUE,2080.0
+CZ biomass wood power 2045,CZ,,biomass wood power,,2045,2045,TRUE,1870.0
+CZ biomass wood power 2050,CZ,,biomass wood power,,2050,2050,TRUE,1710.0
+CZ biomass wood supply 2020,CZ,,biomass wood supply,,2020,2020,TRUE,inf
+CZ biomass wood supply 2021,CZ,,biomass wood supply,,2021,2021,TRUE,inf
+CZ biomass wood supply 2022,CZ,,biomass wood supply,,2022,2022,TRUE,inf
+CZ biomass wood supply 2023,CZ,,biomass wood supply,,2023,2023,TRUE,inf
+CZ biomass wood supply 2025,CZ,,biomass wood supply,,2025,2025,TRUE,inf
+CZ biomass wood supply 2030,CZ,,biomass wood supply,,2030,2030,TRUE,inf
+CZ biomass wood supply 2035,CZ,,biomass wood supply,,2035,2035,TRUE,inf
+CZ biomass wood supply 2040,CZ,,biomass wood supply,,2040,2040,TRUE,inf
+CZ biomass wood supply 2045,CZ,,biomass wood supply,,2045,2045,TRUE,inf
+CZ biomass wood supply 2050,CZ,,biomass wood supply,,2050,2050,TRUE,inf
+CZ electricity final use 2020,CZ,,electricity final use,,2020,2020,TRUE,inf
+CZ electricity final use 2021,CZ,,electricity final use,,2021,2021,TRUE,inf
+CZ electricity final use 2022,CZ,,electricity final use,,2022,2022,TRUE,inf
+CZ electricity final use 2023,CZ,,electricity final use,,2023,2023,TRUE,inf
+CZ electricity final use 2025,CZ,,electricity final use,,2025,2025,TRUE,inf
+CZ electricity final use 2030,CZ,,electricity final use,,2030,2030,TRUE,inf
+CZ electricity final use 2035,CZ,,electricity final use,,2035,2035,TRUE,inf
+CZ electricity final use 2040,CZ,,electricity final use,,2040,2040,TRUE,inf
+CZ electricity final use 2045,CZ,,electricity final use,,2045,2045,TRUE,inf
+CZ electricity final use 2050,CZ,,electricity final use,,2050,2050,TRUE,inf
+CZ electricity grid 2020,CZ,,electricity grid,,2020,2020,TRUE,inf
+CZ electricity grid 2021,CZ,,electricity grid,,2021,2021,TRUE,inf
+CZ electricity grid 2022,CZ,,electricity grid,,2022,2022,TRUE,inf
+CZ electricity grid 2023,CZ,,electricity grid,,2023,2023,TRUE,inf
+CZ electricity grid 2025,CZ,,electricity grid,,2025,2025,TRUE,inf
+CZ electricity grid 2030,CZ,,electricity grid,,2030,2030,TRUE,inf
+CZ electricity grid 2035,CZ,,electricity grid,,2035,2035,TRUE,inf
+CZ electricity grid 2040,CZ,,electricity grid,,2040,2040,TRUE,inf
+CZ electricity grid 2045,CZ,,electricity grid,,2045,2045,TRUE,inf
+CZ electricity grid 2050,CZ,,electricity grid,,2050,2050,TRUE,inf
+CZ hard coal power old 2020,CZ,,hard coal power old,,2020,2020,TRUE,1150.0
+CZ hard coal power old 2021,CZ,,hard coal power old,,2021,2021,TRUE,1150.0
+CZ hard coal power old 2022,CZ,,hard coal power old,,2022,2022,TRUE,1150.0
+CZ hard coal power old 2023,CZ,,hard coal power old,,2023,2023,TRUE,1150.0
+CZ hard coal power old 2025,CZ,,hard coal power old,,2025,2025,TRUE,140.0
+CZ hard coal power old 2030,CZ,,hard coal power old,,2030,2030,TRUE,140.0
+CZ hard coal supply 2020,CZ,,hard coal supply,,2020,2020,TRUE,inf
+CZ hard coal supply 2021,CZ,,hard coal supply,,2021,2021,TRUE,inf
+CZ hard coal supply 2022,CZ,,hard coal supply,,2022,2022,TRUE,inf
+CZ hard coal supply 2023,CZ,,hard coal supply,,2023,2023,TRUE,inf
+CZ hard coal supply 2025,CZ,,hard coal supply,,2025,2025,TRUE,inf
+CZ hard coal supply 2030,CZ,,hard coal supply,,2030,2030,TRUE,inf
+CZ hydro PSH power 2020,CZ,,hydro PSH power,,2020,2020,TRUE,1170.0
+CZ hydro PSH power 2021,CZ,,hydro PSH power,,2021,2021,TRUE,1170.0
+CZ hydro PSH power 2022,CZ,,hydro PSH power,,2022,2022,TRUE,1170.0
+CZ hydro PSH power 2023,CZ,,hydro PSH power,,2023,2023,TRUE,1170.0
+CZ hydro PSH power 2025,CZ,,hydro PSH power,,2025,2025,TRUE,1170.0
+CZ hydro PSH power 2030,CZ,,hydro PSH power,,2030,2030,TRUE,1170.0
+CZ hydro PSH power 2035,CZ,,hydro PSH power,,2035,2035,TRUE,1170.0
+CZ hydro PSH power 2040,CZ,,hydro PSH power,,2040,2040,TRUE,1170.0
+CZ hydro PSH power 2045,CZ,,hydro PSH power,,2045,2045,TRUE,1170.0
+CZ hydro PSH power 2050,CZ,,hydro PSH power,,2050,2050,TRUE,1170.0
+CZ hydro PSH pump 2020,CZ,,hydro PSH pump,,2020,2020,TRUE,820.0
+CZ hydro PSH pump 2021,CZ,,hydro PSH pump,,2021,2021,TRUE,820.0
+CZ hydro PSH pump 2022,CZ,,hydro PSH pump,,2022,2022,TRUE,820.0
+CZ hydro PSH pump 2023,CZ,,hydro PSH pump,,2023,2023,TRUE,820.0
+CZ hydro PSH pump 2025,CZ,,hydro PSH pump,,2025,2025,TRUE,820.0
+CZ hydro PSH pump 2030,CZ,,hydro PSH pump,,2030,2030,TRUE,820.0
+CZ hydro PSH pump 2035,CZ,,hydro PSH pump,,2035,2035,TRUE,820.0
+CZ hydro PSH pump 2040,CZ,,hydro PSH pump,,2040,2040,TRUE,820.0
+CZ hydro PSH pump 2045,CZ,,hydro PSH pump,,2045,2045,TRUE,820.0
+CZ hydro PSH pump 2050,CZ,,hydro PSH pump,,2050,2050,TRUE,820.0
+CZ hydro PSH storage 2020,CZ,,hydro PSH storage,,2020,2020,TRUE,9380.0
+CZ hydro PSH storage 2021,CZ,,hydro PSH storage,,2021,2021,TRUE,9380.0
+CZ hydro PSH storage 2022,CZ,,hydro PSH storage,,2022,2022,TRUE,9380.0
+CZ hydro PSH storage 2023,CZ,,hydro PSH storage,,2023,2023,TRUE,9380.0
+CZ hydro PSH storage 2025,CZ,,hydro PSH storage,,2025,2025,TRUE,9380.0
+CZ hydro PSH storage 2030,CZ,,hydro PSH storage,,2030,2030,TRUE,9380.0
+CZ hydro PSH storage 2035,CZ,,hydro PSH storage,,2035,2035,TRUE,9380.0
+CZ hydro PSH storage 2040,CZ,,hydro PSH storage,,2040,2040,TRUE,9380.0
+CZ hydro PSH storage 2045,CZ,,hydro PSH storage,,2045,2045,TRUE,9380.0
+CZ hydro PSH storage 2050,CZ,,hydro PSH storage,,2050,2050,TRUE,9380.0
+CZ hydro ROR 2020,CZ,,hydro ROR,,2020,2020,TRUE,1090.0
+CZ hydro ROR 2021,CZ,,hydro ROR,,2021,2021,TRUE,1090.0
+CZ hydro ROR 2022,CZ,,hydro ROR,,2022,2022,TRUE,1090.0
+CZ hydro ROR 2023,CZ,,hydro ROR,,2023,2023,TRUE,1090.0
+CZ hydro ROR 2025,CZ,,hydro ROR,,2025,2025,TRUE,1100.0
+CZ hydro ROR 2030,CZ,,hydro ROR,,2030,2030,TRUE,1110.0
+CZ hydro ROR 2035,CZ,,hydro ROR,,2035,2035,TRUE,1110.0
+CZ hydro ROR 2040,CZ,,hydro ROR,,2040,2040,TRUE,1110.0
+CZ hydro ROR 2045,CZ,,hydro ROR,,2045,2045,TRUE,1110.0
+CZ hydro ROR 2050,CZ,,hydro ROR,,2050,2050,TRUE,1110.0
+CZ hydrogen electrolysis 2035,CZ,,hydrogen electrolysis,,2035,2035,TRUE,2270.0
+CZ hydrogen electrolysis 2040,CZ,,hydrogen electrolysis,,2040,2040,TRUE,3470.0
+CZ hydrogen electrolysis 2045,CZ,,hydrogen electrolysis,,2045,2045,TRUE,3970.0
+CZ hydrogen electrolysis 2050,CZ,,hydrogen electrolysis,,2050,2050,TRUE,5680.0
+CZ hydrogen final use 2035,CZ,,hydrogen final use,,2035,2035,TRUE,inf
+CZ hydrogen final use 2040,CZ,,hydrogen final use,,2040,2040,TRUE,inf
+CZ hydrogen final use 2045,CZ,,hydrogen final use,,2045,2045,TRUE,inf
+CZ hydrogen final use 2050,CZ,,hydrogen final use,,2050,2050,TRUE,inf
+CZ hydrogen power peaker 2050,CZ,,hydrogen power peaker,,2050,2050,TRUE,5560.0
+CZ hydrogen storage 2050,CZ,,hydrogen storage,,2050,2050,TRUE,558900.0
+CZ lignite power SC 2020,CZ,,lignite power SC,,2020,2020,TRUE,1100.0
+CZ lignite power SC 2021,CZ,,lignite power SC,,2021,2021,TRUE,1100.0
+CZ lignite power SC 2022,CZ,,lignite power SC,,2022,2022,TRUE,1100.0
+CZ lignite power SC 2023,CZ,,lignite power SC,,2023,2023,TRUE,1100.0
+CZ lignite power old 2020,CZ,,lignite power old,,2020,2020,TRUE,4900.0
+CZ lignite power old 2021,CZ,,lignite power old,,2021,2021,TRUE,4900.0
+CZ lignite power old 2022,CZ,,lignite power old,,2022,2022,TRUE,4900.0
+CZ lignite power old 2023,CZ,,lignite power old,,2023,2023,TRUE,4900.0
+CZ lignite power old 2025,CZ,,lignite power old,,2025,2025,TRUE,3250.0
+CZ lignite power old 2030,CZ,,lignite power old,,2030,2030,TRUE,3250.0
+CZ lignite supply 2020,CZ,,lignite supply,,2020,2020,TRUE,inf
+CZ lignite supply 2021,CZ,,lignite supply,,2021,2021,TRUE,inf
+CZ lignite supply 2022,CZ,,lignite supply,,2022,2022,TRUE,inf
+CZ lignite supply 2023,CZ,,lignite supply,,2023,2023,TRUE,inf
+CZ lignite supply 2025,CZ,,lignite supply,,2025,2025,TRUE,inf
+CZ lignite supply 2030,CZ,,lignite supply,,2030,2030,TRUE,inf
+CZ natural gas power peaker 2020,CZ,,natural gas power peaker,,2020,2020,TRUE,1610.0
+CZ natural gas power peaker 2021,CZ,,natural gas power peaker,,2021,2021,TRUE,1610.0
+CZ natural gas power peaker 2022,CZ,,natural gas power peaker,,2022,2022,TRUE,1610.0
+CZ natural gas power peaker 2023,CZ,,natural gas power peaker,,2023,2023,TRUE,1610.0
+CZ natural gas power peaker 2025,CZ,,natural gas power peaker,,2025,2025,TRUE,6880.0
+CZ natural gas power peaker 2030,CZ,,natural gas power peaker,,2030,2030,TRUE,7080.0
+CZ natural gas power peaker 2035,CZ,,natural gas power peaker,,2035,2035,TRUE,11100.0
+CZ natural gas power peaker 2040,CZ,,natural gas power peaker,,2040,2040,TRUE,11960.0
+CZ natural gas power peaker 2045,CZ,,natural gas power peaker,,2045,2045,TRUE,11960.0
+CZ natural gas power peaker 2050,CZ,,natural gas power peaker,,2050,2050,TRUE,6190.0
+CZ natural gas supply 2020,CZ,,natural gas supply,,2020,2020,TRUE,inf
+CZ natural gas supply 2021,CZ,,natural gas supply,,2021,2021,TRUE,inf
+CZ natural gas supply 2022,CZ,,natural gas supply,,2022,2022,TRUE,inf
+CZ natural gas supply 2023,CZ,,natural gas supply,,2023,2023,TRUE,inf
+CZ natural gas supply 2025,CZ,,natural gas supply,,2025,2025,TRUE,inf
+CZ natural gas supply 2030,CZ,,natural gas supply,,2030,2030,TRUE,inf
+CZ natural gas supply 2035,CZ,,natural gas supply,,2035,2035,TRUE,inf
+CZ natural gas supply 2040,CZ,,natural gas supply,,2040,2040,TRUE,inf
+CZ natural gas supply 2045,CZ,,natural gas supply,,2045,2045,TRUE,inf
+CZ natural gas supply 2050,CZ,,natural gas supply,,2050,2050,TRUE,inf
+CZ nuclear power large 2020,CZ,,nuclear power large,,2020,2020,TRUE,3940.0
+CZ nuclear power large 2021,CZ,,nuclear power large,,2021,2021,TRUE,3940.0
+CZ nuclear power large 2022,CZ,,nuclear power large,,2022,2022,TRUE,3940.0
+CZ nuclear power large 2023,CZ,,nuclear power large,,2023,2023,TRUE,3940.0
+CZ nuclear power large 2025,CZ,,nuclear power large,,2025,2025,TRUE,3940.0
+CZ nuclear power large 2030,CZ,,nuclear power large,,2030,2030,TRUE,3940.0
+CZ nuclear power large 2035,CZ,,nuclear power large,,2035,2035,TRUE,3940.0
+CZ nuclear power large 2040,CZ,,nuclear power large,,2040,2040,TRUE,2060.0
+CZ nuclear power large 2045,CZ,,nuclear power large,,2045,2045,TRUE,2060.0
+CZ nuclear power large 2050,CZ,,nuclear power large,,2050,2050,TRUE,2060.0
+CZ solar PV ground 2020,CZ,,solar PV ground,,2020,2020,TRUE,2070.0
+CZ solar PV ground 2021,CZ,,solar PV ground,,2021,2021,TRUE,2070.0
+CZ solar PV ground 2022,CZ,,solar PV ground,,2022,2022,TRUE,2070.0
+CZ solar PV ground 2023,CZ,,solar PV ground,,2023,2023,TRUE,2070.0
+CZ solar PV ground 2025,CZ,,solar PV ground,,2025,2025,TRUE,3000.0
+CZ solar PV ground 2030,CZ,,solar PV ground,,2030,2030,TRUE,4980.0
+CZ solar PV ground 2035,CZ,,solar PV ground,,2035,2035,TRUE,5060.0
+CZ solar PV ground 2040,CZ,,solar PV ground,,2040,2040,TRUE,7480.0
+CZ solar PV ground 2045,CZ,,solar PV ground,,2045,2045,TRUE,7480.0
+CZ solar PV ground 2050,CZ,,solar PV ground,,2050,2050,TRUE,5720.0
+CZ wind onshore 2020,CZ,,wind onshore,,2020,2020,TRUE,340.0
+CZ wind onshore 2021,CZ,,wind onshore,,2021,2021,TRUE,340.0
+CZ wind onshore 2022,CZ,,wind onshore,,2022,2022,TRUE,340.0
+CZ wind onshore 2023,CZ,,wind onshore,,2023,2023,TRUE,340.0
+CZ wind onshore 2025,CZ,,wind onshore,,2025,2025,TRUE,620.0
+CZ wind onshore 2030,CZ,,wind onshore,,2030,2030,TRUE,3560.0
+CZ wind onshore 2035,CZ,,wind onshore,,2035,2035,TRUE,7210.0
+CZ wind onshore 2040,CZ,,wind onshore,,2040,2040,TRUE,11020.0
+CZ wind onshore 2045,CZ,,wind onshore,,2045,2045,TRUE,14830.0
+CZ wind onshore 2050,CZ,,wind onshore,,2050,2050,TRUE,18500.0
+DE DSR reduction 2025,DE,,DSR reduction,,2025,2025,TRUE,4000.0
+DE DSR reduction 2030,DE,,DSR reduction,,2030,2030,TRUE,5860.0
+DE DSR reduction 2035,DE,,DSR reduction,,2035,2035,TRUE,7870.0
+DE DSR reduction 2040,DE,,DSR reduction,,2040,2040,TRUE,9050.0
+DE DSR reduction 2045,DE,,DSR reduction,,2045,2045,TRUE,10130.0
+DE DSR reduction 2050,DE,,DSR reduction,,2050,2050,TRUE,11150.0
+DE battery large charger 2020,DE,,battery large charger,,2020,2020,TRUE,10.0
+DE battery large charger 2021,DE,,battery large charger,,2021,2021,TRUE,10.0
+DE battery large charger 2022,DE,,battery large charger,,2022,2022,TRUE,10.0
+DE battery large charger 2023,DE,,battery large charger,,2023,2023,TRUE,10.0
+DE battery large charger 2025,DE,,battery large charger,,2025,2025,TRUE,10.0
+DE battery large charger 2030,DE,,battery large charger,,2030,2030,TRUE,3590.0
+DE battery large charger 2035,DE,,battery large charger,,2035,2035,TRUE,5450.0
+DE battery large charger 2040,DE,,battery large charger,,2040,2040,TRUE,5430.0
+DE battery large charger 2045,DE,,battery large charger,,2045,2045,TRUE,5430.0
+DE battery large charger 2050,DE,,battery large charger,,2050,2050,TRUE,1860.0
+DE battery large power 2020,DE,,battery large power,,2020,2020,TRUE,20.0
+DE battery large power 2021,DE,,battery large power,,2021,2021,TRUE,20.0
+DE battery large power 2022,DE,,battery large power,,2022,2022,TRUE,20.0
+DE battery large power 2023,DE,,battery large power,,2023,2023,TRUE,20.0
+DE battery large power 2025,DE,,battery large power,,2025,2025,TRUE,20.0
+DE battery large power 2030,DE,,battery large power,,2030,2030,TRUE,3990.0
+DE battery large power 2035,DE,,battery large power,,2035,2035,TRUE,6050.0
+DE battery large power 2040,DE,,battery large power,,2040,2040,TRUE,6040.0
+DE battery large power 2045,DE,,battery large power,,2045,2045,TRUE,6040.0
+DE battery large power 2050,DE,,battery large power,,2050,2050,TRUE,2060.0
+DE battery large storage 2020,DE,,battery large storage,,2020,2020,TRUE,30.0
+DE battery large storage 2021,DE,,battery large storage,,2021,2021,TRUE,30.0
+DE battery large storage 2022,DE,,battery large storage,,2022,2022,TRUE,30.0
+DE battery large storage 2023,DE,,battery large storage,,2023,2023,TRUE,30.0
+DE battery large storage 2025,DE,,battery large storage,,2025,2025,TRUE,30.0
+DE battery large storage 2030,DE,,battery large storage,,2030,2030,TRUE,7980.0
+DE battery large storage 2035,DE,,battery large storage,,2035,2035,TRUE,12100.0
+DE battery large storage 2040,DE,,battery large storage,,2040,2040,TRUE,12070.0
+DE battery large storage 2045,DE,,battery large storage,,2045,2045,TRUE,12070.0
+DE battery large storage 2050,DE,,battery large storage,,2050,2050,TRUE,4120.0
+DE biomass wood power 2020,DE,,biomass wood power,,2020,2020,TRUE,10410.0
+DE biomass wood power 2021,DE,,biomass wood power,,2021,2021,TRUE,10410.0
+DE biomass wood power 2022,DE,,biomass wood power,,2022,2022,TRUE,10410.0
+DE biomass wood power 2023,DE,,biomass wood power,,2023,2023,TRUE,10410.0
+DE biomass wood power 2025,DE,,biomass wood power,,2025,2025,TRUE,9800.0
+DE biomass wood power 2030,DE,,biomass wood power,,2030,2030,TRUE,8530.0
+DE biomass wood power 2035,DE,,biomass wood power,,2035,2035,TRUE,8440.0
+DE biomass wood power 2040,DE,,biomass wood power,,2040,2040,TRUE,7950.0
+DE biomass wood power 2045,DE,,biomass wood power,,2045,2045,TRUE,7380.0
+DE biomass wood power 2050,DE,,biomass wood power,,2050,2050,TRUE,6950.0
+DE biomass wood supply 2020,DE,,biomass wood supply,,2020,2020,TRUE,inf
+DE biomass wood supply 2021,DE,,biomass wood supply,,2021,2021,TRUE,inf
+DE biomass wood supply 2022,DE,,biomass wood supply,,2022,2022,TRUE,inf
+DE biomass wood supply 2023,DE,,biomass wood supply,,2023,2023,TRUE,inf
+DE biomass wood supply 2025,DE,,biomass wood supply,,2025,2025,TRUE,inf
+DE biomass wood supply 2030,DE,,biomass wood supply,,2030,2030,TRUE,inf
+DE biomass wood supply 2035,DE,,biomass wood supply,,2035,2035,TRUE,inf
+DE biomass wood supply 2040,DE,,biomass wood supply,,2040,2040,TRUE,inf
+DE biomass wood supply 2045,DE,,biomass wood supply,,2045,2045,TRUE,inf
+DE biomass wood supply 2050,DE,,biomass wood supply,,2050,2050,TRUE,inf
+DE electricity final use 2020,DE,,electricity final use,,2020,2020,TRUE,inf
+DE electricity final use 2021,DE,,electricity final use,,2021,2021,TRUE,inf
+DE electricity final use 2022,DE,,electricity final use,,2022,2022,TRUE,inf
+DE electricity final use 2023,DE,,electricity final use,,2023,2023,TRUE,inf
+DE electricity final use 2025,DE,,electricity final use,,2025,2025,TRUE,inf
+DE electricity final use 2030,DE,,electricity final use,,2030,2030,TRUE,inf
+DE electricity final use 2035,DE,,electricity final use,,2035,2035,TRUE,inf
+DE electricity final use 2040,DE,,electricity final use,,2040,2040,TRUE,inf
+DE electricity final use 2045,DE,,electricity final use,,2045,2045,TRUE,inf
+DE electricity final use 2050,DE,,electricity final use,,2050,2050,TRUE,inf
+DE electricity grid 2020,DE,,electricity grid,,2020,2020,TRUE,inf
+DE electricity grid 2021,DE,,electricity grid,,2021,2021,TRUE,inf
+DE electricity grid 2022,DE,,electricity grid,,2022,2022,TRUE,inf
+DE electricity grid 2023,DE,,electricity grid,,2023,2023,TRUE,inf
+DE electricity grid 2025,DE,,electricity grid,,2025,2025,TRUE,inf
+DE electricity grid 2030,DE,,electricity grid,,2030,2030,TRUE,inf
+DE electricity grid 2035,DE,,electricity grid,,2035,2035,TRUE,inf
+DE electricity grid 2040,DE,,electricity grid,,2040,2040,TRUE,inf
+DE electricity grid 2045,DE,,electricity grid,,2045,2045,TRUE,inf
+DE electricity grid 2050,DE,,electricity grid,,2050,2050,TRUE,inf
+DE hard coal power SC 2020,DE,,hard coal power SC,,2020,2020,TRUE,6290.0
+DE hard coal power SC 2021,DE,,hard coal power SC,,2021,2021,TRUE,6290.0
+DE hard coal power SC 2022,DE,,hard coal power SC,,2022,2022,TRUE,6290.0
+DE hard coal power SC 2023,DE,,hard coal power SC,,2023,2023,TRUE,6290.0
+DE hard coal power SC 2025,DE,,hard coal power SC,,2025,2025,TRUE,3010.0
+DE hard coal power SC 2030,DE,,hard coal power SC,,2030,2030,TRUE,1580.0
+DE hard coal power old 2020,DE,,hard coal power old,,2020,2020,TRUE,18700.0
+DE hard coal power old 2021,DE,,hard coal power old,,2021,2021,TRUE,18700.0
+DE hard coal power old 2022,DE,,hard coal power old,,2022,2022,TRUE,18700.0
+DE hard coal power old 2023,DE,,hard coal power old,,2023,2023,TRUE,18700.0
+DE hard coal power old 2025,DE,,hard coal power old,,2025,2025,TRUE,10940.0
+DE hard coal supply 2020,DE,,hard coal supply,,2020,2020,TRUE,inf
+DE hard coal supply 2021,DE,,hard coal supply,,2021,2021,TRUE,inf
+DE hard coal supply 2022,DE,,hard coal supply,,2022,2022,TRUE,inf
+DE hard coal supply 2023,DE,,hard coal supply,,2023,2023,TRUE,inf
+DE hard coal supply 2025,DE,,hard coal supply,,2025,2025,TRUE,inf
+DE hard coal supply 2030,DE,,hard coal supply,,2030,2030,TRUE,inf
+DE hydro PSH power 2020,DE,,hydro PSH power,,2020,2020,TRUE,6210.0
+DE hydro PSH power 2021,DE,,hydro PSH power,,2021,2021,TRUE,6210.0
+DE hydro PSH power 2022,DE,,hydro PSH power,,2022,2022,TRUE,6210.0
+DE hydro PSH power 2023,DE,,hydro PSH power,,2023,2023,TRUE,6210.0
+DE hydro PSH power 2025,DE,,hydro PSH power,,2025,2025,TRUE,9790.0
+DE hydro PSH power 2030,DE,,hydro PSH power,,2030,2030,TRUE,9790.0
+DE hydro PSH power 2035,DE,,hydro PSH power,,2035,2035,TRUE,9790.0
+DE hydro PSH power 2040,DE,,hydro PSH power,,2040,2040,TRUE,9790.0
+DE hydro PSH power 2045,DE,,hydro PSH power,,2045,2045,TRUE,9790.0
+DE hydro PSH power 2050,DE,,hydro PSH power,,2050,2050,TRUE,9790.0
+DE hydro PSH pump 2020,DE,,hydro PSH pump,,2020,2020,TRUE,4350.0
+DE hydro PSH pump 2021,DE,,hydro PSH pump,,2021,2021,TRUE,4350.0
+DE hydro PSH pump 2022,DE,,hydro PSH pump,,2022,2022,TRUE,4350.0
+DE hydro PSH pump 2023,DE,,hydro PSH pump,,2023,2023,TRUE,4350.0
+DE hydro PSH pump 2025,DE,,hydro PSH pump,,2025,2025,TRUE,6850.0
+DE hydro PSH pump 2030,DE,,hydro PSH pump,,2030,2030,TRUE,6850.0
+DE hydro PSH pump 2035,DE,,hydro PSH pump,,2035,2035,TRUE,6850.0
+DE hydro PSH pump 2040,DE,,hydro PSH pump,,2040,2040,TRUE,6850.0
+DE hydro PSH pump 2045,DE,,hydro PSH pump,,2045,2045,TRUE,6850.0
+DE hydro PSH pump 2050,DE,,hydro PSH pump,,2050,2050,TRUE,6850.0
+DE hydro PSH storage 2020,DE,,hydro PSH storage,,2020,2020,TRUE,49700.0
+DE hydro PSH storage 2021,DE,,hydro PSH storage,,2021,2021,TRUE,49700.0
+DE hydro PSH storage 2022,DE,,hydro PSH storage,,2022,2022,TRUE,49700.0
+DE hydro PSH storage 2023,DE,,hydro PSH storage,,2023,2023,TRUE,49700.0
+DE hydro PSH storage 2025,DE,,hydro PSH storage,,2025,2025,TRUE,78330.0
+DE hydro PSH storage 2030,DE,,hydro PSH storage,,2030,2030,TRUE,78330.0
+DE hydro PSH storage 2035,DE,,hydro PSH storage,,2035,2035,TRUE,78330.0
+DE hydro PSH storage 2040,DE,,hydro PSH storage,,2040,2040,TRUE,78330.0
+DE hydro PSH storage 2045,DE,,hydro PSH storage,,2045,2045,TRUE,78330.0
+DE hydro PSH storage 2050,DE,,hydro PSH storage,,2050,2050,TRUE,78330.0
+DE hydro ROR 2020,DE,,hydro ROR,,2020,2020,TRUE,4130.0
+DE hydro ROR 2021,DE,,hydro ROR,,2021,2021,TRUE,4130.0
+DE hydro ROR 2022,DE,,hydro ROR,,2022,2022,TRUE,4130.0
+DE hydro ROR 2023,DE,,hydro ROR,,2023,2023,TRUE,4130.0
+DE hydro ROR 2025,DE,,hydro ROR,,2025,2025,TRUE,4130.0
+DE hydro ROR 2030,DE,,hydro ROR,,2030,2030,TRUE,4130.0
+DE hydro ROR 2035,DE,,hydro ROR,,2035,2035,TRUE,4130.0
+DE hydro ROR 2040,DE,,hydro ROR,,2040,2040,TRUE,4130.0
+DE hydro ROR 2045,DE,,hydro ROR,,2045,2045,TRUE,4130.0
+DE hydro ROR 2050,DE,,hydro ROR,,2050,2050,TRUE,4130.0
+DE hydrogen electrolysis 2025,DE,,hydrogen electrolysis,,2025,2025,TRUE,900.0
+DE hydrogen electrolysis 2030,DE,,hydrogen electrolysis,,2030,2030,TRUE,14920.0
+DE hydrogen electrolysis 2035,DE,,hydrogen electrolysis,,2035,2035,TRUE,35350.0
+DE hydrogen electrolysis 2040,DE,,hydrogen electrolysis,,2040,2040,TRUE,35350.0
+DE hydrogen electrolysis 2045,DE,,hydrogen electrolysis,,2045,2045,TRUE,50230.0
+DE hydrogen electrolysis 2050,DE,,hydrogen electrolysis,,2050,2050,TRUE,77350.0
+DE hydrogen final use 2025,DE,,hydrogen final use,,2025,2025,TRUE,inf
+DE hydrogen final use 2030,DE,,hydrogen final use,,2030,2030,TRUE,inf
+DE hydrogen final use 2035,DE,,hydrogen final use,,2035,2035,TRUE,inf
+DE hydrogen final use 2040,DE,,hydrogen final use,,2040,2040,TRUE,inf
+DE hydrogen final use 2045,DE,,hydrogen final use,,2045,2045,TRUE,inf
+DE hydrogen final use 2050,DE,,hydrogen final use,,2050,2050,TRUE,inf
+DE hydrogen power peaker 2040,DE,,hydrogen power peaker,,2040,2040,TRUE,2550.0
+DE hydrogen power peaker 2045,DE,,hydrogen power peaker,,2045,2045,TRUE,10400.0
+DE hydrogen power peaker 2050,DE,,hydrogen power peaker,,2050,2050,TRUE,45880.0
+DE hydrogen storage 2040,DE,,hydrogen storage,,2040,2040,TRUE,10.0
+DE hydrogen storage 2045,DE,,hydrogen storage,,2045,2045,TRUE,5326260.0
+DE hydrogen storage 2050,DE,,hydrogen storage,,2050,2050,TRUE,35508920.0
+DE lignite power SC 2020,DE,,lignite power SC,,2020,2020,TRUE,7490.0
+DE lignite power SC 2021,DE,,lignite power SC,,2021,2021,TRUE,7490.0
+DE lignite power SC 2022,DE,,lignite power SC,,2022,2022,TRUE,7490.0
+DE lignite power SC 2023,DE,,lignite power SC,,2023,2023,TRUE,7490.0
+DE lignite power SC 2025,DE,,lignite power SC,,2025,2025,TRUE,4570.0
+DE lignite power SC 2030,DE,,lignite power SC,,2030,2030,TRUE,4570.0
+DE lignite power SC 2035,DE,,lignite power SC,,2035,2035,TRUE,3890.0
+DE lignite power old 2020,DE,,lignite power old,,2020,2020,TRUE,13570.0
+DE lignite power old 2021,DE,,lignite power old,,2021,2021,TRUE,13570.0
+DE lignite power old 2022,DE,,lignite power old,,2022,2022,TRUE,13570.0
+DE lignite power old 2023,DE,,lignite power old,,2023,2023,TRUE,13570.0
+DE lignite power old 2025,DE,,lignite power old,,2025,2025,TRUE,10760.0
+DE lignite supply 2020,DE,,lignite supply,,2020,2020,TRUE,inf
+DE lignite supply 2021,DE,,lignite supply,,2021,2021,TRUE,inf
+DE lignite supply 2022,DE,,lignite supply,,2022,2022,TRUE,inf
+DE lignite supply 2023,DE,,lignite supply,,2023,2023,TRUE,inf
+DE lignite supply 2025,DE,,lignite supply,,2025,2025,TRUE,inf
+DE lignite supply 2030,DE,,lignite supply,,2030,2030,TRUE,inf
+DE lignite supply 2035,DE,,lignite supply,,2035,2035,TRUE,inf
+DE natural gas power peaker 2020,DE,,natural gas power peaker,,2020,2020,TRUE,47360.0
+DE natural gas power peaker 2021,DE,,natural gas power peaker,,2021,2021,TRUE,47360.0
+DE natural gas power peaker 2022,DE,,natural gas power peaker,,2022,2022,TRUE,47360.0
+DE natural gas power peaker 2023,DE,,natural gas power peaker,,2023,2023,TRUE,47360.0
+DE natural gas power peaker 2025,DE,,natural gas power peaker,,2025,2025,TRUE,62470.0
+DE natural gas power peaker 2030,DE,,natural gas power peaker,,2030,2030,TRUE,65310.0
+DE natural gas power peaker 2035,DE,,natural gas power peaker,,2035,2035,TRUE,71440.0
+DE natural gas power peaker 2040,DE,,natural gas power peaker,,2040,2040,TRUE,67790.0
+DE natural gas power peaker 2045,DE,,natural gas power peaker,,2045,2045,TRUE,58920.0
+DE natural gas power peaker 2050,DE,,natural gas power peaker,,2050,2050,TRUE,12940.0
+DE natural gas supply 2020,DE,,natural gas supply,,2020,2020,TRUE,inf
+DE natural gas supply 2021,DE,,natural gas supply,,2021,2021,TRUE,inf
+DE natural gas supply 2022,DE,,natural gas supply,,2022,2022,TRUE,inf
+DE natural gas supply 2023,DE,,natural gas supply,,2023,2023,TRUE,inf
+DE natural gas supply 2025,DE,,natural gas supply,,2025,2025,TRUE,inf
+DE natural gas supply 2030,DE,,natural gas supply,,2030,2030,TRUE,inf
+DE natural gas supply 2035,DE,,natural gas supply,,2035,2035,TRUE,inf
+DE natural gas supply 2040,DE,,natural gas supply,,2040,2040,TRUE,inf
+DE natural gas supply 2045,DE,,natural gas supply,,2045,2045,TRUE,inf
+DE natural gas supply 2050,DE,,natural gas supply,,2050,2050,TRUE,inf
+DE nuclear power large 2020,DE,,nuclear power large,,2020,2020,TRUE,8120.0
+DE nuclear power large 2021,DE,,nuclear power large,,2021,2021,TRUE,8120.0
+DE nuclear power large 2022,DE,,nuclear power large,,2022,2022,TRUE,8120.0
+DE nuclear power large 2023,DE,,nuclear power large,,2023,2023,TRUE,8120.0
+DE solar PV ground 2020,DE,,solar PV ground,,2020,2020,TRUE,53780.0
+DE solar PV ground 2021,DE,,solar PV ground,,2021,2021,TRUE,53780.0
+DE solar PV ground 2022,DE,,solar PV ground,,2022,2022,TRUE,53780.0
+DE solar PV ground 2023,DE,,solar PV ground,,2023,2023,TRUE,53780.0
+DE solar PV ground 2025,DE,,solar PV ground,,2025,2025,TRUE,73300.0
+DE solar PV ground 2030,DE,,solar PV ground,,2030,2030,TRUE,193930.0
+DE solar PV ground 2035,DE,,solar PV ground,,2035,2035,TRUE,203930.0
+DE solar PV ground 2040,DE,,solar PV ground,,2040,2040,TRUE,203930.0
+DE solar PV ground 2045,DE,,solar PV ground,,2045,2045,TRUE,203930.0
+DE solar PV ground 2050,DE,,solar PV ground,,2050,2050,TRUE,203930.0
+DE wind offshore 2020,DE,,wind offshore,,2020,2020,TRUE,7750.0
+DE wind offshore 2021,DE,,wind offshore,,2021,2021,TRUE,7750.0
+DE wind offshore 2022,DE,,wind offshore,,2022,2022,TRUE,7750.0
+DE wind offshore 2023,DE,,wind offshore,,2023,2023,TRUE,7750.0
+DE wind offshore 2025,DE,,wind offshore,,2025,2025,TRUE,11080.0
+DE wind offshore 2030,DE,,wind offshore,,2030,2030,TRUE,30210.0
+DE wind offshore 2035,DE,,wind offshore,,2035,2035,TRUE,43850.0
+DE wind offshore 2040,DE,,wind offshore,,2040,2040,TRUE,63050.0
+DE wind offshore 2045,DE,,wind offshore,,2045,2045,TRUE,82250.0
+DE wind offshore 2050,DE,,wind offshore,,2050,2050,TRUE,99780.0
+DE wind onshore 2020,DE,,wind onshore,,2020,2020,TRUE,54440.0
+DE wind onshore 2021,DE,,wind onshore,,2021,2021,TRUE,54440.0
+DE wind onshore 2022,DE,,wind onshore,,2022,2022,TRUE,54440.0
+DE wind onshore 2023,DE,,wind onshore,,2023,2023,TRUE,54440.0
+DE wind onshore 2025,DE,,wind onshore,,2025,2025,TRUE,72440.0
+DE wind onshore 2030,DE,,wind onshore,,2030,2030,TRUE,105000.0
+DE wind onshore 2035,DE,,wind onshore,,2035,2035,TRUE,106970.0
+DE wind onshore 2040,DE,,wind onshore,,2040,2040,TRUE,106970.0
+DE wind onshore 2045,DE,,wind onshore,,2045,2045,TRUE,106970.0
+DE wind onshore 2050,DE,,wind onshore,,2050,2050,TRUE,106970.0
+LT DSR reduction 2025,LT,,DSR reduction,,2025,2025,TRUE,90.0
+LT DSR reduction 2030,LT,,DSR reduction,,2030,2030,TRUE,140.0
+LT DSR reduction 2035,LT,,DSR reduction,,2035,2035,TRUE,200.0
+LT DSR reduction 2040,LT,,DSR reduction,,2040,2040,TRUE,240.0
+LT DSR reduction 2045,LT,,DSR reduction,,2045,2045,TRUE,270.0
+LT DSR reduction 2050,LT,,DSR reduction,,2050,2050,TRUE,300.0
+LT battery large charger 2035,LT,,battery large charger,,2035,2035,TRUE,190.0
+LT battery large charger 2040,LT,,battery large charger,,2040,2040,TRUE,190.0
+LT battery large charger 2045,LT,,battery large charger,,2045,2045,TRUE,220.0
+LT battery large charger 2050,LT,,battery large charger,,2050,2050,TRUE,200.0
+LT battery large power 2035,LT,,battery large power,,2035,2035,TRUE,210.0
+LT battery large power 2040,LT,,battery large power,,2040,2040,TRUE,210.0
+LT battery large power 2045,LT,,battery large power,,2045,2045,TRUE,240.0
+LT battery large power 2050,LT,,battery large power,,2050,2050,TRUE,220.0
+LT battery large storage 2035,LT,,battery large storage,,2035,2035,TRUE,420.0
+LT battery large storage 2040,LT,,battery large storage,,2040,2040,TRUE,420.0
+LT battery large storage 2045,LT,,battery large storage,,2045,2045,TRUE,490.0
+LT battery large storage 2050,LT,,battery large storage,,2050,2050,TRUE,450.0
+LT biomass wood power 2020,LT,,biomass wood power,,2020,2020,TRUE,120.0
+LT biomass wood power 2021,LT,,biomass wood power,,2021,2021,TRUE,120.0
+LT biomass wood power 2022,LT,,biomass wood power,,2022,2022,TRUE,120.0
+LT biomass wood power 2023,LT,,biomass wood power,,2023,2023,TRUE,120.0
+LT biomass wood power 2025,LT,,biomass wood power,,2025,2025,TRUE,540.0
+LT biomass wood power 2030,LT,,biomass wood power,,2030,2030,TRUE,520.0
+LT biomass wood power 2035,LT,,biomass wood power,,2035,2035,TRUE,520.0
+LT biomass wood power 2040,LT,,biomass wood power,,2040,2040,TRUE,460.0
+LT biomass wood power 2045,LT,,biomass wood power,,2045,2045,TRUE,400.0
+LT biomass wood power 2050,LT,,biomass wood power,,2050,2050,TRUE,360.0
+LT biomass wood supply 2020,LT,,biomass wood supply,,2020,2020,TRUE,inf
+LT biomass wood supply 2021,LT,,biomass wood supply,,2021,2021,TRUE,inf
+LT biomass wood supply 2022,LT,,biomass wood supply,,2022,2022,TRUE,inf
+LT biomass wood supply 2023,LT,,biomass wood supply,,2023,2023,TRUE,inf
+LT biomass wood supply 2025,LT,,biomass wood supply,,2025,2025,TRUE,inf
+LT biomass wood supply 2030,LT,,biomass wood supply,,2030,2030,TRUE,inf
+LT biomass wood supply 2035,LT,,biomass wood supply,,2035,2035,TRUE,inf
+LT biomass wood supply 2040,LT,,biomass wood supply,,2040,2040,TRUE,inf
+LT biomass wood supply 2045,LT,,biomass wood supply,,2045,2045,TRUE,inf
+LT biomass wood supply 2050,LT,,biomass wood supply,,2050,2050,TRUE,inf
+LT electricity final use 2020,LT,,electricity final use,,2020,2020,TRUE,inf
+LT electricity final use 2021,LT,,electricity final use,,2021,2021,TRUE,inf
+LT electricity final use 2022,LT,,electricity final use,,2022,2022,TRUE,inf
+LT electricity final use 2023,LT,,electricity final use,,2023,2023,TRUE,inf
+LT electricity final use 2025,LT,,electricity final use,,2025,2025,TRUE,inf
+LT electricity final use 2030,LT,,electricity final use,,2030,2030,TRUE,inf
+LT electricity final use 2035,LT,,electricity final use,,2035,2035,TRUE,inf
+LT electricity final use 2040,LT,,electricity final use,,2040,2040,TRUE,inf
+LT electricity final use 2045,LT,,electricity final use,,2045,2045,TRUE,inf
+LT electricity final use 2050,LT,,electricity final use,,2050,2050,TRUE,inf
+LT electricity grid 2020,LT,,electricity grid,,2020,2020,TRUE,inf
+LT electricity grid 2021,LT,,electricity grid,,2021,2021,TRUE,inf
+LT electricity grid 2022,LT,,electricity grid,,2022,2022,TRUE,inf
+LT electricity grid 2023,LT,,electricity grid,,2023,2023,TRUE,inf
+LT electricity grid 2025,LT,,electricity grid,,2025,2025,TRUE,inf
+LT electricity grid 2030,LT,,electricity grid,,2030,2030,TRUE,inf
+LT electricity grid 2035,LT,,electricity grid,,2035,2035,TRUE,inf
+LT electricity grid 2040,LT,,electricity grid,,2040,2040,TRUE,inf
+LT electricity grid 2045,LT,,electricity grid,,2045,2045,TRUE,inf
+LT electricity grid 2050,LT,,electricity grid,,2050,2050,TRUE,inf
+LT hydro PSH power 2020,LT,,hydro PSH power,,2020,2020,TRUE,950.0
+LT hydro PSH power 2021,LT,,hydro PSH power,,2021,2021,TRUE,950.0
+LT hydro PSH power 2022,LT,,hydro PSH power,,2022,2022,TRUE,950.0
+LT hydro PSH power 2023,LT,,hydro PSH power,,2023,2023,TRUE,950.0
+LT hydro PSH power 2025,LT,,hydro PSH power,,2025,2025,TRUE,1120.0
+LT hydro PSH power 2030,LT,,hydro PSH power,,2030,2030,TRUE,1120.0
+LT hydro PSH power 2035,LT,,hydro PSH power,,2035,2035,TRUE,1120.0
+LT hydro PSH power 2040,LT,,hydro PSH power,,2040,2040,TRUE,1120.0
+LT hydro PSH power 2045,LT,,hydro PSH power,,2045,2045,TRUE,1120.0
+LT hydro PSH power 2050,LT,,hydro PSH power,,2050,2050,TRUE,1120.0
+LT hydro PSH pump 2020,LT,,hydro PSH pump,,2020,2020,TRUE,660.0
+LT hydro PSH pump 2021,LT,,hydro PSH pump,,2021,2021,TRUE,660.0
+LT hydro PSH pump 2022,LT,,hydro PSH pump,,2022,2022,TRUE,660.0
+LT hydro PSH pump 2023,LT,,hydro PSH pump,,2023,2023,TRUE,660.0
+LT hydro PSH pump 2025,LT,,hydro PSH pump,,2025,2025,TRUE,790.0
+LT hydro PSH pump 2030,LT,,hydro PSH pump,,2030,2030,TRUE,790.0
+LT hydro PSH pump 2035,LT,,hydro PSH pump,,2035,2035,TRUE,790.0
+LT hydro PSH pump 2040,LT,,hydro PSH pump,,2040,2040,TRUE,790.0
+LT hydro PSH pump 2045,LT,,hydro PSH pump,,2045,2045,TRUE,790.0
+LT hydro PSH pump 2050,LT,,hydro PSH pump,,2050,2050,TRUE,790.0
+LT hydro PSH storage 2020,LT,,hydro PSH storage,,2020,2020,TRUE,7600.0
+LT hydro PSH storage 2021,LT,,hydro PSH storage,,2021,2021,TRUE,7600.0
+LT hydro PSH storage 2022,LT,,hydro PSH storage,,2022,2022,TRUE,7600.0
+LT hydro PSH storage 2023,LT,,hydro PSH storage,,2023,2023,TRUE,7600.0
+LT hydro PSH storage 2025,LT,,hydro PSH storage,,2025,2025,TRUE,9000.0
+LT hydro PSH storage 2030,LT,,hydro PSH storage,,2030,2030,TRUE,9000.0
+LT hydro PSH storage 2035,LT,,hydro PSH storage,,2035,2035,TRUE,9000.0
+LT hydro PSH storage 2040,LT,,hydro PSH storage,,2040,2040,TRUE,9000.0
+LT hydro PSH storage 2045,LT,,hydro PSH storage,,2045,2045,TRUE,9000.0
+LT hydro PSH storage 2050,LT,,hydro PSH storage,,2050,2050,TRUE,9000.0
+LT hydro ROR 2020,LT,,hydro ROR,,2020,2020,TRUE,310.0
+LT hydro ROR 2021,LT,,hydro ROR,,2021,2021,TRUE,310.0
+LT hydro ROR 2022,LT,,hydro ROR,,2022,2022,TRUE,310.0
+LT hydro ROR 2023,LT,,hydro ROR,,2023,2023,TRUE,310.0
+LT hydro ROR 2025,LT,,hydro ROR,,2025,2025,TRUE,140.0
+LT hydro ROR 2030,LT,,hydro ROR,,2030,2030,TRUE,140.0
+LT hydro ROR 2035,LT,,hydro ROR,,2035,2035,TRUE,140.0
+LT hydro ROR 2040,LT,,hydro ROR,,2040,2040,TRUE,140.0
+LT hydro ROR 2045,LT,,hydro ROR,,2045,2045,TRUE,140.0
+LT hydro ROR 2050,LT,,hydro ROR,,2050,2050,TRUE,140.0
+LT hydrogen electrolysis 2035,LT,,hydrogen electrolysis,,2035,2035,TRUE,530.0
+LT hydrogen electrolysis 2040,LT,,hydrogen electrolysis,,2040,2040,TRUE,530.0
+LT hydrogen electrolysis 2045,LT,,hydrogen electrolysis,,2045,2045,TRUE,860.0
+LT hydrogen electrolysis 2050,LT,,hydrogen electrolysis,,2050,2050,TRUE,1420.0
+LT hydrogen final use 2035,LT,,hydrogen final use,,2035,2035,TRUE,inf
+LT hydrogen final use 2040,LT,,hydrogen final use,,2040,2040,TRUE,inf
+LT hydrogen final use 2045,LT,,hydrogen final use,,2045,2045,TRUE,inf
+LT hydrogen final use 2050,LT,,hydrogen final use,,2050,2050,TRUE,inf
+LT hydrogen power peaker 2045,LT,,hydrogen power peaker,,2045,2045,TRUE,100.0
+LT hydrogen power peaker 2050,LT,,hydrogen power peaker,,2050,2050,TRUE,1920.0
+LT hydrogen storage 2045,LT,,hydrogen storage,,2045,2045,TRUE,36330.0
+LT hydrogen storage 2050,LT,,hydrogen storage,,2050,2050,TRUE,60810.0
+LT natural gas power peaker 2020,LT,,natural gas power peaker,,2020,2020,TRUE,1910.0
+LT natural gas power peaker 2021,LT,,natural gas power peaker,,2021,2021,TRUE,1910.0
+LT natural gas power peaker 2022,LT,,natural gas power peaker,,2022,2022,TRUE,1910.0
+LT natural gas power peaker 2023,LT,,natural gas power peaker,,2023,2023,TRUE,1910.0
+LT natural gas power peaker 2025,LT,,natural gas power peaker,,2025,2025,TRUE,1960.0
+LT natural gas power peaker 2030,LT,,natural gas power peaker,,2030,2030,TRUE,2230.0
+LT natural gas power peaker 2035,LT,,natural gas power peaker,,2035,2035,TRUE,1590.0
+LT natural gas power peaker 2040,LT,,natural gas power peaker,,2040,2040,TRUE,1810.0
+LT natural gas power peaker 2045,LT,,natural gas power peaker,,2045,2045,TRUE,1710.0
+LT natural gas power peaker 2050,LT,,natural gas power peaker,,2050,2050,TRUE,210.0
+LT natural gas supply 2020,LT,,natural gas supply,,2020,2020,TRUE,inf
+LT natural gas supply 2021,LT,,natural gas supply,,2021,2021,TRUE,inf
+LT natural gas supply 2022,LT,,natural gas supply,,2022,2022,TRUE,inf
+LT natural gas supply 2023,LT,,natural gas supply,,2023,2023,TRUE,inf
+LT natural gas supply 2025,LT,,natural gas supply,,2025,2025,TRUE,inf
+LT natural gas supply 2030,LT,,natural gas supply,,2030,2030,TRUE,inf
+LT natural gas supply 2035,LT,,natural gas supply,,2035,2035,TRUE,inf
+LT natural gas supply 2040,LT,,natural gas supply,,2040,2040,TRUE,inf
+LT natural gas supply 2045,LT,,natural gas supply,,2045,2045,TRUE,inf
+LT natural gas supply 2050,LT,,natural gas supply,,2050,2050,TRUE,inf
+LT solar PV ground 2020,LT,,solar PV ground,,2020,2020,TRUE,140.0
+LT solar PV ground 2021,LT,,solar PV ground,,2021,2021,TRUE,140.0
+LT solar PV ground 2022,LT,,solar PV ground,,2022,2022,TRUE,140.0
+LT solar PV ground 2023,LT,,solar PV ground,,2023,2023,TRUE,140.0
+LT solar PV ground 2025,LT,,solar PV ground,,2025,2025,TRUE,150.0
+LT solar PV ground 2030,LT,,solar PV ground,,2030,2030,TRUE,850.0
+LT solar PV ground 2035,LT,,solar PV ground,,2035,2035,TRUE,900.0
+LT solar PV ground 2040,LT,,solar PV ground,,2040,2040,TRUE,4740.0
+LT solar PV ground 2045,LT,,solar PV ground,,2045,2045,TRUE,4740.0
+LT solar PV ground 2050,LT,,solar PV ground,,2050,2050,TRUE,4720.0
+LT wind offshore 2030,LT,,wind offshore,,2030,2030,TRUE,700.0
+LT wind offshore 2035,LT,,wind offshore,,2035,2035,TRUE,1220.0
+LT wind offshore 2040,LT,,wind offshore,,2040,2040,TRUE,1600.0
+LT wind offshore 2045,LT,,wind offshore,,2045,2045,TRUE,1920.0
+LT wind offshore 2050,LT,,wind offshore,,2050,2050,TRUE,2620.0
+LT wind onshore 2020,LT,,wind onshore,,2020,2020,TRUE,540.0
+LT wind onshore 2021,LT,,wind onshore,,2021,2021,TRUE,540.0
+LT wind onshore 2022,LT,,wind onshore,,2022,2022,TRUE,540.0
+LT wind onshore 2023,LT,,wind onshore,,2023,2023,TRUE,540.0
+LT wind onshore 2025,LT,,wind onshore,,2025,2025,TRUE,1300.0
+LT wind onshore 2030,LT,,wind onshore,,2030,2030,TRUE,1300.0
+LT wind onshore 2035,LT,,wind onshore,,2035,2035,TRUE,1580.0
+LT wind onshore 2040,LT,,wind onshore,,2040,2040,TRUE,1350.0
+LT wind onshore 2045,LT,,wind onshore,,2045,2045,TRUE,1100.0
+LT wind onshore 2050,LT,,wind onshore,,2050,2050,TRUE,1100.0
+SE DSR reduction 2025,SE,,DSR reduction,,2025,2025,TRUE,990.0
+SE DSR reduction 2030,SE,,DSR reduction,,2030,2030,TRUE,1440.0
+SE DSR reduction 2035,SE,,DSR reduction,,2035,2035,TRUE,1910.0
+SE DSR reduction 2040,SE,,DSR reduction,,2040,2040,TRUE,2170.0
+SE DSR reduction 2045,SE,,DSR reduction,,2045,2045,TRUE,2410.0
+SE DSR reduction 2050,SE,,DSR reduction,,2050,2050,TRUE,2640.0
+SE battery large charger 2035,SE,,battery large charger,,2035,2035,TRUE,2030.0
+SE battery large charger 2040,SE,,battery large charger,,2040,2040,TRUE,2030.0
+SE battery large power 2035,SE,,battery large power,,2035,2035,TRUE,2250.0
+SE battery large power 2040,SE,,battery large power,,2040,2040,TRUE,2250.0
+SE battery large storage 2035,SE,,battery large storage,,2035,2035,TRUE,4500.0
+SE battery large storage 2040,SE,,battery large storage,,2040,2040,TRUE,4500.0
+SE biomass wood power 2020,SE,,biomass wood power,,2020,2020,TRUE,5300.0
+SE biomass wood power 2021,SE,,biomass wood power,,2021,2021,TRUE,5300.0
+SE biomass wood power 2022,SE,,biomass wood power,,2022,2022,TRUE,5300.0
+SE biomass wood power 2023,SE,,biomass wood power,,2023,2023,TRUE,5300.0
+SE biomass wood power 2025,SE,,biomass wood power,,2025,2025,TRUE,6560.0
+SE biomass wood power 2030,SE,,biomass wood power,,2030,2030,TRUE,6460.0
+SE biomass wood power 2035,SE,,biomass wood power,,2035,2035,TRUE,6320.0
+SE biomass wood power 2040,SE,,biomass wood power,,2040,2040,TRUE,5920.0
+SE biomass wood power 2045,SE,,biomass wood power,,2045,2045,TRUE,5550.0
+SE biomass wood power 2050,SE,,biomass wood power,,2050,2050,TRUE,5280.0
+SE biomass wood supply 2020,SE,,biomass wood supply,,2020,2020,TRUE,inf
+SE biomass wood supply 2021,SE,,biomass wood supply,,2021,2021,TRUE,inf
+SE biomass wood supply 2022,SE,,biomass wood supply,,2022,2022,TRUE,inf
+SE biomass wood supply 2023,SE,,biomass wood supply,,2023,2023,TRUE,inf
+SE biomass wood supply 2025,SE,,biomass wood supply,,2025,2025,TRUE,inf
+SE biomass wood supply 2030,SE,,biomass wood supply,,2030,2030,TRUE,inf
+SE biomass wood supply 2035,SE,,biomass wood supply,,2035,2035,TRUE,inf
+SE biomass wood supply 2040,SE,,biomass wood supply,,2040,2040,TRUE,inf
+SE biomass wood supply 2045,SE,,biomass wood supply,,2045,2045,TRUE,inf
+SE biomass wood supply 2050,SE,,biomass wood supply,,2050,2050,TRUE,inf
+SE electricity final use 2020,SE,,electricity final use,,2020,2020,TRUE,inf
+SE electricity final use 2021,SE,,electricity final use,,2021,2021,TRUE,inf
+SE electricity final use 2022,SE,,electricity final use,,2022,2022,TRUE,inf
+SE electricity final use 2023,SE,,electricity final use,,2023,2023,TRUE,inf
+SE electricity final use 2025,SE,,electricity final use,,2025,2025,TRUE,inf
+SE electricity final use 2030,SE,,electricity final use,,2030,2030,TRUE,inf
+SE electricity final use 2035,SE,,electricity final use,,2035,2035,TRUE,inf
+SE electricity final use 2040,SE,,electricity final use,,2040,2040,TRUE,inf
+SE electricity final use 2045,SE,,electricity final use,,2045,2045,TRUE,inf
+SE electricity final use 2050,SE,,electricity final use,,2050,2050,TRUE,inf
+SE electricity grid 2020,SE,,electricity grid,,2020,2020,TRUE,inf
+SE electricity grid 2021,SE,,electricity grid,,2021,2021,TRUE,inf
+SE electricity grid 2022,SE,,electricity grid,,2022,2022,TRUE,inf
+SE electricity grid 2023,SE,,electricity grid,,2023,2023,TRUE,inf
+SE electricity grid 2025,SE,,electricity grid,,2025,2025,TRUE,inf
+SE electricity grid 2030,SE,,electricity grid,,2030,2030,TRUE,inf
+SE electricity grid 2035,SE,,electricity grid,,2035,2035,TRUE,inf
+SE electricity grid 2040,SE,,electricity grid,,2040,2040,TRUE,inf
+SE electricity grid 2045,SE,,electricity grid,,2045,2045,TRUE,inf
+SE electricity grid 2050,SE,,electricity grid,,2050,2050,TRUE,inf
+SE hydro ROR 2020,SE,,hydro ROR,,2020,2020,TRUE,16180.0
+SE hydro ROR 2021,SE,,hydro ROR,,2021,2021,TRUE,16180.0
+SE hydro ROR 2022,SE,,hydro ROR,,2022,2022,TRUE,16180.0
+SE hydro ROR 2023,SE,,hydro ROR,,2023,2023,TRUE,16180.0
+SE hydro ROR 2025,SE,,hydro ROR,,2025,2025,TRUE,16180.0
+SE hydro ROR 2030,SE,,hydro ROR,,2030,2030,TRUE,16180.0
+SE hydro ROR 2035,SE,,hydro ROR,,2035,2035,TRUE,16180.0
+SE hydro ROR 2040,SE,,hydro ROR,,2040,2040,TRUE,16180.0
+SE hydro ROR 2045,SE,,hydro ROR,,2045,2045,TRUE,16180.0
+SE hydro ROR 2050,SE,,hydro ROR,,2050,2050,TRUE,16180.0
+SE hydrogen electrolysis 2025,SE,,hydrogen electrolysis,,2025,2025,TRUE,1190.0
+SE hydrogen electrolysis 2030,SE,,hydrogen electrolysis,,2030,2030,TRUE,2090.0
+SE hydrogen electrolysis 2035,SE,,hydrogen electrolysis,,2035,2035,TRUE,3930.0
+SE hydrogen electrolysis 2040,SE,,hydrogen electrolysis,,2040,2040,TRUE,3930.0
+SE hydrogen electrolysis 2045,SE,,hydrogen electrolysis,,2045,2045,TRUE,5380.0
+SE hydrogen electrolysis 2050,SE,,hydrogen electrolysis,,2050,2050,TRUE,4720.0
+SE hydrogen final use 2025,SE,,hydrogen final use,,2025,2025,TRUE,inf
+SE hydrogen final use 2030,SE,,hydrogen final use,,2030,2030,TRUE,inf
+SE hydrogen final use 2035,SE,,hydrogen final use,,2035,2035,TRUE,inf
+SE hydrogen final use 2040,SE,,hydrogen final use,,2040,2040,TRUE,inf
+SE hydrogen final use 2045,SE,,hydrogen final use,,2045,2045,TRUE,inf
+SE hydrogen final use 2050,SE,,hydrogen final use,,2050,2050,TRUE,inf
+SE natural gas power peaker 2020,SE,,natural gas power peaker,,2020,2020,TRUE,1640.0
+SE natural gas power peaker 2021,SE,,natural gas power peaker,,2021,2021,TRUE,1640.0
+SE natural gas power peaker 2022,SE,,natural gas power peaker,,2022,2022,TRUE,1640.0
+SE natural gas power peaker 2023,SE,,natural gas power peaker,,2023,2023,TRUE,1640.0
+SE natural gas power peaker 2025,SE,,natural gas power peaker,,2025,2025,TRUE,1610.0
+SE natural gas power peaker 2030,SE,,natural gas power peaker,,2030,2030,TRUE,720.0
+SE natural gas power peaker 2035,SE,,natural gas power peaker,,2035,2035,TRUE,110.0
+SE natural gas power peaker 2040,SE,,natural gas power peaker,,2040,2040,TRUE,110.0
+SE natural gas supply 2020,SE,,natural gas supply,,2020,2020,TRUE,inf
+SE natural gas supply 2021,SE,,natural gas supply,,2021,2021,TRUE,inf
+SE natural gas supply 2022,SE,,natural gas supply,,2022,2022,TRUE,inf
+SE natural gas supply 2023,SE,,natural gas supply,,2023,2023,TRUE,inf
+SE natural gas supply 2025,SE,,natural gas supply,,2025,2025,TRUE,inf
+SE natural gas supply 2030,SE,,natural gas supply,,2030,2030,TRUE,inf
+SE natural gas supply 2035,SE,,natural gas supply,,2035,2035,TRUE,inf
+SE natural gas supply 2040,SE,,natural gas supply,,2040,2040,TRUE,inf
+SE nuclear power large 2020,SE,,nuclear power large,,2020,2020,TRUE,7550.0
+SE nuclear power large 2021,SE,,nuclear power large,,2021,2021,TRUE,7550.0
+SE nuclear power large 2022,SE,,nuclear power large,,2022,2022,TRUE,7550.0
+SE nuclear power large 2023,SE,,nuclear power large,,2023,2023,TRUE,7550.0
+SE nuclear power large 2025,SE,,nuclear power large,,2025,2025,TRUE,6670.0
+SE nuclear power large 2030,SE,,nuclear power large,,2030,2030,TRUE,6670.0
+SE nuclear power large 2035,SE,,nuclear power large,,2035,2035,TRUE,2570.0
+SE solar PV ground 2020,SE,,solar PV ground,,2020,2020,TRUE,1400.0
+SE solar PV ground 2021,SE,,solar PV ground,,2021,2021,TRUE,1400.0
+SE solar PV ground 2022,SE,,solar PV ground,,2022,2022,TRUE,1400.0
+SE solar PV ground 2023,SE,,solar PV ground,,2023,2023,TRUE,1400.0
+SE solar PV ground 2025,SE,,solar PV ground,,2025,2025,TRUE,1960.0
+SE solar PV ground 2030,SE,,solar PV ground,,2030,2030,TRUE,4010.0
+SE solar PV ground 2035,SE,,solar PV ground,,2035,2035,TRUE,5690.0
+SE solar PV ground 2040,SE,,solar PV ground,,2040,2040,TRUE,5690.0
+SE solar PV ground 2045,SE,,solar PV ground,,2045,2045,TRUE,5690.0
+SE solar PV ground 2050,SE,,solar PV ground,,2050,2050,TRUE,5690.0
+SE wind offshore 2020,SE,,wind offshore,,2020,2020,TRUE,200.0
+SE wind offshore 2021,SE,,wind offshore,,2021,2021,TRUE,200.0
+SE wind offshore 2022,SE,,wind offshore,,2022,2022,TRUE,200.0
+SE wind offshore 2023,SE,,wind offshore,,2023,2023,TRUE,200.0
+SE wind offshore 2025,SE,,wind offshore,,2025,2025,TRUE,430.0
+SE wind offshore 2030,SE,,wind offshore,,2030,2030,TRUE,1190.0
+SE wind offshore 2035,SE,,wind offshore,,2035,2035,TRUE,1860.0
+SE wind offshore 2040,SE,,wind offshore,,2040,2040,TRUE,1860.0
+SE wind offshore 2045,SE,,wind offshore,,2045,2045,TRUE,1860.0
+SE wind offshore 2050,SE,,wind offshore,,2050,2050,TRUE,1860.0
+SE wind onshore 2020,SE,,wind onshore,,2020,2020,TRUE,9480.0
+SE wind onshore 2021,SE,,wind onshore,,2021,2021,TRUE,9480.0
+SE wind onshore 2022,SE,,wind onshore,,2022,2022,TRUE,9480.0
+SE wind onshore 2023,SE,,wind onshore,,2023,2023,TRUE,9480.0
+SE wind onshore 2025,SE,,wind onshore,,2025,2025,TRUE,15550.0
+SE wind onshore 2030,SE,,wind onshore,,2030,2030,TRUE,16950.0
+SE wind onshore 2035,SE,,wind onshore,,2035,2035,TRUE,21680.0
+SE wind onshore 2040,SE,,wind onshore,,2040,2040,TRUE,20110.0
+SE wind onshore 2045,SE,,wind onshore,,2045,2045,TRUE,20110.0
+SE wind onshore 2050,SE,,wind onshore,,2050,2050,TRUE,20110.0
+SK DSR reduction 2025,SK,,DSR reduction,,2025,2025,TRUE,200.0
+SK DSR reduction 2030,SK,,DSR reduction,,2030,2030,TRUE,300.0
+SK DSR reduction 2035,SK,,DSR reduction,,2035,2035,TRUE,400.0
+SK DSR reduction 2040,SK,,DSR reduction,,2040,2040,TRUE,470.0
+SK DSR reduction 2045,SK,,DSR reduction,,2045,2045,TRUE,530.0
+SK DSR reduction 2050,SK,,DSR reduction,,2050,2050,TRUE,590.0
+SK battery large charger 2035,SK,,battery large charger,,2035,2035,TRUE,470.0
+SK battery large charger 2040,SK,,battery large charger,,2040,2040,TRUE,470.0
+SK battery large charger 2045,SK,,battery large charger,,2045,2045,TRUE,470.0
+SK battery large charger 2050,SK,,battery large charger,,2050,2050,TRUE,470.0
+SK battery large power 2035,SK,,battery large power,,2035,2035,TRUE,520.0
+SK battery large power 2040,SK,,battery large power,,2040,2040,TRUE,520.0
+SK battery large power 2045,SK,,battery large power,,2045,2045,TRUE,520.0
+SK battery large power 2050,SK,,battery large power,,2050,2050,TRUE,520.0
+SK battery large storage 2035,SK,,battery large storage,,2035,2035,TRUE,1050.0
+SK battery large storage 2040,SK,,battery large storage,,2040,2040,TRUE,1050.0
+SK battery large storage 2045,SK,,battery large storage,,2045,2045,TRUE,1050.0
+SK battery large storage 2050,SK,,battery large storage,,2050,2050,TRUE,1050.0
+SK biomass wood power 2020,SK,,biomass wood power,,2020,2020,TRUE,230.0
+SK biomass wood power 2021,SK,,biomass wood power,,2021,2021,TRUE,230.0
+SK biomass wood power 2022,SK,,biomass wood power,,2022,2022,TRUE,230.0
+SK biomass wood power 2023,SK,,biomass wood power,,2023,2023,TRUE,230.0
+SK biomass wood power 2025,SK,,biomass wood power,,2025,2025,TRUE,560.0
+SK biomass wood power 2030,SK,,biomass wood power,,2030,2030,TRUE,580.0
+SK biomass wood power 2035,SK,,biomass wood power,,2035,2035,TRUE,680.0
+SK biomass wood power 2040,SK,,biomass wood power,,2040,2040,TRUE,700.0
+SK biomass wood power 2045,SK,,biomass wood power,,2045,2045,TRUE,620.0
+SK biomass wood power 2050,SK,,biomass wood power,,2050,2050,TRUE,560.0
+SK biomass wood supply 2020,SK,,biomass wood supply,,2020,2020,TRUE,inf
+SK biomass wood supply 2021,SK,,biomass wood supply,,2021,2021,TRUE,inf
+SK biomass wood supply 2022,SK,,biomass wood supply,,2022,2022,TRUE,inf
+SK biomass wood supply 2023,SK,,biomass wood supply,,2023,2023,TRUE,inf
+SK biomass wood supply 2025,SK,,biomass wood supply,,2025,2025,TRUE,inf
+SK biomass wood supply 2030,SK,,biomass wood supply,,2030,2030,TRUE,inf
+SK biomass wood supply 2035,SK,,biomass wood supply,,2035,2035,TRUE,inf
+SK biomass wood supply 2040,SK,,biomass wood supply,,2040,2040,TRUE,inf
+SK biomass wood supply 2045,SK,,biomass wood supply,,2045,2045,TRUE,inf
+SK biomass wood supply 2050,SK,,biomass wood supply,,2050,2050,TRUE,inf
+SK electricity final use 2020,SK,,electricity final use,,2020,2020,TRUE,inf
+SK electricity final use 2021,SK,,electricity final use,,2021,2021,TRUE,inf
+SK electricity final use 2022,SK,,electricity final use,,2022,2022,TRUE,inf
+SK electricity final use 2023,SK,,electricity final use,,2023,2023,TRUE,inf
+SK electricity final use 2025,SK,,electricity final use,,2025,2025,TRUE,inf
+SK electricity final use 2030,SK,,electricity final use,,2030,2030,TRUE,inf
+SK electricity final use 2035,SK,,electricity final use,,2035,2035,TRUE,inf
+SK electricity final use 2040,SK,,electricity final use,,2040,2040,TRUE,inf
+SK electricity final use 2045,SK,,electricity final use,,2045,2045,TRUE,inf
+SK electricity final use 2050,SK,,electricity final use,,2050,2050,TRUE,inf
+SK electricity grid 2020,SK,,electricity grid,,2020,2020,TRUE,inf
+SK electricity grid 2021,SK,,electricity grid,,2021,2021,TRUE,inf
+SK electricity grid 2022,SK,,electricity grid,,2022,2022,TRUE,inf
+SK electricity grid 2023,SK,,electricity grid,,2023,2023,TRUE,inf
+SK electricity grid 2025,SK,,electricity grid,,2025,2025,TRUE,inf
+SK electricity grid 2030,SK,,electricity grid,,2030,2030,TRUE,inf
+SK electricity grid 2035,SK,,electricity grid,,2035,2035,TRUE,inf
+SK electricity grid 2040,SK,,electricity grid,,2040,2040,TRUE,inf
+SK electricity grid 2045,SK,,electricity grid,,2045,2045,TRUE,inf
+SK electricity grid 2050,SK,,electricity grid,,2050,2050,TRUE,inf
+SK hard coal power old 2020,SK,,hard coal power old,,2020,2020,TRUE,290.0
+SK hard coal power old 2021,SK,,hard coal power old,,2021,2021,TRUE,290.0
+SK hard coal power old 2022,SK,,hard coal power old,,2022,2022,TRUE,290.0
+SK hard coal power old 2023,SK,,hard coal power old,,2023,2023,TRUE,290.0
+SK hard coal supply 2020,SK,,hard coal supply,,2020,2020,TRUE,inf
+SK hard coal supply 2021,SK,,hard coal supply,,2021,2021,TRUE,inf
+SK hard coal supply 2022,SK,,hard coal supply,,2022,2022,TRUE,inf
+SK hard coal supply 2023,SK,,hard coal supply,,2023,2023,TRUE,inf
+SK hydro PSH power 2020,SK,,hydro PSH power,,2020,2020,TRUE,920.0
+SK hydro PSH power 2021,SK,,hydro PSH power,,2021,2021,TRUE,920.0
+SK hydro PSH power 2022,SK,,hydro PSH power,,2022,2022,TRUE,920.0
+SK hydro PSH power 2023,SK,,hydro PSH power,,2023,2023,TRUE,920.0
+SK hydro PSH power 2025,SK,,hydro PSH power,,2025,2025,TRUE,920.0
+SK hydro PSH power 2030,SK,,hydro PSH power,,2030,2030,TRUE,1490.0
+SK hydro PSH power 2035,SK,,hydro PSH power,,2035,2035,TRUE,1490.0
+SK hydro PSH power 2040,SK,,hydro PSH power,,2040,2040,TRUE,1490.0
+SK hydro PSH power 2045,SK,,hydro PSH power,,2045,2045,TRUE,1490.0
+SK hydro PSH power 2050,SK,,hydro PSH power,,2050,2050,TRUE,1490.0
+SK hydro PSH pump 2020,SK,,hydro PSH pump,,2020,2020,TRUE,640.0
+SK hydro PSH pump 2021,SK,,hydro PSH pump,,2021,2021,TRUE,640.0
+SK hydro PSH pump 2022,SK,,hydro PSH pump,,2022,2022,TRUE,640.0
+SK hydro PSH pump 2023,SK,,hydro PSH pump,,2023,2023,TRUE,640.0
+SK hydro PSH pump 2025,SK,,hydro PSH pump,,2025,2025,TRUE,640.0
+SK hydro PSH pump 2030,SK,,hydro PSH pump,,2030,2030,TRUE,1040.0
+SK hydro PSH pump 2035,SK,,hydro PSH pump,,2035,2035,TRUE,1040.0
+SK hydro PSH pump 2040,SK,,hydro PSH pump,,2040,2040,TRUE,1040.0
+SK hydro PSH pump 2045,SK,,hydro PSH pump,,2045,2045,TRUE,1040.0
+SK hydro PSH pump 2050,SK,,hydro PSH pump,,2050,2050,TRUE,1040.0
+SK hydro PSH storage 2020,SK,,hydro PSH storage,,2020,2020,TRUE,7330.0
+SK hydro PSH storage 2021,SK,,hydro PSH storage,,2021,2021,TRUE,7330.0
+SK hydro PSH storage 2022,SK,,hydro PSH storage,,2022,2022,TRUE,7330.0
+SK hydro PSH storage 2023,SK,,hydro PSH storage,,2023,2023,TRUE,7330.0
+SK hydro PSH storage 2025,SK,,hydro PSH storage,,2025,2025,TRUE,7330.0
+SK hydro PSH storage 2030,SK,,hydro PSH storage,,2030,2030,TRUE,11890.0
+SK hydro PSH storage 2035,SK,,hydro PSH storage,,2035,2035,TRUE,11890.0
+SK hydro PSH storage 2040,SK,,hydro PSH storage,,2040,2040,TRUE,11890.0
+SK hydro PSH storage 2045,SK,,hydro PSH storage,,2045,2045,TRUE,11890.0
+SK hydro PSH storage 2050,SK,,hydro PSH storage,,2050,2050,TRUE,11890.0
+SK hydro ROR 2020,SK,,hydro ROR,,2020,2020,TRUE,2430.0
+SK hydro ROR 2021,SK,,hydro ROR,,2021,2021,TRUE,2430.0
+SK hydro ROR 2022,SK,,hydro ROR,,2022,2022,TRUE,2430.0
+SK hydro ROR 2023,SK,,hydro ROR,,2023,2023,TRUE,2430.0
+SK hydro ROR 2025,SK,,hydro ROR,,2025,2025,TRUE,2430.0
+SK hydro ROR 2030,SK,,hydro ROR,,2030,2030,TRUE,2590.0
+SK hydro ROR 2035,SK,,hydro ROR,,2035,2035,TRUE,2590.0
+SK hydro ROR 2040,SK,,hydro ROR,,2040,2040,TRUE,2590.0
+SK hydro ROR 2045,SK,,hydro ROR,,2045,2045,TRUE,2590.0
+SK hydro ROR 2050,SK,,hydro ROR,,2050,2050,TRUE,2590.0
+SK hydrogen electrolysis 2035,SK,,hydrogen electrolysis,,2035,2035,TRUE,1250.0
+SK hydrogen electrolysis 2040,SK,,hydrogen electrolysis,,2040,2040,TRUE,2080.0
+SK hydrogen electrolysis 2045,SK,,hydrogen electrolysis,,2045,2045,TRUE,2080.0
+SK hydrogen electrolysis 2050,SK,,hydrogen electrolysis,,2050,2050,TRUE,2950.0
+SK hydrogen final use 2035,SK,,hydrogen final use,,2035,2035,TRUE,inf
+SK hydrogen final use 2040,SK,,hydrogen final use,,2040,2040,TRUE,inf
+SK hydrogen final use 2045,SK,,hydrogen final use,,2045,2045,TRUE,inf
+SK hydrogen final use 2050,SK,,hydrogen final use,,2050,2050,TRUE,inf
+SK hydrogen power peaker 2050,SK,,hydrogen power peaker,,2050,2050,TRUE,1710.0
+SK hydrogen storage 2045,SK,,hydrogen storage,,2045,2045,TRUE,590.0
+SK hydrogen storage 2050,SK,,hydrogen storage,,2050,2050,TRUE,623480.0
+SK lignite power old 2020,SK,,lignite power old,,2020,2020,TRUE,310.0
+SK lignite power old 2021,SK,,lignite power old,,2021,2021,TRUE,310.0
+SK lignite power old 2022,SK,,lignite power old,,2022,2022,TRUE,310.0
+SK lignite power old 2023,SK,,lignite power old,,2023,2023,TRUE,310.0
+SK lignite power old 2025,SK,,lignite power old,,2025,2025,TRUE,90.0
+SK lignite power old 2030,SK,,lignite power old,,2030,2030,TRUE,50.0
+SK lignite power old 2035,SK,,lignite power old,,2035,2035,TRUE,50.0
+SK lignite supply 2020,SK,,lignite supply,,2020,2020,TRUE,inf
+SK lignite supply 2021,SK,,lignite supply,,2021,2021,TRUE,inf
+SK lignite supply 2022,SK,,lignite supply,,2022,2022,TRUE,inf
+SK lignite supply 2023,SK,,lignite supply,,2023,2023,TRUE,inf
+SK lignite supply 2025,SK,,lignite supply,,2025,2025,TRUE,inf
+SK lignite supply 2030,SK,,lignite supply,,2030,2030,TRUE,inf
+SK lignite supply 2035,SK,,lignite supply,,2035,2035,TRUE,inf
+SK natural gas power peaker 2020,SK,,natural gas power peaker,,2020,2020,TRUE,610.0
+SK natural gas power peaker 2021,SK,,natural gas power peaker,,2021,2021,TRUE,610.0
+SK natural gas power peaker 2022,SK,,natural gas power peaker,,2022,2022,TRUE,610.0
+SK natural gas power peaker 2023,SK,,natural gas power peaker,,2023,2023,TRUE,610.0
+SK natural gas power peaker 2025,SK,,natural gas power peaker,,2025,2025,TRUE,1280.0
+SK natural gas power peaker 2030,SK,,natural gas power peaker,,2030,2030,TRUE,2060.0
+SK natural gas power peaker 2035,SK,,natural gas power peaker,,2035,2035,TRUE,1390.0
+SK natural gas power peaker 2040,SK,,natural gas power peaker,,2040,2040,TRUE,2090.0
+SK natural gas power peaker 2045,SK,,natural gas power peaker,,2045,2045,TRUE,2050.0
+SK natural gas power peaker 2050,SK,,natural gas power peaker,,2050,2050,TRUE,930.0
+SK natural gas supply 2020,SK,,natural gas supply,,2020,2020,TRUE,inf
+SK natural gas supply 2021,SK,,natural gas supply,,2021,2021,TRUE,inf
+SK natural gas supply 2022,SK,,natural gas supply,,2022,2022,TRUE,inf
+SK natural gas supply 2023,SK,,natural gas supply,,2023,2023,TRUE,inf
+SK natural gas supply 2025,SK,,natural gas supply,,2025,2025,TRUE,inf
+SK natural gas supply 2030,SK,,natural gas supply,,2030,2030,TRUE,inf
+SK natural gas supply 2035,SK,,natural gas supply,,2035,2035,TRUE,inf
+SK natural gas supply 2040,SK,,natural gas supply,,2040,2040,TRUE,inf
+SK natural gas supply 2045,SK,,natural gas supply,,2045,2045,TRUE,inf
+SK natural gas supply 2050,SK,,natural gas supply,,2050,2050,TRUE,inf
+SK nuclear power large 2020,SK,,nuclear power large,,2020,2020,TRUE,1940.0
+SK nuclear power large 2021,SK,,nuclear power large,,2021,2021,TRUE,1940.0
+SK nuclear power large 2022,SK,,nuclear power large,,2022,2022,TRUE,1940.0
+SK nuclear power large 2023,SK,,nuclear power large,,2023,2023,TRUE,1940.0
+SK nuclear power large 2025,SK,,nuclear power large,,2025,2025,TRUE,2820.0
+SK nuclear power large 2030,SK,,nuclear power large,,2030,2030,TRUE,1820.0
+SK nuclear power large 2035,SK,,nuclear power large,,2035,2035,TRUE,1820.0
+SK nuclear power large 2040,SK,,nuclear power large,,2040,2040,TRUE,1350.0
+SK nuclear power large 2045,SK,,nuclear power large,,2045,2045,TRUE,880.0
+SK nuclear power large 2050,SK,,nuclear power large,,2050,2050,TRUE,880.0
+SK solar PV ground 2020,SK,,solar PV ground,,2020,2020,TRUE,590.0
+SK solar PV ground 2021,SK,,solar PV ground,,2021,2021,TRUE,590.0
+SK solar PV ground 2022,SK,,solar PV ground,,2022,2022,TRUE,590.0
+SK solar PV ground 2023,SK,,solar PV ground,,2023,2023,TRUE,590.0
+SK solar PV ground 2025,SK,,solar PV ground,,2025,2025,TRUE,960.0
+SK solar PV ground 2030,SK,,solar PV ground,,2030,2030,TRUE,6520.0
+SK solar PV ground 2035,SK,,solar PV ground,,2035,2035,TRUE,8280.0
+SK solar PV ground 2040,SK,,solar PV ground,,2040,2040,TRUE,14030.0
+SK solar PV ground 2045,SK,,solar PV ground,,2045,2045,TRUE,15290.0
+SK solar PV ground 2050,SK,,solar PV ground,,2050,2050,TRUE,14850.0
+SK wind onshore 2025,SK,,wind onshore,,2025,2025,TRUE,250.0
+SK wind onshore 2030,SK,,wind onshore,,2030,2030,TRUE,1410.0
+SK wind onshore 2035,SK,,wind onshore,,2035,2035,TRUE,2750.0
+SK wind onshore 2040,SK,,wind onshore,,2040,2040,TRUE,4220.0
+SK wind onshore 2045,SK,,wind onshore,,2045,2045,TRUE,5680.0
+SK wind onshore 2050,SK,,wind onshore,,2050,2050,TRUE,7020.0

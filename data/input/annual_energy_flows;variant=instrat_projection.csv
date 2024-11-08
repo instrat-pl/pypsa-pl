@@ -1,0 +1,83 @@
+name,area,carrier,type,parameter,year,value
+PL biomass wood final use flow 2020,PL,biomass wood final use,inflow,flow,2020,33.9
+PL biomass wood final use flow 2025,PL,biomass wood final use,inflow,flow,2025,40.5
+PL biomass wood final use flow 2030,PL,biomass wood final use,inflow,flow,2030,46.0
+PL biomass wood final use flow 2035,PL,biomass wood final use,inflow,flow,2035,50.4
+PL biomass wood final use flow 2040,PL,biomass wood final use,inflow,flow,2040,53.8
+PL biomass wood final use flow 2045,PL,biomass wood final use,inflow,flow,2045,56.0
+PL biomass wood final use flow 2050,PL,biomass wood final use,inflow,flow,2050,57.1
+PL electricity final use flow 2020,PL,electricity final use,inflow,flow,2020,143.6
+PL electricity final use flow 2025,PL,electricity final use,inflow,flow,2025,147.2
+PL electricity final use flow 2030,PL,electricity final use,inflow,flow,2030,156.4
+PL electricity final use flow 2035,PL,electricity final use,inflow,flow,2035,172.1
+PL electricity final use flow 2040,PL,electricity final use,inflow,flow,2040,191.4
+PL electricity final use flow 2045,PL,electricity final use,inflow,flow,2045,210.7
+PL electricity final use flow 2050,PL,electricity final use,inflow,flow,2050,225.8
+PL hard coal final use flow 2020,PL,hard coal final use,inflow,flow,2020,55.7
+PL hard coal final use flow 2025,PL,hard coal final use,inflow,flow,2025,47.8
+PL hard coal final use flow 2030,PL,hard coal final use,inflow,flow,2030,39.3
+PL hard coal final use flow 2035,PL,hard coal final use,inflow,flow,2035,23.4
+PL hard coal final use flow 2040,PL,hard coal final use,inflow,flow,2040,5.4
+PL hydrogen final use flow 2020,PL,hydrogen final use,inflow,flow,2020,27.1
+PL hydrogen final use flow 2025,PL,hydrogen final use,inflow,flow,2025,27.1
+PL hydrogen final use flow 2030,PL,hydrogen final use,inflow,flow,2030,27.1
+PL hydrogen final use flow 2035,PL,hydrogen final use,inflow,flow,2035,34.9
+PL hydrogen final use flow 2040,PL,hydrogen final use,inflow,flow,2040,55.5
+PL hydrogen final use flow 2045,PL,hydrogen final use,inflow,flow,2045,82.3
+PL hydrogen final use flow 2050,PL,hydrogen final use,inflow,flow,2050,112.7
+PL light vehicle mobility final use flow 2020,PL,light vehicle mobility final use,inflow,flow,2020,42.0
+PL light vehicle mobility final use flow 2025,PL,light vehicle mobility final use,inflow,flow,2025,47.2
+PL light vehicle mobility final use flow 2030,PL,light vehicle mobility final use,inflow,flow,2030,51.4
+PL light vehicle mobility final use flow 2035,PL,light vehicle mobility final use,inflow,flow,2035,52.2
+PL light vehicle mobility final use flow 2040,PL,light vehicle mobility final use,inflow,flow,2040,50.4
+PL light vehicle mobility final use flow 2045,PL,light vehicle mobility final use,inflow,flow,2045,47.7
+PL light vehicle mobility final use flow 2050,PL,light vehicle mobility final use,inflow,flow,2050,44.0
+PL lulucf final use flow 2020,PL,lulucf final use,inflow,flow,2020,19.1
+PL lulucf final use flow 2025,PL,lulucf final use,inflow,flow,2025,22.3
+PL lulucf final use flow 2030,PL,lulucf final use,inflow,flow,2030,25.5
+PL lulucf final use flow 2035,PL,lulucf final use,inflow,flow,2035,28.7
+PL lulucf final use flow 2040,PL,lulucf final use,inflow,flow,2040,31.9
+PL lulucf final use flow 2045,PL,lulucf final use,inflow,flow,2045,35.1
+PL lulucf final use flow 2050,PL,lulucf final use,inflow,flow,2050,38.3
+PL natural gas final use flow 2020,PL,natural gas final use,inflow,flow,2020,64.2
+PL natural gas final use flow 2025,PL,natural gas final use,inflow,flow,2025,71.4
+PL natural gas final use flow 2030,PL,natural gas final use,inflow,flow,2030,74.6
+PL natural gas final use flow 2035,PL,natural gas final use,inflow,flow,2035,66.7
+PL natural gas final use flow 2040,PL,natural gas final use,inflow,flow,2040,55.5
+PL natural gas final use flow 2045,PL,natural gas final use,inflow,flow,2045,39.1
+PL natural gas final use flow 2050,PL,natural gas final use,inflow,flow,2050,23.7
+PL other fuel final use flow 2020,PL,other fuel final use,inflow,flow,2020,164.9
+PL other fuel final use flow 2025,PL,other fuel final use,inflow,flow,2025,190.5
+PL other fuel final use flow 2030,PL,other fuel final use,inflow,flow,2030,203.6
+PL other fuel final use flow 2035,PL,other fuel final use,inflow,flow,2035,195.8
+PL other fuel final use flow 2040,PL,other fuel final use,inflow,flow,2040,169.2
+PL other fuel final use flow 2045,PL,other fuel final use,inflow,flow,2045,125.4
+PL other fuel final use flow 2050,PL,other fuel final use,inflow,flow,2050,72.2
+PL other heating final use flow 2020,PL,other heating final use,inflow,flow,2020,16.1
+PL other heating final use flow 2025,PL,other heating final use,inflow,flow,2025,16.0
+PL other heating final use flow 2030,PL,other heating final use,inflow,flow,2030,15.8
+PL other heating final use flow 2035,PL,other heating final use,inflow,flow,2035,15.4
+PL other heating final use flow 2040,PL,other heating final use,inflow,flow,2040,14.9
+PL other heating final use flow 2045,PL,other heating final use,inflow,flow,2045,14.9
+PL other heating final use flow 2050,PL,other heating final use,inflow,flow,2050,14.9
+PL process emissions final use flow 2020,PL,process emissions final use,inflow,flow,2020,81.9
+PL process emissions final use flow 2025,PL,process emissions final use,inflow,flow,2025,79.6
+PL process emissions final use flow 2030,PL,process emissions final use,inflow,flow,2030,77.2
+PL process emissions final use flow 2035,PL,process emissions final use,inflow,flow,2035,65.0
+PL process emissions final use flow 2040,PL,process emissions final use,inflow,flow,2040,49.0
+PL process emissions final use flow 2045,PL,process emissions final use,inflow,flow,2045,38.0
+PL process emissions final use flow 2050,PL,process emissions final use,inflow,flow,2050,32.8
+PL space heating final use flow 2020,PL,space heating final use,inflow,flow,2020,158.8
+PL space heating final use flow 2025,PL,space heating final use,inflow,flow,2025,143.6
+PL space heating final use flow 2030,PL,space heating final use,inflow,flow,2030,130.8
+PL space heating final use flow 2035,PL,space heating final use,inflow,flow,2035,120.3
+PL space heating final use flow 2040,PL,space heating final use,inflow,flow,2040,111.8
+PL space heating final use flow 2045,PL,space heating final use,inflow,flow,2045,105.2
+PL space heating final use flow 2050,PL,space heating final use,inflow,flow,2050,100.4
+PL water heating final use flow 2020,PL,water heating final use,inflow,flow,2020,48.9
+PL water heating final use flow 2025,PL,water heating final use,inflow,flow,2025,48.9
+PL water heating final use flow 2030,PL,water heating final use,inflow,flow,2030,48.9
+PL water heating final use flow 2035,PL,water heating final use,inflow,flow,2035,48.9
+PL water heating final use flow 2040,PL,water heating final use,inflow,flow,2040,48.9
+PL water heating final use flow 2045,PL,water heating final use,inflow,flow,2045,48.9
+PL water heating final use flow 2050,PL,water heating final use,inflow,flow,2050,48.9

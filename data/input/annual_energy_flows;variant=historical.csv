@@ -1,0 +1,85 @@
+name,area,carrier,type,parameter,year,value
+PL biogas CHP flow 2020,PL,biogas CHP,outflow,flow,2020,1.1
+PL biogas CHP flow 2021,PL,biogas CHP,outflow,flow,2021,1.2
+PL biogas CHP flow 2022,PL,biogas CHP,outflow,flow,2022,1.2
+PL biogas CHP flow 2023,PL,biogas CHP,outflow,flow,2023,1.3
+PL biomass wood CHP flow 2020,PL,biomass wood CHP,outflow,flow,2020,4.4
+PL biomass wood CHP flow 2021,PL,biomass wood CHP,outflow,flow,2021,3.6
+PL biomass wood CHP flow 2022,PL,biomass wood CHP,outflow,flow,2022,3.6
+PL biomass wood CHP flow 2023,PL,biomass wood CHP,outflow,flow,2023,3.6
+PL biomass wood power flow 2020,PL,biomass wood power,outflow,flow,2020,1.9
+PL biomass wood power flow 2021,PL,biomass wood power,outflow,flow,2021,2.3
+PL biomass wood power flow 2022,PL,biomass wood power,outflow,flow,2022,1.9
+PL biomass wood power flow 2023,PL,biomass wood power,outflow,flow,2023,2.2
+PL electricity export flow 2020,PL,electricity export,outflow,flow,2020,7.4
+PL electricity export flow 2021,PL,electricity export,outflow,flow,2021,14.2
+PL electricity export flow 2022,PL,electricity export,outflow,flow,2022,16.9
+PL electricity export flow 2023,PL,electricity export,outflow,flow,2023,11.4
+PL electricity final use flow 2020,PL,electricity final use,inflow,flow,2020,155.6
+PL electricity final use flow 2021,PL,electricity final use,inflow,flow,2021,163.2
+PL electricity final use flow 2022,PL,electricity final use,inflow,flow,2022,160.4
+PL electricity final use flow 2023,PL,electricity final use,inflow,flow,2023,154.3
+PL electricity import flow 2020,PL,electricity import,outflow,flow,2020,20.6
+PL electricity import flow 2021,PL,electricity import,outflow,flow,2021,15.1
+PL electricity import flow 2022,PL,electricity import,outflow,flow,2022,15.2
+PL electricity import flow 2023,PL,electricity import,outflow,flow,2023,15.1
+PL hard coal CHP flow 2020,PL,hard coal CHP,outflow,flow,2020,17.1
+PL hard coal CHP flow 2021,PL,hard coal CHP,outflow,flow,2021,17.9
+PL hard coal CHP flow 2022,PL,hard coal CHP,outflow,flow,2022,16.1
+PL hard coal CHP flow 2023,PL,hard coal CHP,outflow,flow,2023,14.4
+PL hard coal power flow 2020,PL,hard coal power,outflow,flow,2020,46.8
+PL hard coal power flow 2021,PL,hard coal power,outflow,flow,2021,57.3
+PL hard coal power flow 2022,PL,hard coal power,outflow,flow,2022,54.7
+PL hard coal power flow 2023,PL,hard coal power,outflow,flow,2023,44.3
+PL hydro PSH power flow 2020,PL,hydro PSH power,outflow,flow,2020,0.8
+PL hydro PSH power flow 2021,PL,hydro PSH power,outflow,flow,2021,0.8
+PL hydro PSH power flow 2022,PL,hydro PSH power,outflow,flow,2022,1.1
+PL hydro PSH power flow 2023,PL,hydro PSH power,outflow,flow,2023,1.3
+PL hydro ROR flow 2020,PL,hydro ROR,outflow,flow,2020,2.1
+PL hydro ROR flow 2021,PL,hydro ROR,outflow,flow,2021,2.3
+PL hydro ROR flow 2022,PL,hydro ROR,outflow,flow,2022,2.0
+PL hydro ROR flow 2023,PL,hydro ROR,outflow,flow,2023,2.4
+PL hydrogen final use flow 2020,PL,hydrogen final use,inflow,flow,2020,28.6
+PL hydrogen final use flow 2021,PL,hydrogen final use,inflow,flow,2021,27.3
+PL hydrogen final use flow 2022,PL,hydrogen final use,inflow,flow,2022,23.7
+PL hydrogen final use flow 2023,PL,hydrogen final use,inflow,flow,2023,23.7
+PL light vehicle mobility final use flow 2020,PL,light vehicle mobility final use,inflow,flow,2020,43.8
+PL light vehicle mobility final use flow 2021,PL,light vehicle mobility final use,inflow,flow,2021,44.6
+PL light vehicle mobility final use flow 2022,PL,light vehicle mobility final use,inflow,flow,2022,44.9
+PL light vehicle mobility final use flow 2023,PL,light vehicle mobility final use,inflow,flow,2023,44.9
+PL lignite power flow 2020,PL,lignite power,outflow,flow,2020,33.3
+PL lignite power flow 2021,PL,lignite power,outflow,flow,2021,40.2
+PL lignite power flow 2022,PL,lignite power,outflow,flow,2022,41.2
+PL lignite power flow 2023,PL,lignite power,outflow,flow,2023,30.1
+PL natural gas CHP flow 2020,PL,natural gas CHP,outflow,flow,2020,15.6
+PL natural gas CHP flow 2021,PL,natural gas CHP,outflow,flow,2021,15.0
+PL natural gas CHP flow 2022,PL,natural gas CHP,outflow,flow,2022,11.3
+PL natural gas CHP flow 2023,PL,natural gas CHP,outflow,flow,2023,15.7
+PL other CHP flow 2020,PL,other CHP,outflow,flow,2020,2.7
+PL other CHP flow 2021,PL,other CHP,outflow,flow,2021,2.6
+PL other CHP flow 2022,PL,other CHP,outflow,flow,2022,2.6
+PL other CHP flow 2023,PL,other CHP,outflow,flow,2023,2.4
+PL other heating final use flow 2020,PL,other heating final use,inflow,flow,2020,15.6
+PL other heating final use flow 2021,PL,other heating final use,inflow,flow,2021,16.9
+PL other heating final use flow 2022,PL,other heating final use,inflow,flow,2022,15.2
+PL other heating final use flow 2023,PL,other heating final use,inflow,flow,2023,15.2
+PL solar PV ground flow 2020,PL,solar PV ground,outflow,flow,2020,1.0
+PL solar PV ground flow 2021,PL,solar PV ground,outflow,flow,2021,1.3
+PL solar PV ground flow 2022,PL,solar PV ground,outflow,flow,2022,2.5
+PL solar PV ground flow 2023,PL,solar PV ground,outflow,flow,2023,4.6
+PL solar PV roof flow 2020,PL,solar PV roof,outflow,flow,2020,1.1
+PL solar PV roof flow 2021,PL,solar PV roof,outflow,flow,2021,2.7
+PL solar PV roof flow 2022,PL,solar PV roof,outflow,flow,2022,5.7
+PL solar PV roof flow 2023,PL,solar PV roof,outflow,flow,2023,6.8
+PL space heating final use flow 2020,PL,space heating final use,inflow,flow,2020,155.8
+PL space heating final use flow 2021,PL,space heating final use,inflow,flow,2021,164.6
+PL space heating final use flow 2022,PL,space heating final use,inflow,flow,2022,152.8
+PL space heating final use flow 2023,PL,space heating final use,inflow,flow,2023,152.8
+PL water heating final use flow 2020,PL,water heating final use,inflow,flow,2020,47.3
+PL water heating final use flow 2021,PL,water heating final use,inflow,flow,2021,52.0
+PL water heating final use flow 2022,PL,water heating final use,inflow,flow,2022,49.8
+PL water heating final use flow 2023,PL,water heating final use,inflow,flow,2023,49.8
+PL wind onshore flow 2020,PL,wind onshore,outflow,flow,2020,15.8
+PL wind onshore flow 2021,PL,wind onshore,outflow,flow,2021,16.3
+PL wind onshore flow 2022,PL,wind onshore,outflow,flow,2022,19.8
+PL wind onshore flow 2023,PL,wind onshore,outflow,flow,2023,23.2
