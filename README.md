@@ -39,7 +39,7 @@ Traffic data used to infer light vehicle mobility and BEV charging time series |
 
 Here you can find the list of publications based on the PyPSA-PL results and links to the full datasets stored in Zenodo.
 
-* Kubiczek, P., Smoleń, M. (2024). Trzy dekady wyzwań. Scenariusz polskiej transformacji energetycznej do 2050 r. Instrat Policy Paper 03/2024. https://instrat.pl/trzy-dekady-wyzwan/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13946777.svg)](https://doi.org/10.5281/zenodo.13946777)
+* Kubiczek, P., Smoleń, M. (2024). Three challenging decades. Scenario for the Polish energy transition out to 2050. Instrat Policy Paper 03/2024. https://instrat.pl/three-challenging-decades/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13946776.svg)](https://doi.org/10.5281/zenodo.13946776)
 * Kubiczek, P., Smoleń, M., Żelisko, W. (2023). Poland approaching carbon neutrality. Four scenarios for the Polish energy transition until 2040. Instrat Policy Paper 06/2023. https://instrat.pl/poland-2040/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10246018.svg)](https://doi.org/10.5281/zenodo.10246018)
 * Kubiczek P. (2023). Baseload power. Modelling the costs of low flexibility of the Polish power system. Instrat Policy Paper 04/2023. https://instrat.pl/baseload-power/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8263172.svg)](https://zenodo.org/record/8263172)
 * Kubiczek P., Smoleń M. (2023). Poland cannot afford medium ambitions. Savings driven by fast deployment of renewables by 2030. Instrat Policy Paper 03/2023. https://instrat.pl/pypsa-march-2023/ [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7784931.svg)](https://doi.org/10.5281/zenodo.7784931)

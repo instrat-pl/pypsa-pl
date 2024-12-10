@@ -16,7 +16,7 @@ from pypsa_pl.custom_constraints import (
 )
 
 
-solver_options = lambda eps=1e-6: {
+solver_options = lambda eps=1e-6, flags=[]: {
     "highs": {
         "threads": 4,
         "solver": "ipm",
@@ -28,6 +28,7 @@ solver_options = lambda eps=1e-6: {
         "ipm_optimality_tolerance": eps,
         "parallel": "on",
         "random_seed": 0,
+        **{flag: "on" for flag in flags},
     },
     "gurobi": {
         "threads": 4,
@@ -39,7 +40,7 @@ solver_options = lambda eps=1e-6: {
         "PreDual": 0,
         "GURO_PAR_BARDENSETHRESH": 200,
         "Seed": 0,
-        # "BarHomogeneous": 1,
+        **{flag: 1 for flag in flags},
     },
     "mosek": {
         "MSK_IPAR_NUM_THREADS": 4,
@@ -49,6 +50,7 @@ solver_options = lambda eps=1e-6: {
         "MSK_DPAR_INTPNT_TOL_DFEAS": eps * 10,
         "MSK_DPAR_INTPNT_TOL_REL_GAP": eps,
         "MSK_DPAR_INTPNT_TOL_INFEAS": eps / 10,
+        **{flag: 1 for flag in flags},
     },
 }
 
@@ -153,11 +155,12 @@ def create_and_solve_model(network, params, fixed_virtual_capacities=False):
     eps = params.get("solver_tolerance", 1e-6)
     if fixed_virtual_capacities:
         eps *= 10
+    extra_flags = params.get("solver_extra_flags", [])
     solver = params["solver"]
 
     status, condition = network.optimize.solve_model(
         solver_name=solver,
-        solver_options=solver_options(eps).get(solver, {}),
+        solver_options=solver_options(eps, extra_flags).get(solver, {}),
     )
     network.meta["solver_status"] = f"{status}: {condition}"
 
